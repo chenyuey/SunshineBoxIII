@@ -1,7 +1,7 @@
 package com.tipchou.sunshineboxiii.support.dao
 
-import com.tipchou.sunshineboxiii.entity.local.UsersLocal
-import com.tipchou.sunshineboxiii.entity.local.UsersLocal_
+import com.tipchou.sunshineboxiii.entity.local.TestLocal
+import com.tipchou.sunshineboxiii.entity.local.TestLocal_
 import com.tipchou.sunshineboxiii.support.App
 import io.objectbox.Box
 import io.objectbox.android.ObjectBoxLiveData
@@ -15,26 +15,26 @@ import javax.inject.Singleton
 @Singleton
 class DbDao @Inject constructor() {
 
-    fun getFirstUser(): ObjectBoxLiveData<UsersLocal> {
+    fun getFirstUser(): ObjectBoxLiveData<TestLocal> {
         val boxStore = App.getBoxStore()
         if (boxStore == null) {
             //should not be here!!!!!!
             throw Exception("App.getBoxStore() get null!!!")
         } else {
-            val userBox: Box<UsersLocal> = boxStore.boxFor(UsersLocal::class.java)
-            return ObjectBoxLiveData(userBox.query().order(UsersLocal_.userId).build())
+            val userBox: Box<TestLocal> = boxStore.boxFor(TestLocal::class.java)
+            return ObjectBoxLiveData(userBox.query().order(TestLocal_.userId).build())
         }
     }
 
-    fun saveUser(usersLocal: UsersLocal) {
+    fun saveUser(testLocal: TestLocal) {
         val boxStore = App.getBoxStore()
         if (boxStore == null) {
             //should not be here!!!!!!
             throw Exception("App.getBoxStore() get null!!!")
         } else {
-            val userBox = boxStore.boxFor(UsersLocal::class.java)
-            usersLocal.id = getObjectIdByUserId(usersLocal.userId)
-            userBox.put(usersLocal)
+            val userBox = boxStore.boxFor(TestLocal::class.java)
+            testLocal.id = getObjectIdByUserId(testLocal.userId)
+            userBox.put(testLocal)
         }
     }
 
@@ -44,9 +44,9 @@ class DbDao @Inject constructor() {
             //should not be here!!!!!!
             throw Exception("App.getBoxStore() get null!!!")
         } else {
-            val userBox = boxStore.boxFor(UsersLocal::class.java)
-            val usersLocal: UsersLocal? = userBox.query().equal(UsersLocal_.userId, userId).build().findUnique()
-            usersLocal?.id ?: 0
+            val userBox = boxStore.boxFor(TestLocal::class.java)
+            val testLocal: TestLocal? = userBox.query().equal(TestLocal_.userId, userId).build().findUnique()
+            testLocal?.id ?: 0
         }
     }
 }

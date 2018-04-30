@@ -1,7 +1,7 @@
 package com.tipchou.sunshineboxiii.ui.main
 
 import android.arch.lifecycle.*
-import com.tipchou.sunshineboxiii.entity.local.UsersLocal
+import com.tipchou.sunshineboxiii.entity.local.TestLocal
 import com.tipchou.sunshineboxiii.support.DaggerMagicBox
 import com.tipchou.sunshineboxiii.support.GeneralObserver
 import com.tipchou.sunshineboxiii.support.Resource
@@ -12,19 +12,19 @@ import javax.inject.Inject
  * Perfect Code
  */
 
-class MainViewModel : ViewModel() {
+class TestViewModel : ViewModel() {
     @Inject
-    lateinit var repository: MainRepository
+    lateinit var repository: TestRepository
 
-    var myObserver: GeneralObserver<Resource<UsersLocal>>? = null
+    var myObserver: GeneralObserver<Resource<TestLocal>>? = null
 
     init {
         DaggerMagicBox.create().poke(this)
     }
 
-    private val user: MutableLiveData<Resource<UsersLocal>> = MediatorLiveData()
+    private val user: MutableLiveData<Resource<TestLocal>> = MediatorLiveData()
 
-    fun getUser(): LiveData<Resource<UsersLocal>> {
+    fun getUser(): LiveData<Resource<TestLocal>> {
         if (myObserver == null) {
             myObserver = GeneralObserver(user) { repository.getFirstUser() }
         }
@@ -35,7 +35,5 @@ class MainViewModel : ViewModel() {
     fun loadUser() {
         myObserver?.load()
     }
-
-
 
 }

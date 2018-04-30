@@ -2,8 +2,8 @@ package com.tipchou.sunshineboxiii.ui.main
 
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MediatorLiveData
-import com.tipchou.sunshineboxiii.entity.local.UsersLocal
-import com.tipchou.sunshineboxiii.entity.web.UsersWeb
+import com.tipchou.sunshineboxiii.entity.local.TestLocal
+import com.tipchou.sunshineboxiii.entity.web.TestWeb
 import com.tipchou.sunshineboxiii.support.DaggerMagicBox
 import com.tipchou.sunshineboxiii.support.GeneralDataRequest
 import com.tipchou.sunshineboxiii.support.Resource
@@ -17,7 +17,7 @@ import javax.inject.Singleton
  * Perfect Code
  */
 @Singleton
-class MainRepository @Inject constructor() {
+class TestRepository @Inject constructor() {
     @Inject
     lateinit var webDao: WebDao
 
@@ -28,10 +28,10 @@ class MainRepository @Inject constructor() {
         DaggerMagicBox.builder().build().poke(this)
     }
 
-    fun getFirstUser(): LiveData<Resource<UsersLocal>> {
-        return GeneralDataRequest<UsersLocal, UsersWeb>(
+    fun getFirstUser(): LiveData<Resource<TestLocal>> {
+        return GeneralDataRequest<TestLocal, TestWeb>(
                 loadFromDb = {
-                    val dbSource: MediatorLiveData<UsersLocal> = MediatorLiveData()
+                    val dbSource: MediatorLiveData<TestLocal> = MediatorLiveData()
                     dbSource.addSource(dbDao.getFirstUser()) {
                         if (it?.size == 0) {
                             dbSource.value = null
@@ -50,9 +50,9 @@ class MainRepository @Inject constructor() {
                     val userName = it?.user_name
                     if (userId == null || userName == null) {
                         //should not be here
-                        throw Exception("UsersWeb's userId or userName is null!!!")
+                        throw Exception("TestWeb's userId or userName is null!!!")
                     } else {
-                        val usersLocalPOJO = UsersLocal(userId = userId, userName = userName)
+                        val usersLocalPOJO = TestLocal(userId = userId, userName = userName)
                         dbDao.saveUser(usersLocalPOJO)
                     }
                 }

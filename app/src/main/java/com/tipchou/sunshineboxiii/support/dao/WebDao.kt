@@ -6,7 +6,7 @@ import com.avos.avoscloud.AVException
 import com.avos.avoscloud.AVObject
 import com.avos.avoscloud.AVQuery
 import com.avos.avoscloud.FindCallback
-import com.tipchou.sunshineboxiii.entity.web.UsersWeb
+import com.tipchou.sunshineboxiii.entity.web.TestWeb
 import com.tipchou.sunshineboxiii.support.ApiResponse
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -18,12 +18,12 @@ import javax.inject.Singleton
 
 @Singleton
 class WebDao @Inject constructor() {
-    fun getFirstUser(): LiveData<ApiResponse<UsersWeb>> {
-        val data = MutableLiveData<ApiResponse<UsersWeb>>()
+    fun getFirstUser(): LiveData<ApiResponse<TestWeb>> {
+        val data = MutableLiveData<ApiResponse<TestWeb>>()
         val query = AVQuery<AVObject>("Users")
         query.findInBackground(object : FindCallback<AVObject>() {
             override fun done(response: MutableList<AVObject>?, exception: AVException?) {
-                val usersWebPOJO = UsersWeb(response?.get(0))
+                val usersWebPOJO = TestWeb(response?.get(0))
                 data.value = ApiResponse(usersWebPOJO, exception)
             }
         })

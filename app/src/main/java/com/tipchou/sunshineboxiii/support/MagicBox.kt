@@ -1,7 +1,7 @@
 package com.tipchou.sunshineboxiii.support
 
-import com.tipchou.sunshineboxiii.ui.main.MainRepository
-import com.tipchou.sunshineboxiii.ui.main.MainViewModel
+import com.tipchou.sunshineboxiii.ui.main.TestRepository
+import com.tipchou.sunshineboxiii.ui.main.TestViewModel
 import dagger.Component
 import javax.inject.Singleton
 
@@ -12,6 +12,6 @@ import javax.inject.Singleton
 @Singleton
 @Component
 interface MagicBox {
-    fun poke(mainViewModel: MainViewModel)
-    fun poke(mainRepository: MainRepository)
+    fun poke(testViewModel: TestViewModel)
+    fun poke(testRepository: TestRepository)
 }
