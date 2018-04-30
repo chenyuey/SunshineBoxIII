@@ -1,8 +1,6 @@
 package com.tipchou.sunshineboxiii.ui.main
 
 import android.arch.lifecycle.*
-import android.support.annotation.MainThread
-import com.bumptech.glide.Glide.init
 import com.tipchou.sunshineboxiii.pojo.localpojo.UsersLocalPOJO
 import com.tipchou.sunshineboxiii.support.DaggerMagicBox
 import com.tipchou.sunshineboxiii.support.Resource
@@ -17,7 +15,7 @@ class MainViewModel : ViewModel() {
     @Inject
     lateinit var repository: MainRepository
 
-    var myObserver: MyObserver? = null
+    var myObserver: GeneralObserver<Resource<UsersLocalPOJO>>? = null
 
     init {
         DaggerMagicBox.create().poke(this)
@@ -27,7 +25,7 @@ class MainViewModel : ViewModel() {
 
     fun getUser(): LiveData<Resource<UsersLocalPOJO>> {
         if (myObserver == null) {
-            myObserver = MyObserver(user, repository)
+            myObserver = GeneralObserver(user) { repository.getFirstUser() }
         }
         loadUser()
         return user
@@ -37,25 +35,21 @@ class MainViewModel : ViewModel() {
         myObserver?.load()
     }
 
-    class MyObserver constructor(private val user: MutableLiveData<Resource<UsersLocalPOJO>>, private val repository: MainRepository) : Observer<Resource<UsersLocalPOJO>> {
+    class GeneralObserver<T> constructor(val data: MutableLiveData<T>, private val request: () -> LiveData<T>) : Observer<T> {
 
-        var request: LiveData<Resource<UsersLocalPOJO>>? = null
+        override fun onChanged(t: T?) {
+            data.value = t
+        }
+
+        private var observedData: LiveData<T>? = null
 
         fun load() {
-            unregister()
-            request = repository.getFirstUser()
-            request?.observeForever(this)
-        }
-
-        private fun unregister() {
-            if (request != null) {
-                request?.removeObserver(this)
-                request = null
+            if (observedData != null) {
+                observedData?.removeObserver(this)
+                observedData = null
             }
-        }
-
-        override fun onChanged(t: Resource<UsersLocalPOJO>?) {
-            user.value = t
+            observedData = request()
+            observedData?.observeForever(this)
         }
 
     }
