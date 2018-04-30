@@ -3,6 +3,7 @@ package com.tipchou.sunshineboxiii.ui.base
 import android.os.Bundle
 import android.support.annotation.LayoutRes
 import android.support.v7.app.AppCompatActivity
+import android.view.WindowManager
 
 /**
  * Created by 邵励治 on 2018/3/26.
@@ -18,6 +19,7 @@ abstract class BaseActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
         setContentView(layoutId())
         supportActionBar?.hide()
         created(savedInstanceState)
