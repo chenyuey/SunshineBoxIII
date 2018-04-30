@@ -1,4 +1,4 @@
-package com.tipchou.sunshineboxiii.pojo.localpojo
+package com.tipchou.sunshineboxiii.entity.local
 
 import io.objectbox.annotation.Entity
 import io.objectbox.annotation.Id
@@ -8,4 +8,4 @@ import io.objectbox.annotation.Id
  * Perfect Code
  */
 @Entity
-class UsersLocalPOJO(@Id var id: Long = 0, val userId: String, val userName: String)
+class UsersLocal(@Id var id: Long = 0, val userId: String, val userName: String)

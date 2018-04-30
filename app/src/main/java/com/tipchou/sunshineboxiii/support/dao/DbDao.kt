@@ -1,12 +1,10 @@
 package com.tipchou.sunshineboxiii.support.dao
 
-import com.tencent.qc.stat.common.User
-import com.tipchou.sunshineboxiii.pojo.localpojo.UsersLocalPOJO
-import com.tipchou.sunshineboxiii.pojo.localpojo.UsersLocalPOJO_
+import com.tipchou.sunshineboxiii.entity.local.UsersLocal
+import com.tipchou.sunshineboxiii.entity.local.UsersLocal_
 import com.tipchou.sunshineboxiii.support.App
 import io.objectbox.Box
 import io.objectbox.android.ObjectBoxLiveData
-import io.objectbox.query.Query
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -17,26 +15,26 @@ import javax.inject.Singleton
 @Singleton
 class DbDao @Inject constructor() {
 
-    fun getFirstUser(): ObjectBoxLiveData<UsersLocalPOJO> {
+    fun getFirstUser(): ObjectBoxLiveData<UsersLocal> {
         val boxStore = App.getBoxStore()
         if (boxStore == null) {
             //should not be here!!!!!!
             throw Exception("App.getBoxStore() get null!!!")
         } else {
-            val userBox: Box<UsersLocalPOJO> = boxStore.boxFor(UsersLocalPOJO::class.java)
-            return ObjectBoxLiveData(userBox.query().order(UsersLocalPOJO_.userId).build())
+            val userBox: Box<UsersLocal> = boxStore.boxFor(UsersLocal::class.java)
+            return ObjectBoxLiveData(userBox.query().order(UsersLocal_.userId).build())
         }
     }
 
-    fun saveUser(usersLocalPOJO: UsersLocalPOJO) {
+    fun saveUser(usersLocal: UsersLocal) {
         val boxStore = App.getBoxStore()
         if (boxStore == null) {
             //should not be here!!!!!!
             throw Exception("App.getBoxStore() get null!!!")
         } else {
-            val userBox = boxStore.boxFor(UsersLocalPOJO::class.java)
-            usersLocalPOJO.id = getObjectIdByUserId(usersLocalPOJO.userId)
-            userBox.put(usersLocalPOJO)
+            val userBox = boxStore.boxFor(UsersLocal::class.java)
+            usersLocal.id = getObjectIdByUserId(usersLocal.userId)
+            userBox.put(usersLocal)
         }
     }
 
@@ -46,9 +44,9 @@ class DbDao @Inject constructor() {
             //should not be here!!!!!!
             throw Exception("App.getBoxStore() get null!!!")
         } else {
-            val userBox = boxStore.boxFor(UsersLocalPOJO::class.java)
-            val usersLocalPOJO: UsersLocalPOJO? = userBox.query().equal(UsersLocalPOJO_.userId, userId).build().findUnique()
-            usersLocalPOJO?.id ?: 0
+            val userBox = boxStore.boxFor(UsersLocal::class.java)
+            val usersLocal: UsersLocal? = userBox.query().equal(UsersLocal_.userId, userId).build().findUnique()
+            usersLocal?.id ?: 0
         }
     }
 }

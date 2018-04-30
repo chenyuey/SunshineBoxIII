@@ -2,8 +2,8 @@ package com.tipchou.sunshineboxiii.ui.main
 
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MediatorLiveData
-import com.tipchou.sunshineboxiii.pojo.localpojo.UsersLocalPOJO
-import com.tipchou.sunshineboxiii.pojo.webpojo.UsersWebPOJO
+import com.tipchou.sunshineboxiii.entity.local.UsersLocal
+import com.tipchou.sunshineboxiii.entity.web.UsersWeb
 import com.tipchou.sunshineboxiii.support.DaggerMagicBox
 import com.tipchou.sunshineboxiii.support.GeneralDataRequest
 import com.tipchou.sunshineboxiii.support.Resource
@@ -28,10 +28,10 @@ class MainRepository @Inject constructor() {
         DaggerMagicBox.builder().build().poke(this)
     }
 
-    fun getFirstUser(): LiveData<Resource<UsersLocalPOJO>> {
-        return GeneralDataRequest<UsersLocalPOJO, UsersWebPOJO>(
+    fun getFirstUser(): LiveData<Resource<UsersLocal>> {
+        return GeneralDataRequest<UsersLocal, UsersWeb>(
                 loadFromDb = {
-                    val dbSource: MediatorLiveData<UsersLocalPOJO> = MediatorLiveData()
+                    val dbSource: MediatorLiveData<UsersLocal> = MediatorLiveData()
                     dbSource.addSource(dbDao.getFirstUser()) {
                         if (it?.size == 0) {
                             dbSource.value = null
@@ -50,9 +50,9 @@ class MainRepository @Inject constructor() {
                     val userName = it?.user_name
                     if (userId == null || userName == null) {
                         //should not be here
-                        throw Exception("UsersWebPOJO's userId or userName is null!!!")
+                        throw Exception("UsersWeb's userId or userName is null!!!")
                     } else {
-                        val usersLocalPOJO = UsersLocalPOJO(userId = userId, userName = userName)
+                        val usersLocalPOJO = UsersLocal(userId = userId, userName = userName)
                         dbDao.saveUser(usersLocalPOJO)
                     }
                 }

@@ -2,7 +2,7 @@ package com.tipchou.sunshineboxiii.support
 
 import android.app.Application
 import com.avos.avoscloud.AVOSCloud
-import com.tipchou.sunshineboxiii.pojo.localpojo.MyObjectBox
+import com.tipchou.sunshineboxiii.entity.local.MyObjectBox
 import io.objectbox.BoxStore
 
 /**
