@@ -1,3 +1,78 @@
 <resources>
-    <string name="app_name">SunshineBoxIII</string>
+    <string name="app_name">阳光盒子</string>
+
+    <!--BaseActivity and BaseFragment-->
+    <string name="base_string1">服务器错误，请稍后再试</string>
+    <string name="base_string2">001：数据解析错误</string>
+    <string name="base_string3">401：服务器系统错误</string>
+    <string name="base_string4">402：请求参数错误</string>
+    <string name="base_string5">203：未登录</string>
+    <string name="base_string6">网络连接失败</string>
+    <string name="base_string7">网络连接失败，请检查您的网络设置</string>
+
+    <!--WelcomeActivity-->
+    <string name="welcome_act_string1">欢迎来到</string>
+    <string name="welcome_act_string3">阳光盒子</string>
+    <string name="welcome_act_string2">我们致力于用科技填补城乡教育鸿沟</string>
+    <string name="welcome_act_string4">点击激活</string>
+
+    <!--PhoneNumberVerifyActivity-->
+    <string name="phone_number_verify_act_string1">请输入您的手机号</string>
+    <string name="phone_number_verify_act_string2">输入手机号</string>
+    <string name="phone_number_verify_act_string3">手机号</string>
+    <string name="phone_number_verify_act_string4">再次发送</string>
+    <string name="phone_number_verify_act_string5">请输入正确的手机号码</string>
+    <string name="phone_number_verify_act_string6">请输入正确的验证码</string>
+    <string name="phone_number_verify_act_string7">验证码</string>
+    <string name="phone_number_verify_act_string8">下一步</string>
+    <string name="phone_number_verify_act_string9">发送验证码</string>
+    <string name="phone_number_verify_act_string10">请输入手机验证码</string>
+    <string name="phone_number_verify_act_string11">返回</string>
+
+    <!--PhoneNumberVerifyActivity-->
+    <string name="activation_code_verify_act_string1">返回</string>
+    <string name="activation_code_verify_act_string2">输入激活码</string>
+    <string name="activation_code_verify_act_string3">请输入该手机号对应的激活码</string>
+    <string name="activation_code_verify_act_string4">激活码</string>
+
+    <!--IndexActivity-->
+    <string name="index_act_string1">已下载课程</string>
+    <string name="index_act_string2">反馈问题</string>
+    <string name="index_act_string3">重置软件</string>
+    <string name="index_act_string4">登出</string>
+    <string name="index_act_string7">阳光盒子</string>
+    <string name="index_act_string8">抽屉菜单开关</string>
+    <string name="index_act_string9">科目</string>
+    <string name="index_act_string10">儿歌</string>
+    <string name="index_act_string11">音乐</string>
+    <string name="index_act_string12">阅读</string>
+    <string name="index_act_string13">游戏</string>
+    <string name="index_act_string14">领域</string>
+    <string name="index_act_string15">健康</string>
+    <string name="index_act_string16">语言</string>
+    <string name="index_act_string17">社会</string>
+    <string name="index_act_string18">科学</string>
+    <string name="index_act_string19">艺术</string>
+
+    <!--IndexDrawer-->
+    <string name="index_drawer_string1">加入教师社区</string>
+    <string name="index_drawer_string2">扫描下方二维码加入教师社区</string>
+    <string name="index_drawer_string3">二维码</string>
+
+    <!--IndexFragment-->
+    <string name="index_fgm_string1">课程</string>
+
+    <!--CourseActivity-->
+    <string name="course_act_string1">返回上一个界面</string>
+    <string name="course_act_string2">提供</string>
+    <string name="course_act_string3">教学文件</string>
+    <string name="course_act_string4">作者</string>
+
+    <!--CourseItem-->
+    <string name="course_act_item_string1">课程类别图片</string>
+    <string name="album_act_string1">下一图</string>
+    <string name="album_act_string2">上一图</string>
+    <string name="album_act_string3">关闭</string>
+    <string name="index_act_string20">刷新</string>
+
 </resources>

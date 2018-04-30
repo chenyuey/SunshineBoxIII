@@ -1,12 +1,15 @@
 package com.tipchou.sunshineboxiii.ui.main
 
 import android.annotation.SuppressLint
+import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.util.Log
 import com.tipchou.sunshineboxiii.R
 import com.tipchou.sunshineboxiii.R.id.main_act_textview1
+import com.tipchou.sunshineboxiii.pojo.localpojo.UsersLocalPOJO
+import com.tipchou.sunshineboxiii.support.Resource
 import com.tipchou.sunshineboxiii.ui.base.BaseActivity
 import kotlinx.android.synthetic.main.activity_main.*
 
@@ -23,6 +26,11 @@ class MainActivity : BaseActivity() {
             main_act_textview1.text = "\"${it?.status.toString()} : ${it?.data?.userName} message: ${it?.message}\""
             Log.e("FUCK", "\"${it?.status.toString()} : ${it?.data?.userName} message: ${it?.message}\"")
         })
+
+        main_act_textview1.setOnClickListener {
+            Log.e("Fuck", "onClick")
+            viewModel?.loadUser()
+        }
     }
 
     override fun resume() {
