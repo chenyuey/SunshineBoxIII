@@ -3,6 +3,7 @@ package com.tipchou.sunshineboxiii.ui.main
 import android.arch.lifecycle.*
 import com.tipchou.sunshineboxiii.pojo.localpojo.UsersLocalPOJO
 import com.tipchou.sunshineboxiii.support.DaggerMagicBox
+import com.tipchou.sunshineboxiii.support.GeneralObserver
 import com.tipchou.sunshineboxiii.support.Resource
 import javax.inject.Inject
 
@@ -35,23 +36,6 @@ class MainViewModel : ViewModel() {
         myObserver?.load()
     }
 
-    class GeneralObserver<T> constructor(val data: MutableLiveData<T>, private val request: () -> LiveData<T>) : Observer<T> {
 
-        override fun onChanged(t: T?) {
-            data.value = t
-        }
-
-        private var observedData: LiveData<T>? = null
-
-        fun load() {
-            if (observedData != null) {
-                observedData?.removeObserver(this)
-                observedData = null
-            }
-            observedData = request()
-            observedData?.observeForever(this)
-        }
-
-    }
 
 }
