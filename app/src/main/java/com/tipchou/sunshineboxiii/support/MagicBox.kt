@@ -1,7 +1,7 @@
 package com.tipchou.sunshineboxiii.support
 
-import com.tipchou.sunshineboxiii.ui.main.TestRepository
-import com.tipchou.sunshineboxiii.ui.main.TestViewModel
+import com.tipchou.sunshineboxiii.ui.test.TestRepository
+import com.tipchou.sunshineboxiii.ui.test.TestViewModel
 import dagger.Component
 import javax.inject.Singleton
 

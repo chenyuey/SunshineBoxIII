@@ -1,9 +1,7 @@
 package com.tipchou.sunshineboxiii.ui.index
 
-import android.content.pm.ActivityInfo
 import android.os.Bundle
 import com.tipchou.sunshineboxiii.R
-
 import com.tipchou.sunshineboxiii.ui.base.BaseActivity
 
 /**

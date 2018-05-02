@@ -1,4 +1,4 @@
-package com.tipchou.sunshineboxiii.ui.main
+package com.tipchou.sunshineboxiii.ui.test
 
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MediatorLiveData

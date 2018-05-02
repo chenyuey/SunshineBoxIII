@@ -1,6 +1,7 @@
-package com.tipchou.sunshineboxiii.ui.main
+package com.tipchou.sunshineboxiii.ui.test
 
 import android.arch.lifecycle.*
+import android.support.v7.widget.RecyclerView
 import com.tipchou.sunshineboxiii.entity.local.TestLocal
 import com.tipchou.sunshineboxiii.support.DaggerMagicBox
 import com.tipchou.sunshineboxiii.support.GeneralObserver
