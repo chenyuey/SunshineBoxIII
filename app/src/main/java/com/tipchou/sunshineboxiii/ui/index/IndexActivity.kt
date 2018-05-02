@@ -1,10 +1,15 @@
 package com.tipchou.sunshineboxiii.ui.index
 
+import android.animation.ObjectAnimator
+import android.animation.ValueAnimator
 import android.graphics.Color
 import android.os.Bundle
 import android.support.v4.view.GravityCompat
 import android.support.v4.widget.DrawerLayout
+import android.util.Log
 import android.view.View
+import android.view.animation.LinearInterpolator
+import android.widget.ImageView
 import com.tipchou.sunshineboxiii.R
 import com.tipchou.sunshineboxiii.ui.base.BaseActivity
 import kotlinx.android.synthetic.main.activity_index.*
@@ -15,6 +20,8 @@ import kotlinx.android.synthetic.main.activity_index_content.*
  * Perfect Code
  */
 class IndexActivity : BaseActivity() {
+
+    private var refreshAnimator: ObjectAnimator? = null
 
     private fun setUpClickEvent() {
         //drawer layout
@@ -73,13 +80,9 @@ class IndexActivity : BaseActivity() {
             index_act_textview9.setTextColor(Color.parseColor("#f09038"))
             index_act_imageview9.background = getDrawable(R.drawable.ic_art_orange)
         }
-    }
-
-    override fun layoutId(): Int = R.layout.activity_index
-
-    override fun created(bundle: Bundle?) {
-        setUpClickEvent()
-        setUpAnimator()
+        //refresh button
+        index_act_view1.setOnClickListener {
+        }
     }
 
     private fun setUpAnimator() {
@@ -102,6 +105,19 @@ class IndexActivity : BaseActivity() {
 
             }
         })
+        //refresh layout animator
+        refreshAnimator = getRefreshButtonAnimator(index_act_imageview10)
+    }
+
+    override fun layoutId(): Int = R.layout.activity_index
+
+    override fun created(bundle: Bundle?) {
+        setUpClickEvent()
+        setUpAnimator()
+    }
+
+    override fun resume() {
+
     }
 
     private fun makeEveryBodyGray() {
@@ -151,8 +167,49 @@ class IndexActivity : BaseActivity() {
         }
     }
 
-    override fun resume() {
-
+    private fun getRefreshButtonAnimator(imageView: ImageView): ObjectAnimator {
+        val objectAnimator = ObjectAnimator.ofFloat<View>(imageView, View.ROTATION, 0F, 360F)
+        objectAnimator.repeatCount = ValueAnimator.INFINITE
+        objectAnimator.duration = 1000
+        objectAnimator.interpolator = LinearInterpolator()
+        return objectAnimator
     }
 
+    private fun startRefresh() {
+        index_act_view1.isEnabled = false
+        index_act_textview11.setTextColor(Color.parseColor("#999999"))
+        index_act_imageview10.background = getDrawable(R.drawable.refresh_69)
+        startRotatingRefreshButton()
+    }
+
+    private fun stopRefresh() {
+        index_act_view1.isEnabled = true
+        index_act_textview11.setTextColor(Color.parseColor("#333333"))
+        index_act_imageview10.background = getDrawable(R.drawable.refresh)
+        stopRotatingRefreshButton()
+    }
+
+    private fun startRotatingRefreshButton() {
+        val animator = refreshAnimator
+        if (animator == null) {
+            //should not be here
+            Log.e(localClassName, "startRotating():animator==null")
+        } else {
+            if (animator.isPaused) {
+                animator.resume()
+            } else {
+                animator.start()
+            }
+        }
+    }
+
+    private fun stopRotatingRefreshButton() {
+        val animator = refreshAnimator
+        if (animator == null) {
+            //should not be here
+            Log.e(localClassName, "stopRotating():animator==null")
+        } else {
+            animator.pause()
+        }
+    }
 }
