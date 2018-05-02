@@ -355,8 +355,8 @@
             </LinearLayout>
         </RelativeLayout>
 
-        <View
-            android:id="@+id/index_act_viewpager"
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/index_act_recyclerview"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="607" />
