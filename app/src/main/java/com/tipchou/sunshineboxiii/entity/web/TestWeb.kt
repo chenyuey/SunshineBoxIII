@@ -7,6 +7,6 @@ import com.avos.avoscloud.AVObject
  * Perfect Code
  */
 class TestWeb constructor(avObject: AVObject?) {
-    val user_id: String? = avObject?.getString("user_id")
-    val user_name: String? = avObject?.getString("user_name")
+    val userId: String? = avObject?.getString("userId")
+    val userName: String? = avObject?.getString("userName")
 }

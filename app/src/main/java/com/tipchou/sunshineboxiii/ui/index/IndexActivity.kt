@@ -2,7 +2,15 @@ package com.tipchou.sunshineboxiii.ui.index
 
 import android.animation.ObjectAnimator
 import android.animation.ValueAnimator
+import android.arch.lifecycle.Observer
+import android.arch.lifecycle.ViewModelProviders
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
 import android.graphics.Color
+import android.net.ConnectivityManager
+import android.net.NetworkInfo
 import android.os.Bundle
 import android.support.v4.view.GravityCompat
 import android.support.v4.widget.DrawerLayout
@@ -11,18 +19,22 @@ import android.view.View
 import android.view.animation.LinearInterpolator
 import android.widget.ImageView
 import com.tipchou.sunshineboxiii.R
+import com.tipchou.sunshineboxiii.R.id.*
 import com.tipchou.sunshineboxiii.ui.base.BaseActivity
 import kotlinx.android.synthetic.main.activity_index.*
 import kotlinx.android.synthetic.main.activity_index_content.*
+
 
 /**
  * Created by 邵励治 on 2018/4/29.
  * Perfect Code
  */
 class IndexActivity : BaseActivity() {
+    private var viewModel: IndexViewModel? = null
 
     private var refreshAnimator: ObjectAnimator? = null
 
+    //-------------------------------onCreate Method------------------------------------------------
     private fun setUpClickEvent() {
         //drawer layout
         index_act_imagebuttton1.setOnClickListener {
@@ -109,17 +121,74 @@ class IndexActivity : BaseActivity() {
         refreshAnimator = getRefreshButtonAnimator(index_act_imageview10)
     }
 
+    private fun setUpNetWorkChangeBroadcast() {
+        val intentFilter = IntentFilter()
+        intentFilter.addAction("android.net.conn.CONNECTIVITY_CHANGE")
+        val netWorkChangeBroadcast = NetworkChangeBroadcast()
+        registerReceiver(netWorkChangeBroadcast, intentFilter)
+    }
+
+    private fun setUpViewModel() {
+        viewModel = ViewModelProviders.of(this).get(IndexViewModel::class.java)
+        viewModel?.getNetStatus()?.observe(this, Observer {
+            if (it == null) {
+                //should not be here
+            } else {
+                if (it) {
+                    index_act_textview10.text = "阳光盒子"
+                } else {
+                    index_act_textview10.text = "阳光盒子（离线模式）"
+                }
+            }
+        })
+    }
+
+    //--------------------------------Main Method---------------------------------------------------
     override fun layoutId(): Int = R.layout.activity_index
 
     override fun created(bundle: Bundle?) {
         setUpClickEvent()
         setUpAnimator()
+        setUpNetWorkChangeBroadcast()
+        setUpViewModel()
     }
 
     override fun resume() {
-
+        viewModel?.setNetStatus(getNetworkState(this))
     }
 
+    //--------------------------------Network Status------------------------------------------------
+    fun isConnected(context: Context): Boolean {
+        val cm = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val activeNetwork: NetworkInfo?
+        activeNetwork = cm.activeNetworkInfo
+        return activeNetwork != null && activeNetwork.isConnectedOrConnecting
+    }
+
+    private inner class NetworkChangeBroadcast : BroadcastReceiver() {
+        override fun onReceive(context: Context, intent: Intent) {
+            val success: Boolean = isConnected(this@IndexActivity)
+            viewModel?.setNetStatus(success)
+        }
+    }
+
+    private fun getNetworkState(context: Context): Boolean {
+        // 获取手机所有连接管理对象（包括对wi-fi,net等连接的管理）
+        val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        // 获取NetworkInfo对象
+        val lotOfNetworkInfo = connectivityManager.allNetworkInfo
+        // 遍历每一个对象
+        for (networkInfo in lotOfNetworkInfo) {
+            if (networkInfo.state == NetworkInfo.State.CONNECTED) {
+                // 网络状态可用
+                return true
+            }
+        }
+        // 没有可用的网络
+        return false
+    }
+
+    //---------------------------------Subject/Tag Button-------------------------------------------
     private fun makeEveryBodyGray() {
         if (index_act_textview1.currentTextColor == Color.parseColor("#f09038")) {
             index_act_textview1.setTextColor(Color.parseColor("#666666"))
@@ -167,6 +236,7 @@ class IndexActivity : BaseActivity() {
         }
     }
 
+    //---------------------------------Refresh Button-----------------------------------------------
     private fun getRefreshButtonAnimator(imageView: ImageView): ObjectAnimator {
         val objectAnimator = ObjectAnimator.ofFloat<View>(imageView, View.ROTATION, 0F, 360F)
         objectAnimator.repeatCount = ValueAnimator.INFINITE

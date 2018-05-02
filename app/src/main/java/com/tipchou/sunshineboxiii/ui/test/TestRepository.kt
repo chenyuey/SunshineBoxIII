@@ -25,37 +25,36 @@ class TestRepository @Inject constructor() {
     lateinit var dbDao: DbDao
 
     init {
-        DaggerMagicBox.builder().build().poke(this)
+        DaggerMagicBox.create().poke(this)
     }
 
-    fun getFirstUser(): LiveData<Resource<TestLocal>> {
-        return GeneralDataRequest<TestLocal, TestWeb>(
-                loadFromDb = {
-                    val dbSource: MediatorLiveData<TestLocal> = MediatorLiveData()
-                    dbSource.addSource(dbDao.getFirstUser()) {
-                        if (it?.size == 0) {
-                            dbSource.value = null
-                        } else {
-                            dbSource.value = it?.get(0)
-                        }
-                    }
-                    dbSource
-                },
-                shouldFetch = { true },
-                createCall = {
-                    webDao.getFirstUser()
-                },
-                saveCallResult = {
-                    val userId = it?.user_id
-                    val userName = it?.user_name
-                    if (userId == null || userName == null) {
-                        //should not be here
-                        throw Exception("TestWeb's userId or userName is null!!!")
+    fun getFirstUser(): LiveData<Resource<TestLocal>> = GeneralDataRequest<TestLocal, TestWeb>(
+            loadFromDb = {
+                val dbSource: MediatorLiveData<TestLocal> = MediatorLiveData()
+                dbSource.addSource(dbDao.getFirstTest()) {
+                    if (it?.size == 0) {
+                        dbSource.value = null
                     } else {
-                        val usersLocalPOJO = TestLocal(userId = userId, userName = userName)
-                        dbDao.saveUser(usersLocalPOJO)
+                        dbSource.value = it?.get(0)
                     }
                 }
-        ).getAsLiveData()
-    }
+                dbSource
+            },
+            shouldFetch = { true },
+            createCall = {
+                webDao.getFirstUser()
+            },
+            saveCallResult = {
+                val userId = it?.userId
+                val userName = it?.userName
+                if (userId == null || userName == null) {
+                    //should not be here
+                    throw Exception("TestWeb's userId or userName is null!!!")
+                } else {
+                    val usersLocalPOJO = TestLocal(userId = userId, userName = userName)
+                    dbDao.saveTest(usersLocalPOJO)
+                }
+            }
+    ).getAsLiveData()
+
 }

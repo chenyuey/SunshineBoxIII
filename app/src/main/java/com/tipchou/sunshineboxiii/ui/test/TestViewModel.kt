@@ -16,25 +16,23 @@ import javax.inject.Inject
 class TestViewModel : ViewModel() {
     @Inject
     lateinit var repository: TestRepository
+    private val user: MutableLiveData<Resource<TestLocal>> = MutableLiveData()
 
-    var myObserver: GeneralObserver<Resource<TestLocal>>? = null
+    private val myObserver: GeneralObserver<Resource<TestLocal>>
 
     init {
         DaggerMagicBox.create().poke(this)
+        myObserver = GeneralObserver(user) { repository.getFirstUser() }
     }
 
-    private val user: MutableLiveData<Resource<TestLocal>> = MediatorLiveData()
 
     fun getUser(): LiveData<Resource<TestLocal>> {
-        if (myObserver == null) {
-            myObserver = GeneralObserver(user) { repository.getFirstUser() }
-        }
         loadUser()
         return user
     }
 
     fun loadUser() {
-        myObserver?.load()
+        myObserver.load()
     }
 
 }
