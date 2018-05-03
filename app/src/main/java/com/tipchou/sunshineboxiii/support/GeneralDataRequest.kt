@@ -2,60 +2,71 @@ package com.tipchou.sunshineboxiii.support
 
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MediatorLiveData
+import android.net.Network
 import android.support.annotation.MainThread
 import android.util.Log
+import com.bumptech.glide.Glide.init
 
 /**
  * Created by 邵励治 on 2018/4/26.
  * Perfect Code
  */
-class GeneralDataRequest<ResultType, RequestType> @MainThread
+class GeneralDataRequest<Database, Network> @MainThread
 constructor(
-        loadFromDb: () -> LiveData<ResultType>,
-        shouldFetch: (data: ResultType?) -> Boolean,
-        createCall: () -> LiveData<ApiResponse<RequestType>>,
-        saveCallResult: (item: RequestType?) -> Unit
+        loadFromDb: () -> LiveData<List<Database>>,
+        shouldFetch: (data: List<Database>) -> Boolean,
+        createCall: () -> LiveData<ApiResponse<List<Network>>>,
+        saveCallResult: (item: List<Network>) -> Unit
 ) {
-    private val result = MediatorLiveData<Resource<ResultType>>()
+    private val result = MediatorLiveData<Resource<List<Database>>>()
 
     init {
         result.value = Resource.loading(null)
-        val dbSource: LiveData<ResultType> = loadFromDb()
+        val dbSource: LiveData<List<Database>> = loadFromDb()
         result.addSource(dbSource) { dbData ->
             result.removeSource(dbSource)
-            if (shouldFetch(dbData)) {
-                result.addSource(dbSource) {
-                    result.value = Resource.loading(it)
-                }
-                val netSource: LiveData<ApiResponse<RequestType>> = createCall()
-                result.addSource(netSource) { netData ->
-                    result.removeSource(netSource)
-                    result.removeSource(dbSource)
-                    if (netData != null) {
-                        if (netData.isSuccessful()) {
-                            saveCallResult(netData.getBody())
-                            result.addSource(loadFromDb()) {
-                                result.value = Resource.success(it)
-                            }
+            if (dbData == null) {
+                //should not be here
+            } else {
+                if (shouldFetch(dbData)) {
+                    result.addSource(dbSource) {
+                        result.value = Resource.loading(it)
+                    }
+                    val netSource: LiveData<ApiResponse<List<Network>>> = createCall()
+                    result.addSource(netSource) { netData ->
+                        result.removeSource(netSource)
+                        result.removeSource(dbSource)
+                        if (netData == null) {
+                            //should not be here!!!
                         } else {
-                            result.addSource(dbSource) {
-                                result.value = Resource.error(netData.getErrorMessage(), it)
+                            if (netData.isSuccessful()) {
+                                val body = netData.getBody()
+                                if (body == null) {
+                                    //should not be here!!!
+                                } else {
+                                    saveCallResult(body)
+                                    result.addSource(loadFromDb()) {
+                                        result.value = Resource.success(it)
+                                    }
+                                }
+                            } else {
+                                result.addSource(dbSource) {
+                                    result.value = Resource.error(netData.getErrorMessage(), it)
+                                }
                             }
                         }
-                    } else {
-                        //should not be here!!!
-                        Log.e("GeneralDataRequest", "netData is null!!!")
+                    }
+                } else {
+                    result.addSource(dbSource) {
+                        result.value = Resource.success(it)
                     }
                 }
-            } else {
-                result.addSource(dbSource) {
-                    result.value = Resource.success(it)
-                }
             }
+
         }
     }
 
-    fun getAsLiveData(): LiveData<Resource<ResultType>> {
+    fun getAsLiveData(): LiveData<Resource<List<Database>>> {
         return result
     }
 }
