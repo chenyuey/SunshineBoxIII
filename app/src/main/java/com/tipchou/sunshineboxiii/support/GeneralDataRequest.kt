@@ -2,10 +2,7 @@ package com.tipchou.sunshineboxiii.support
 
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MediatorLiveData
-import android.net.Network
 import android.support.annotation.MainThread
-import android.util.Log
-import com.bumptech.glide.Glide.init
 
 /**
  * Created by 邵励治 on 2018/4/26.
