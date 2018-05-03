@@ -3,6 +3,7 @@ package com.tipchou.sunshineboxiii.support
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MediatorLiveData
 import android.support.annotation.MainThread
+import android.util.Log
 
 /**
  * Created by 邵励治 on 2018/4/26.
@@ -41,6 +42,9 @@ constructor(
                                 result.value = Resource.error(netData.getErrorMessage(), it)
                             }
                         }
+                    } else {
+                        //should not be here!!!
+                        Log.e("GeneralDataRequest", "netData is null!!!")
                     }
                 }
             } else {

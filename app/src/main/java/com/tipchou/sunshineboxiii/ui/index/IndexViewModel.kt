@@ -44,7 +44,7 @@ class IndexViewModel : ViewModel() {
         netStatus.value = boolean
     }
 
-//    fun getUser(): LiveData<Resource<UserLocal>> {
+//    fun getTest(): LiveData<Resource<UserLocal>> {
 //        loadUser()
 //        return user
 //    }

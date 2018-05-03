@@ -15,7 +15,7 @@ import javax.inject.Singleton
 @Singleton
 class DbDao @Inject constructor() {
 
-    fun getFirstTest(): ObjectBoxLiveData<TestLocal> {
+    fun getTest(): ObjectBoxLiveData<TestLocal> {
         val boxStore = App.getBoxStore()
         if (boxStore == null) {
             //should not be here!!!!!!
@@ -26,15 +26,25 @@ class DbDao @Inject constructor() {
         }
     }
 
-    fun saveTest(testLocal: TestLocal) {
+    fun saveTest(testLocalList: List<TestLocal>) {
         val boxStore = App.getBoxStore()
         if (boxStore == null) {
             //should not be here!!!!!!
             throw Exception("App.getBoxStore() get null!!!")
         } else {
             val userBox = boxStore.boxFor(TestLocal::class.java)
-            testLocal.id = getTestObjectIdByUserId(testLocal.userId)
-            userBox.put(testLocal)
+            userBox.put(testLocalList)
+        }
+    }
+
+    fun removeTest(testLocalList: List<TestLocal>) {
+        val boxStore = App.getBoxStore()
+        if (boxStore == null) {
+            //should not be here!!!!!!
+            throw Exception("App.getBoxStore() get null!!!")
+        } else {
+            val userBox = boxStore.boxFor(TestLocal::class.java)
+            userBox.remove(testLocalList)
         }
     }
 

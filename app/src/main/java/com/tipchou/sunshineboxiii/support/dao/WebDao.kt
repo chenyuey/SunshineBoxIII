@@ -2,6 +2,7 @@ package com.tipchou.sunshineboxiii.support.dao
 
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
+import android.util.Log
 import com.avos.avoscloud.AVException
 import com.avos.avoscloud.AVObject
 import com.avos.avoscloud.AVQuery
@@ -18,13 +19,18 @@ import javax.inject.Singleton
 
 @Singleton
 class WebDao @Inject constructor() {
-    fun getFirstUser(): LiveData<ApiResponse<TestWeb>> {
-        val data = MutableLiveData<ApiResponse<TestWeb>>()
+    fun getTest(): LiveData<ApiResponse<List<TestWeb>>> {
+        val data = MutableLiveData<ApiResponse<List<TestWeb>>>()
         val query = AVQuery<AVObject>("Users")
         query.findInBackground(object : FindCallback<AVObject>() {
             override fun done(response: MutableList<AVObject>?, exception: AVException?) {
-                val usersWebPOJO = TestWeb(response?.get(0))
-                data.value = ApiResponse(usersWebPOJO, exception)
+                val result = ArrayList<TestWeb>()
+                if (response != null) {
+                    for (item in response) {
+                        result.add(TestWeb(item))
+                    }
+                }
+                data.value = ApiResponse(result, exception)
             }
         })
         return data

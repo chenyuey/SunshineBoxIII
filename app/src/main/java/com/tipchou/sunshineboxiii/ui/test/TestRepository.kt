@@ -2,13 +2,17 @@ package com.tipchou.sunshineboxiii.ui.test
 
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MediatorLiveData
+import android.arch.lifecycle.Observer
+import android.util.Log
+import com.tencent.open.BrowserAuth.a
 import com.tipchou.sunshineboxiii.entity.local.TestLocal
+import com.tipchou.sunshineboxiii.entity.local.TestLocal_.userId
+import com.tipchou.sunshineboxiii.entity.local.TestLocal_.userName
 import com.tipchou.sunshineboxiii.entity.web.TestWeb
-import com.tipchou.sunshineboxiii.support.DaggerMagicBox
-import com.tipchou.sunshineboxiii.support.GeneralDataRequest
-import com.tipchou.sunshineboxiii.support.Resource
+import com.tipchou.sunshineboxiii.support.*
 import com.tipchou.sunshineboxiii.support.dao.DbDao
 import com.tipchou.sunshineboxiii.support.dao.WebDao
+import io.objectbox.android.ObjectBoxLiveData
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -18,6 +22,7 @@ import javax.inject.Singleton
  */
 @Singleton
 class TestRepository @Inject constructor() {
+
     @Inject
     lateinit var webDao: WebDao
 
@@ -28,31 +33,36 @@ class TestRepository @Inject constructor() {
         DaggerMagicBox.create().poke(this)
     }
 
-    fun getFirstUser(): LiveData<Resource<TestLocal>> = GeneralDataRequest<TestLocal, TestWeb>(
+    fun getUser(): LiveData<Resource<List<TestLocal>>> = GeneralDataRequest<List<TestLocal>, List<TestWeb>>(
             loadFromDb = {
-                val dbSource: MediatorLiveData<TestLocal> = MediatorLiveData()
-                dbSource.addSource(dbDao.getFirstTest()) {
-                    if (it?.size == 0) {
-                        dbSource.value = null
-                    } else {
-                        dbSource.value = it?.get(0)
-                    }
+                val dbSource: MediatorLiveData<List<TestLocal>> = MediatorLiveData()
+                dbSource.addSource(dbDao.getTest()) {
+                    dbSource.value = it
                 }
                 dbSource
             },
             shouldFetch = { true },
-            createCall = {
-                webDao.getFirstUser()
-            },
+            createCall = { webDao.getTest() },
             saveCallResult = {
-                val userId = it?.userId
-                val userName = it?.userName
-                if (userId == null || userName == null) {
-                    //should not be here
-                    throw Exception("TestWeb's userId or userName is null!!!")
+                if (it != null) {
+                    GeneralSaveCallResult(
+                            netData = it,
+                            requestDb = { dbDao.getTest() },
+                            deleteDb = { dbDao.removeTest(it) },
+                            buildSavedList = {
+                                val databaseList = ArrayList<TestLocal>()
+                                for (item in it) {
+                                    val dbData = TestLocal(userId = item.userId, userName = item.userName)
+                                    databaseList.add(dbData)
+                                }
+                                databaseList
+                            },
+                            addDb = {
+                                dbDao.saveTest(it)
+                            }
+                    )
                 } else {
-                    val usersLocalPOJO = TestLocal(userId = userId, userName = userName)
-                    dbDao.saveTest(usersLocalPOJO)
+                    //should not be here!!!
                 }
             }
     ).getAsLiveData()

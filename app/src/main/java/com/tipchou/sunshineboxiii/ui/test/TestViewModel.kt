@@ -1,7 +1,6 @@
 package com.tipchou.sunshineboxiii.ui.test
 
 import android.arch.lifecycle.*
-import android.support.v7.widget.RecyclerView
 import com.tipchou.sunshineboxiii.entity.local.TestLocal
 import com.tipchou.sunshineboxiii.support.DaggerMagicBox
 import com.tipchou.sunshineboxiii.support.GeneralObserver
@@ -16,17 +15,17 @@ import javax.inject.Inject
 class TestViewModel : ViewModel() {
     @Inject
     lateinit var repository: TestRepository
-    private val user: MutableLiveData<Resource<TestLocal>> = MutableLiveData()
+    private val user: MutableLiveData<Resource<List<TestLocal>>> = MutableLiveData()
 
-    private val myObserver: GeneralObserver<Resource<TestLocal>>
+    private val myObserver: GeneralObserver<Resource<List<TestLocal>>>
 
     init {
         DaggerMagicBox.create().poke(this)
-        myObserver = GeneralObserver(user) { repository.getFirstUser() }
+        myObserver = GeneralObserver(user) { repository.getUser() }
     }
 
 
-    fun getUser(): LiveData<Resource<TestLocal>> {
+    fun getUser(): LiveData<Resource<List<TestLocal>>> {
         loadUser()
         return user
     }

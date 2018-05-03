@@ -6,6 +6,7 @@ import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.util.Log
 import com.tipchou.sunshineboxiii.R
+
 import com.tipchou.sunshineboxiii.ui.base.BaseActivity
 import kotlinx.android.synthetic.main.activity_test.*
 
@@ -19,8 +20,19 @@ class TestActivity : BaseActivity() {
         viewModel = ViewModelProviders.of(this).get(TestViewModel::class.java)
 
         viewModel?.getUser()?.observe(this, Observer {
-            main_act_textview1.text = "\"${it?.status.toString()} : ${it?.data?.userName} message: ${it?.message}\""
-            Log.e("FUCK", "\"${it?.status.toString()} : ${it?.data?.userName} message: ${it?.message}\"")
+            Log.e("Fuck", "Status: ${it?.status.toString()}; Message: ${it?.message}; Size: ${it?.data?.size}")
+            if (it == null) {
+
+            } else {
+                if (it.data == null) {
+
+                } else {
+                    main_act_textview1.text = ""
+                    for (item in it.data) {
+                        main_act_textview1.text = "${main_act_textview1.text}\n${item.userName}"
+                    }
+                }
+            }
         })
 
         main_act_textview1.setOnClickListener {
