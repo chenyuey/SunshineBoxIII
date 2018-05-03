@@ -1,18 +1,14 @@
 package com.tipchou.sunshineboxiii.ui.test
 
 import android.arch.lifecycle.LiveData
-import android.arch.lifecycle.MediatorLiveData
-import android.arch.lifecycle.Observer
-import android.util.Log
-import com.tencent.open.BrowserAuth.a
 import com.tipchou.sunshineboxiii.entity.local.TestLocal
-import com.tipchou.sunshineboxiii.entity.local.TestLocal_.userId
-import com.tipchou.sunshineboxiii.entity.local.TestLocal_.userName
 import com.tipchou.sunshineboxiii.entity.web.TestWeb
-import com.tipchou.sunshineboxiii.support.*
+import com.tipchou.sunshineboxiii.support.DaggerMagicBox
+import com.tipchou.sunshineboxiii.support.GeneralDataRequest
+import com.tipchou.sunshineboxiii.support.GeneralSaveCallResult
+import com.tipchou.sunshineboxiii.support.Resource
 import com.tipchou.sunshineboxiii.support.dao.DbDao
 import com.tipchou.sunshineboxiii.support.dao.WebDao
-import io.objectbox.android.ObjectBoxLiveData
 import javax.inject.Inject
 import javax.inject.Singleton
 
