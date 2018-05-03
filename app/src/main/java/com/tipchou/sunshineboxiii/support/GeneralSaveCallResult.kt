@@ -1,10 +1,7 @@
 package com.tipchou.sunshineboxiii.support
 
-import com.bumptech.glide.Glide.init
 import android.arch.lifecycle.Observer
 import io.objectbox.android.ObjectBoxLiveData
-import java.util.*
-import kotlin.collections.ArrayList
 
 /**
  * Created by 邵励治 on 2018/5/3.
