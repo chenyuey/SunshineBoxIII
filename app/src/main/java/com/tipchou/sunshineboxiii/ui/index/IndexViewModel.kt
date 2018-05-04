@@ -9,6 +9,7 @@ import com.tipchou.sunshineboxiii.entity.local.LessonLocal
 import com.tipchou.sunshineboxiii.entity.local.UserLocal
 import com.tipchou.sunshineboxiii.support.DaggerMagicBox
 import com.tipchou.sunshineboxiii.support.GeneralObserver
+import com.tipchou.sunshineboxiii.support.LessonType
 import com.tipchou.sunshineboxiii.support.Resource
 import javax.inject.Inject
 
@@ -25,6 +26,7 @@ class IndexViewModel : ViewModel() {
     private val lesson: MutableLiveData<Resource<LessonLocal>> = MutableLiveData()
     private val downloadedLesson: MutableLiveData<Resource<DownloadLocal>> = MutableLiveData()
     private val netStatus: MutableLiveData<Boolean> = MutableLiveData()
+    private val lessonType: MutableLiveData<LessonType> = MutableLiveData()
 
     //data observer
 //    private val userObserver: GeneralObserver<Resource<UserLocal>>
@@ -33,9 +35,16 @@ class IndexViewModel : ViewModel() {
 
     init {
         DaggerMagicBox.create().poke(this)
+        lessonType.value = LessonType.NURSERY
 //        userObserver = GeneralObserver(user) {}
 //        lessonObserver = GeneralObserver(lesson) {}
 //        downloadedLessonObserver = GeneralObserver(downloadedLesson) {}
+    }
+
+    fun getLessonType() = lessonType
+
+    fun setLessonType(lessonType: LessonType) {
+        this.lessonType.value = lessonType
     }
 
     fun getNetStatus() = netStatus

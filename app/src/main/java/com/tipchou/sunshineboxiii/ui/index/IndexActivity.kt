@@ -12,6 +12,7 @@ import android.graphics.Color
 import android.net.ConnectivityManager
 import android.net.NetworkInfo
 import android.os.Bundle
+import android.support.design.widget.Snackbar
 import android.support.v4.view.GravityCompat
 import android.support.v4.widget.DrawerLayout
 import android.util.Log
@@ -19,6 +20,8 @@ import android.view.View
 import android.view.animation.LinearInterpolator
 import android.widget.ImageView
 import com.tipchou.sunshineboxiii.R
+import com.tipchou.sunshineboxiii.R.id.*
+import com.tipchou.sunshineboxiii.support.LessonType
 import com.tipchou.sunshineboxiii.ui.base.BaseActivity
 import kotlinx.android.synthetic.main.activity_index.*
 import kotlinx.android.synthetic.main.activity_index_content.*
@@ -46,50 +49,32 @@ class IndexActivity : BaseActivity() {
         }
         //subject button
         index_act_linearlayout1.setOnClickListener {
-            makeEveryBodyGray()
-            index_act_textview1.setTextColor(Color.parseColor("#f09038"))
-            index_act_imageview1.background = getDrawable(R.drawable.ic_nursery_orange)
+            viewModel?.setLessonType(LessonType.NURSERY)
         }
         index_act_linearlayout2.setOnClickListener {
-            makeEveryBodyGray()
-            index_act_textview2.setTextColor(Color.parseColor("#f09038"))
-            index_act_imageview2.background = getDrawable(R.drawable.ic_music_orange)
+            viewModel?.setLessonType(LessonType.MUSIC)
         }
         index_act_linearlayout3.setOnClickListener {
-            makeEveryBodyGray()
-            index_act_textview3.setTextColor(Color.parseColor("#f09038"))
-            index_act_imageview3.background = getDrawable(R.drawable.ic_reading_orange)
+            viewModel?.setLessonType(LessonType.READING)
         }
         index_act_linearlayout4.setOnClickListener {
-            makeEveryBodyGray()
-            index_act_textview4.setTextColor(Color.parseColor("#f09038"))
-            index_act_imageview4.background = getDrawable(R.drawable.ic_game_orange)
+            viewModel?.setLessonType(LessonType.GAME)
         }
         //tag button
         index_act_linearlayout5.setOnClickListener {
-            makeEveryBodyGray()
-            index_act_textview5.setTextColor(Color.parseColor("#f09038"))
-            index_act_imageview5.background = getDrawable(R.drawable.ic_health_orange)
+            viewModel?.setLessonType(LessonType.HEALTH)
         }
         index_act_linearlayout6.setOnClickListener {
-            makeEveryBodyGray()
-            index_act_textview6.setTextColor(Color.parseColor("#f09038"))
-            index_act_imageview6.background = getDrawable(R.drawable.ic_language_orange)
+            viewModel?.setLessonType(LessonType.LANGUAGE)
         }
         index_act_linearlayout7.setOnClickListener {
-            makeEveryBodyGray()
-            index_act_textview7.setTextColor(Color.parseColor("#f09038"))
-            index_act_imageview7.background = getDrawable(R.drawable.ic_social_orange)
+            viewModel?.setLessonType(LessonType.SOCIAL)
         }
         index_act_linearlayout8.setOnClickListener {
-            makeEveryBodyGray()
-            index_act_textview8.setTextColor(Color.parseColor("#f09038"))
-            index_act_imageview8.background = getDrawable(R.drawable.ic_science_orange)
+            viewModel?.setLessonType(LessonType.SCIENCE)
         }
         index_act_linearlayout9.setOnClickListener {
-            makeEveryBodyGray()
-            index_act_textview9.setTextColor(Color.parseColor("#f09038"))
-            index_act_imageview9.background = getDrawable(R.drawable.ic_art_orange)
+            viewModel?.setLessonType(LessonType.ART)
         }
         //refresh button
         index_act_view1.setOnClickListener {
@@ -140,6 +125,60 @@ class IndexActivity : BaseActivity() {
                 }
             }
         })
+        viewModel?.getLessonType()?.observe(this, Observer {
+            when (it) {
+                LessonType.NURSERY -> {
+                    makeEveryBodyGray()
+                    index_act_textview1.setTextColor(Color.parseColor("#f09038"))
+                    index_act_imageview1.background = getDrawable(R.drawable.ic_nursery_orange)
+                }
+                LessonType.MUSIC -> {
+                    makeEveryBodyGray()
+                    index_act_textview2.setTextColor(Color.parseColor("#f09038"))
+                    index_act_imageview2.background = getDrawable(R.drawable.ic_music_orange)
+
+                }
+                LessonType.READING -> {
+                    makeEveryBodyGray()
+                    index_act_textview3.setTextColor(Color.parseColor("#f09038"))
+                    index_act_imageview3.background = getDrawable(R.drawable.ic_reading_orange)
+
+                }
+                LessonType.GAME -> {
+                    makeEveryBodyGray()
+                    index_act_textview4.setTextColor(Color.parseColor("#f09038"))
+                    index_act_imageview4.background = getDrawable(R.drawable.ic_game_orange)
+
+                }
+                LessonType.HEALTH -> {
+                    makeEveryBodyGray()
+                    index_act_textview5.setTextColor(Color.parseColor("#f09038"))
+                    index_act_imageview5.background = getDrawable(R.drawable.ic_health_orange)
+                }
+                LessonType.LANGUAGE -> {
+                    makeEveryBodyGray()
+                    index_act_textview6.setTextColor(Color.parseColor("#f09038"))
+                    index_act_imageview6.background = getDrawable(R.drawable.ic_language_orange)
+                }
+                LessonType.SOCIAL -> {
+                    makeEveryBodyGray()
+                    index_act_textview7.setTextColor(Color.parseColor("#f09038"))
+                    index_act_imageview7.background = getDrawable(R.drawable.ic_social_orange)
+
+                }
+                LessonType.SCIENCE -> {
+                    makeEveryBodyGray()
+                    index_act_textview8.setTextColor(Color.parseColor("#f09038"))
+                    index_act_imageview8.background = getDrawable(R.drawable.ic_science_orange)
+                }
+                LessonType.ART -> {
+                    makeEveryBodyGray()
+                    index_act_textview9.setTextColor(Color.parseColor("#f09038"))
+                    index_act_imageview9.background = getDrawable(R.drawable.ic_art_orange)
+
+                }
+            }
+        })
     }
 
     //--------------------------------Main Method---------------------------------------------------
@@ -154,6 +193,11 @@ class IndexActivity : BaseActivity() {
 
     override fun resume() {
         viewModel?.setNetStatus(getNetworkState(this))
+    }
+
+    //--------------------------------Snack Bar-----------------------------------------------------
+    private fun showSnackBar(message: String) {
+        Snackbar.make(index_act_coordinatorlayout, message, Snackbar.LENGTH_LONG).show()
     }
 
     //--------------------------------Network Status------------------------------------------------
