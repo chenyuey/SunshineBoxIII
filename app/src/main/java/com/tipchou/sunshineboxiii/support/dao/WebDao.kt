@@ -93,10 +93,6 @@ class WebDao @Inject constructor() {
                         result.add(LessonWeb(item))
                     }
                 }
-                Log.e("Size", result.size.toString())
-                for (item in result) {
-                    Log.e("Lesson", item.toString())
-                }
                 data.value = ApiResponse(result, exception)
             }
         })

@@ -45,7 +45,6 @@ class TestActivity : BaseActivity() {
             viewModel?.loadUser()
         }
 
-        WebDao().getLesson(LessonType.HEALTH)
 //        Log.e("在登录前获取用户", AVUser.getCurrentUser().username)
 
 //        AVUser.logInInBackground("shaolizhi", "12345678", object : LogInCallback<AVUser>() {
