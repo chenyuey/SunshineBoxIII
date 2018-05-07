@@ -40,7 +40,7 @@ class TestRepository @Inject constructor() {
             buildSavedList = {
                 val databaseList = ArrayList<TestLocal>()
                 for (item in it) {
-                    val dbData = TestLocal(userId = item.userId, userName = item.userName)
+                    val dbData = TestLocal(userId = item.userId, userName = item.userName, tags = item.tags)
                     databaseList.add(dbData)
                 }
                 databaseList

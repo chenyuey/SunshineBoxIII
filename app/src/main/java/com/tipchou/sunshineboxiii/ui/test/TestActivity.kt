@@ -32,6 +32,7 @@ class TestActivity : BaseActivity() {
                     main_act_textview1.text = ""
                     for (item in it.data) {
                         main_act_textview1.text = "${main_act_textview1.text}\n${item.userName}"
+                        Log.e("Item", "${item.tags}")
                     }
                 }
             }

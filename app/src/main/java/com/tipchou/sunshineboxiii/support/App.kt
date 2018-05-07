@@ -19,9 +19,9 @@ class App : Application() {
         super.onCreate()
         boxStore = MyObjectBox.builder().androidContext(this@App).build()
         //Test Environment
-//        AVOSCloud.initialize(this, "TDJUy79LG3JzSqVw7Hj1emIr-gzGzoHsz", "P1wJ6vfje0bVezeeio4eqCJ7")
+        AVOSCloud.initialize(this, "TDJUy79LG3JzSqVw7Hj1emIr-gzGzoHsz", "P1wJ6vfje0bVezeeio4eqCJ7")
         //Product Environment
-        AVOSCloud.initialize(this, "CQBviH8f3TNrbRwzHfjTw7yk-gzGzoHsz", "5KnQsMhpWAAXYXvzbGV1YU62")
+//        AVOSCloud.initialize(this, "CQBviH8f3TNrbRwzHfjTw7yk-gzGzoHsz", "5KnQsMhpWAAXYXvzbGV1YU62")
     }
 
 }

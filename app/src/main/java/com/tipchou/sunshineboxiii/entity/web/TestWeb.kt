@@ -9,7 +9,8 @@ import com.avos.avoscloud.AVObject
 class TestWeb constructor(avObject: AVObject) {
     val userId: String? = avObject.getString("user_id")
     val userName: String? = avObject.getString("user_name")
+    val tags: String? = avObject.getList("tags")?.toString()
     override fun toString(): String {
-        return "TestWeb(userId=$userId, userName=$userName)"
+        return "TestWeb(userId=$userId, userName=$userName, tags=$tags)"
     }
 }
