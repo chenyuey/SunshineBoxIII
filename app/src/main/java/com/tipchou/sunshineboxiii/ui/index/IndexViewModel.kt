@@ -1,12 +1,10 @@
 package com.tipchou.sunshineboxiii.ui.index
 
-import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
-import com.bumptech.glide.Glide.init
 import com.tipchou.sunshineboxiii.entity.local.DownloadLocal
 import com.tipchou.sunshineboxiii.entity.local.LessonLocal
-import com.tipchou.sunshineboxiii.entity.local.UserLocal
+import com.tipchou.sunshineboxiii.entity.local.RoleLocal
 import com.tipchou.sunshineboxiii.support.DaggerMagicBox
 import com.tipchou.sunshineboxiii.support.GeneralObserver
 import com.tipchou.sunshineboxiii.support.LessonType
@@ -22,21 +20,23 @@ class IndexViewModel : ViewModel() {
     lateinit var repository: IndexRepository
 
     //observed data
-    private val user: MutableLiveData<Resource<UserLocal>> = MutableLiveData()
+    private val role: MutableLiveData<Resource<List<RoleLocal>>> = MutableLiveData()
     private val lesson: MutableLiveData<Resource<LessonLocal>> = MutableLiveData()
     private val downloadedLesson: MutableLiveData<Resource<DownloadLocal>> = MutableLiveData()
     private val netStatus: MutableLiveData<Boolean> = MutableLiveData()
     private val lessonType: MutableLiveData<LessonType> = MutableLiveData()
 
     //data observer
-//    private val userObserver: GeneralObserver<Resource<UserLocal>>
+    private val roleObserver: GeneralObserver<Resource<List<RoleLocal>>>
 //    private val lessonObserver: GeneralObserver<Resource<LessonLocal>>
 //    private val downloadedLessonObserver: GeneralObserver<Resource<DownloadLocal>>
 
     init {
         DaggerMagicBox.create().poke(this)
         lessonType.value = LessonType.NURSERY
-//        userObserver = GeneralObserver(user) {}
+        roleObserver = GeneralObserver(role) {
+            repository.getUserRole()
+        }
 //        lessonObserver = GeneralObserver(lesson) {}
 //        downloadedLessonObserver = GeneralObserver(downloadedLesson) {}
     }
@@ -53,25 +53,12 @@ class IndexViewModel : ViewModel() {
         netStatus.value = boolean
     }
 
-//    fun getTest(): LiveData<Resource<UserLocal>> {
-//        loadUser()
-//        return user
-//    }
+    fun getRole(): MutableLiveData<Resource<List<RoleLocal>>> {
+        loadRole()
+        return role
+    }
 
-//    fun loadUser() = userObserver.load()
-
-//    fun getLesson(): LiveData<Resource<LessonLocal>> {
-//        loadLesson()
-//        return lesson
-//    }
-
-//    fun loadLesson() = lessonObserver.load()
-
-//    fun getDownloadedLesson(): LiveData<Resource<DownloadLocal>> {
-//        loadDownloadedLesson()
-//        return downloadedLesson
-//    }
-
-//    private fun loadDownloadedLesson() = downloadedLessonObserver.load()
-
+    fun loadRole() {
+        roleObserver.load()
+    }
 }

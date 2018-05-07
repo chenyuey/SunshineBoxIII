@@ -1,8 +1,8 @@
 package com.tipchou.sunshineboxiii.ui.index
 
 import android.arch.lifecycle.LiveData
-import com.tipchou.sunshineboxiii.entity.local.UserLocal
-import com.tipchou.sunshineboxiii.entity.web.UserWeb
+import com.tipchou.sunshineboxiii.entity.local.RoleLocal
+import com.tipchou.sunshineboxiii.entity.web.RoleWeb
 import com.tipchou.sunshineboxiii.support.DaggerMagicBox
 import com.tipchou.sunshineboxiii.support.GeneralDataRequest
 import com.tipchou.sunshineboxiii.support.Resource
@@ -27,10 +27,19 @@ class IndexRepository @Inject constructor() {
         DaggerMagicBox.create().poke(this)
     }
 
-//    fun getUserRole(): LiveData<Resource<UserLocal>> = GeneralDataRequest<UserLocal, UserWeb>(
-//            loadFromDb = {},
-//            shouldFetch = {},
-//            createCall = {},
-//            saveCallResult = {}
-//    ).getAsLiveData()
+    fun getUserRole(): LiveData<Resource<List<RoleLocal>>> = GeneralDataRequest<RoleLocal, RoleWeb>(
+            loadFromDb = { dbDao.getRole() },
+            shouldFetch = { true },
+            createCall = { webDao.getRole() },
+            deleteDb = { dbDao.removeRole(it) },
+            buildSavedList = {
+                val databaseList = ArrayList<RoleLocal>()
+                for (item in it) {
+                    val dbData = RoleLocal(name = item.name)
+                    databaseList.add(dbData)
+                }
+                databaseList
+            },
+            saveCallResult = { dbDao.saveRole(it) }
+    ).getAsLiveData()
 }

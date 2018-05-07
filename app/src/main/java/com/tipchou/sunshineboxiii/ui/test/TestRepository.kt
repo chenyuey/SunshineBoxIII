@@ -5,7 +5,6 @@ import com.tipchou.sunshineboxiii.entity.local.TestLocal
 import com.tipchou.sunshineboxiii.entity.web.TestWeb
 import com.tipchou.sunshineboxiii.support.DaggerMagicBox
 import com.tipchou.sunshineboxiii.support.GeneralDataRequest
-import com.tipchou.sunshineboxiii.support.GeneralSaveCallResult
 import com.tipchou.sunshineboxiii.support.Resource
 import com.tipchou.sunshineboxiii.support.dao.DbDao
 import com.tipchou.sunshineboxiii.support.dao.WebDao
@@ -35,23 +34,19 @@ class TestRepository @Inject constructor() {
             },
             shouldFetch = { true },
             createCall = { webDao.getTest() },
+            deleteDb = {
+                dbDao.removeTest(it)
+            },
+            buildSavedList = {
+                val databaseList = ArrayList<TestLocal>()
+                for (item in it) {
+                    val dbData = TestLocal(userId = item.userId, userName = item.userName)
+                    databaseList.add(dbData)
+                }
+                databaseList
+            },
             saveCallResult = {
-                GeneralSaveCallResult(
-                        netData = it,
-                        requestDb = { dbDao.getTest() },
-                        deleteDb = { dbDao.removeTest(it) },
-                        buildSavedList = {
-                            val databaseList = ArrayList<TestLocal>()
-                            for (item in it) {
-                                val dbData = TestLocal(userId = item.userId, userName = item.userName)
-                                databaseList.add(dbData)
-                            }
-                            databaseList
-                        },
-                        addDb = {
-                            dbDao.saveTest(it)
-                        }
-                )
+                dbDao.saveTest(it)
             }
     ).getAsLiveData()
 

@@ -2,11 +2,8 @@ package com.tipchou.sunshineboxiii.support.dao
 
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
-import android.util.Log
-import com.avos.avoscloud.AVException
-import com.avos.avoscloud.AVObject
-import com.avos.avoscloud.AVQuery
-import com.avos.avoscloud.FindCallback
+import com.avos.avoscloud.*
+import com.tipchou.sunshineboxiii.entity.web.RoleWeb
 import com.tipchou.sunshineboxiii.entity.web.TestWeb
 import com.tipchou.sunshineboxiii.support.ApiResponse
 import javax.inject.Inject
@@ -19,6 +16,9 @@ import javax.inject.Singleton
 
 @Singleton
 class WebDao @Inject constructor() {
+    /**
+     * 测试
+     */
     fun getTest(): LiveData<ApiResponse<List<TestWeb>>> {
         val data = MutableLiveData<ApiResponse<List<TestWeb>>>()
         val query = AVQuery<AVObject>("Users")
@@ -33,6 +33,32 @@ class WebDao @Inject constructor() {
                 data.value = ApiResponse(result, exception)
             }
         })
+        return data
+    }
+
+    /**
+     * 获取当前登录用户的用户角色列表
+     * 请务必在登录状态下调用，否则将会抛出异常
+     */
+    fun getRole(): LiveData<ApiResponse<List<RoleWeb>>> {
+        val data = MutableLiveData<ApiResponse<List<RoleWeb>>>()
+        val currentUser = AVUser.getCurrentUser()
+        if (currentUser == null) {
+            //当前用户未登录
+            throw Exception("getRole(): 当前用户未登录！")
+        } else {
+            currentUser.getRolesInBackground(object : AVCallback<List<AVRole>>() {
+                override fun internalDone0(response: List<AVRole>?, exception: AVException?) {
+                    val result = ArrayList<RoleWeb>()
+                    if (response != null) {
+                        for (item in response) {
+                            result.add(RoleWeb(item))
+                        }
+                    }
+                    data.value = ApiResponse(result, exception)
+                }
+            })
+        }
         return data
     }
 }

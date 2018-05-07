@@ -5,7 +5,9 @@ import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.util.Log
+import com.avos.avoscloud.*
 import com.tipchou.sunshineboxiii.R
+import com.tipchou.sunshineboxiii.R.id.main_act_textview1
 
 import com.tipchou.sunshineboxiii.ui.base.BaseActivity
 import kotlinx.android.synthetic.main.activity_test.*
@@ -39,6 +41,43 @@ class TestActivity : BaseActivity() {
             Log.e("Fuck", "onClick")
             viewModel?.loadUser()
         }
+
+//        Log.e("在登录前获取用户", AVUser.getCurrentUser().username)
+
+//        AVUser.logInInBackground("shaolizhi", "12345678", object : LogInCallback<AVUser>() {
+//            override fun done(p0: AVUser?, p1: AVException?) {
+//                if (p1 == null) {
+//                    //网络请求成功
+//                    Log.e("FUCK", "登录成功!")
+//                    if (p0 == null) {
+//                        //should not be here
+//                        Log.e("FUCK", "should not be here")
+//                    } else {
+//                        Log.e("FUCK", "当前用户为: ${p0.username}")
+//                    }
+//                } else {
+//                    Log.e("FUCK","登录失败")
+//                }
+//            }
+//        })
+
+
+//        Log.e("在登录后获取用户", AVUser.getCurrentUser().username)
+//        AVUser.getCurrentUser().getRolesInBackground(object : AVCallback<List<AVRole>>() {
+//            override fun internalDone0(p0: List<AVRole>?, p1: AVException?) {
+//                if (p1 == null) {
+//                    Log.d("FUCK", "网络请求成功")
+//                    if (p0 == null) {
+//                        //should not be here!!!
+//                        Log.d("FUCK", "should not be here!!!")
+//                    } else {
+//                        Log.d("用户角色", p0.toString())
+//                    }
+//                } else {
+//                    Log.d("FUCK", "网络请求失败")
+//                }
+//            }
+//        })
     }
 
     override fun resume() {

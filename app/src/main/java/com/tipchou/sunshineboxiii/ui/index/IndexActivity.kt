@@ -19,6 +19,9 @@ import android.util.Log
 import android.view.View
 import android.view.animation.LinearInterpolator
 import android.widget.ImageView
+import com.avos.avoscloud.AVException
+import com.avos.avoscloud.AVUser
+import com.avos.avoscloud.LogInCallback
 import com.tipchou.sunshineboxiii.R
 import com.tipchou.sunshineboxiii.R.id.*
 import com.tipchou.sunshineboxiii.support.LessonType
@@ -179,6 +182,20 @@ class IndexActivity : BaseActivity() {
                 }
             }
         })
+        viewModel?.getRole()?.observe(this, Observer {
+            Log.e("Fuck", "Status: ${it?.status.toString()}; Message: ${it?.message}; Size: ${it?.data?.size}")
+            if (it == null) {
+
+            } else {
+                if (it.data == null) {
+
+                } else {
+                    for (item in it.data) {
+                        Log.e("Role", item.name)
+                    }
+                }
+            }
+        })
     }
 
     //--------------------------------Main Method---------------------------------------------------
@@ -193,6 +210,7 @@ class IndexActivity : BaseActivity() {
 
     override fun resume() {
         viewModel?.setNetStatus(getNetworkState(this))
+        viewModel?.loadRole()
     }
 
     //--------------------------------Snack Bar-----------------------------------------------------

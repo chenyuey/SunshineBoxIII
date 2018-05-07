@@ -8,4 +8,4 @@ import io.objectbox.annotation.Id
  * Perfect Code
  */
 @Entity
-class UserLocal(@Id var id: Long = 0, val cellphone: String, val role: String)
+class RoleLocal(@Id var id: Long = 0, val name: String?)
