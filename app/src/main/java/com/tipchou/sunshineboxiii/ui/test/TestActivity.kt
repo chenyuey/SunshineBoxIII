@@ -8,6 +8,8 @@ import android.util.Log
 import com.avos.avoscloud.*
 import com.tipchou.sunshineboxiii.R
 import com.tipchou.sunshineboxiii.R.id.main_act_textview1
+import com.tipchou.sunshineboxiii.support.LessonType
+import com.tipchou.sunshineboxiii.support.dao.WebDao
 
 import com.tipchou.sunshineboxiii.ui.base.BaseActivity
 import kotlinx.android.synthetic.main.activity_test.*
@@ -43,6 +45,7 @@ class TestActivity : BaseActivity() {
             viewModel?.loadUser()
         }
 
+        WebDao().getLesson(LessonType.HEALTH)
 //        Log.e("在登录前获取用户", AVUser.getCurrentUser().username)
 
 //        AVUser.logInInBackground("shaolizhi", "12345678", object : LogInCallback<AVUser>() {

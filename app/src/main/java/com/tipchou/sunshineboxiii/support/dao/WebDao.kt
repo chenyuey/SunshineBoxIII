@@ -2,10 +2,15 @@ package com.tipchou.sunshineboxiii.support.dao
 
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
+import android.util.Log
 import com.avos.avoscloud.*
+import com.google.protobuf.Api
+import com.tencent.qc.stat.StatConfig.e
+import com.tipchou.sunshineboxiii.entity.web.LessonWeb
 import com.tipchou.sunshineboxiii.entity.web.RoleWeb
 import com.tipchou.sunshineboxiii.entity.web.TestWeb
 import com.tipchou.sunshineboxiii.support.ApiResponse
+import com.tipchou.sunshineboxiii.support.LessonType
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -59,6 +64,42 @@ class WebDao @Inject constructor() {
                 }
             })
         }
+        return data
+    }
+
+    fun getLesson(lessonType: LessonType): LiveData<ApiResponse<List<LessonWeb>>> {
+        val data = MutableLiveData<ApiResponse<List<LessonWeb>>>()
+        val query = AVQuery<AVObject>("Lesson")
+        when (lessonType) {
+            LessonType.NURSERY -> query.whereEqualTo("subject", AVObject.createWithoutData("Subject", "5a701c8c1b69e6003c534903"))
+            LessonType.MUSIC -> query.whereEqualTo("subject", AVObject.createWithoutData("Subject", "5a741bcb2f301e003be904ed"))
+            LessonType.READING -> query.whereEqualTo("subject", AVObject.createWithoutData("Subject", "5a701c82d50eee00444134b2"))
+            LessonType.GAME -> query.whereEqualTo("subject", AVObject.createWithoutData("Subject", "5a8e908dac502e0032b6225d"))
+            LessonType.HEALTH -> query.whereStartsWith("tags", "domain.健康")
+            LessonType.LANGUAGE -> query.whereStartsWith("tags", "domain.语言")
+            LessonType.SOCIAL -> query.whereStartsWith("tags", "domain.社会")
+            LessonType.SCIENCE -> query.whereStartsWith("tags", "domain.科学")
+            LessonType.ART -> query.whereStartsWith("tags", "domain.艺术")
+        }
+        query.include("package")
+        query.include("subject")
+        query.include("staging_package")
+        query.limit = 1000
+        query.findInBackground(object : FindCallback<AVObject>() {
+            override fun done(response: MutableList<AVObject>?, exception: AVException?) {
+                val result = ArrayList<LessonWeb>()
+                if (response != null) {
+                    for (item in response) {
+                        result.add(LessonWeb(item))
+                    }
+                }
+                Log.e("Size", result.size.toString())
+                for (item in result) {
+                    Log.e("Lesson", item.toString())
+                }
+                data.value = ApiResponse(result, exception)
+            }
+        })
         return data
     }
 }
