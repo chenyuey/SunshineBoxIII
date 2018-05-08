@@ -21,30 +21,80 @@ import com.tipchou.sunshineboxiii.support.Resource
  */
 class IndexRecyclerViewAdapter(activity: IndexActivity) : RecyclerView.Adapter<IndexRecyclerViewAdapter.ViewHolder>() {
 
-    private val netStatus: LiveData<Boolean>
-    private val role: LiveData<Resource<List<RoleLocal>>>
-    private val lesson: LiveData<Resource<List<LessonLocal>>>
+    private val netStatusLiveData: LiveData<Boolean>
+    private val roleLiveData: LiveData<Resource<List<RoleLocal>>>
+    private val lessonLiveData: LiveData<Resource<List<LessonLocal>>>
 
     private val layoutInflater: LayoutInflater = LayoutInflater.from(activity)
 
+    private val lesson = ArrayList<LessonLocal>()
+
     init {
         val viewModel: IndexViewModel = ViewModelProviders.of(activity).get(IndexViewModel::class.java)
-        netStatus = viewModel.getNetStatus()
-        netStatus.observe(activity, Observer { })
-        role = viewModel.getRole()
-        role.observe(activity, Observer { })
-        lesson = viewModel.getLesson()
-        lesson.observe(activity, Observer {
+        netStatusLiveData = viewModel.getNetStatus()
+        netStatusLiveData.observe(activity, Observer { })
+        roleLiveData = viewModel.getRole()
+        roleLiveData.observe(activity, Observer { })
+        lessonLiveData = viewModel.getLesson()
+        lessonLiveData.observe(activity, Observer {
+            lesson.clear()
+            notifyDataSetChanged()
+            buildLessonList(it, roleLiveData)
             notifyDataSetChanged()
         })
     }
 
+    private fun buildLessonList(it: Resource<List<LessonLocal>>?, roleLiveData: MutableLiveData<Resource<List<RoleLocal>>>) {
+        if (it?.status == Resource.Status.SUCCESS || it?.status == Resource.Status.ERROR || it?.status == Resource.Status.LOADING) {
+            val roleList: List<RoleLocal>? = roleLiveData.value?.data
+            val lessonList = it.data
+            if (roleList == null) {
+                //should not be here
+            } else {
+                val isEditor = isUserEditor(roleList)
+                if (isEditor) {
+                    if (lessonList == null) {
+                        //should not be here
+                    } else {
+                        for (item in lessonList) {
+                            if (item.isPublish == true || item.areChecked == 1) {
+                                lesson.add(item)
+                            }
+                        }
+                    }
+                } else {
+                    if (lessonList == null) {
+                        //should not be here
+                    } else {
+                        for (item in lessonList) {
+                            if (item.isPublish == true) {
+                                lesson.add(item)
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private fun isUserEditor(roleList: List<RoleLocal>): Boolean {
+        var isEditor = false
+        for (role in roleList) {
+            when (role.name) {
+                "admin" -> isEditor = true
+                "admin1" -> isEditor = true
+                "admin2" -> isEditor = true
+            }
+        }
+        return isEditor
+    }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder = ViewHolder(layoutInflater.inflate(R.layout.item_index_recyclerview, parent, false))
 
-    override fun getItemCount(): Int = lesson.value?.data?.size ?: 0
+    override fun getItemCount(): Int = lesson.size
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bind(lesson = lesson.value?.data?.get(position))
+        holder.bind(lesson = lesson[position])
     }
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView), View.OnClickListener {
@@ -61,6 +111,12 @@ class IndexRecyclerViewAdapter(activity: IndexActivity) : RecyclerView.Adapter<I
                 "MUSIC" -> backgroundImageView.setBackgroundResource(R.drawable.music)
                 "READING" -> backgroundImageView.setBackgroundResource(R.drawable.reading)
                 "GAME" -> backgroundImageView.setBackgroundResource(R.drawable.game)
+            }
+            when (lesson?.areChecked) {
+                0 -> isAuditedImageView.visibility = View.GONE
+                1 -> isAuditedImageView.visibility = View.VISIBLE
+                2 -> isAuditedImageView.visibility = View.GONE
+                3 -> isAuditedImageView.visibility = View.GONE
             }
         }
 
