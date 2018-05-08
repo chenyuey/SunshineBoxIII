@@ -21,6 +21,8 @@ import android.view.View
 import android.view.animation.LinearInterpolator
 import android.widget.ImageView
 import com.tipchou.sunshineboxiii.R
+import com.tipchou.sunshineboxiii.R.id.*
+import com.tipchou.sunshineboxiii.entity.local.RoleLocal
 import com.tipchou.sunshineboxiii.support.LessonType
 import com.tipchou.sunshineboxiii.ui.base.BaseActivity
 import kotlinx.android.synthetic.main.activity_index.*
@@ -191,13 +193,17 @@ class IndexActivity : BaseActivity() {
         viewModel?.getRole()?.observe(this, Observer {
             Log.e("Role", "Status: ${it?.status.toString()}; Message: ${it?.message}; Size: ${it?.data?.size}")
             if (it == null) {
-
+                //should not be here
             } else {
-                if (it.data == null) {
-
+                val roleList = it.data
+                if (roleList == null) {
+                    //should not be here!!!
                 } else {
-                    for (item in it.data) {
-                        Log.e("Role", item.name)
+                    val isEditor = isUserEditor(roleList)
+                    if (isEditor) {
+                        index_act_textview10.text = "阳光盒子（审阅模式）"
+                    } else {
+                        index_act_textview10.text = "阳光盒子"
                     }
                 }
             }
@@ -232,6 +238,19 @@ class IndexActivity : BaseActivity() {
     //--------------------------------Snack Bar-----------------------------------------------------
     private fun showSnackBar(message: String) {
         Snackbar.make(index_act_coordinatorlayout, message, Snackbar.LENGTH_LONG).show()
+    }
+
+    //--------------------------------Role----------------------------------------------------------
+    private fun isUserEditor(roleList: List<RoleLocal>): Boolean {
+        var isEditor = false
+        for (role in roleList) {
+            when (role.name) {
+                "admin" -> isEditor = true
+                "admin1" -> isEditor = true
+                "admin2" -> isEditor = true
+            }
+        }
+        return isEditor
     }
 
     //--------------------------------Network Status------------------------------------------------
