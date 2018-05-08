@@ -19,11 +19,7 @@ import android.util.Log
 import android.view.View
 import android.view.animation.LinearInterpolator
 import android.widget.ImageView
-import com.avos.avoscloud.AVException
-import com.avos.avoscloud.AVUser
-import com.avos.avoscloud.LogInCallback
 import com.tipchou.sunshineboxiii.R
-import com.tipchou.sunshineboxiii.R.id.*
 import com.tipchou.sunshineboxiii.support.LessonType
 import com.tipchou.sunshineboxiii.ui.base.BaseActivity
 import kotlinx.android.synthetic.main.activity_index.*
@@ -53,31 +49,40 @@ class IndexActivity : BaseActivity() {
         //subject button
         index_act_linearlayout1.setOnClickListener {
             viewModel?.setLessonType(LessonType.NURSERY)
+            viewModel?.loadLesson()
         }
         index_act_linearlayout2.setOnClickListener {
             viewModel?.setLessonType(LessonType.MUSIC)
+            viewModel?.loadLesson()
         }
         index_act_linearlayout3.setOnClickListener {
             viewModel?.setLessonType(LessonType.READING)
+            viewModel?.loadLesson()
         }
         index_act_linearlayout4.setOnClickListener {
             viewModel?.setLessonType(LessonType.GAME)
+            viewModel?.loadLesson()
         }
         //tag button
         index_act_linearlayout5.setOnClickListener {
             viewModel?.setLessonType(LessonType.HEALTH)
+            viewModel?.loadLesson()
         }
         index_act_linearlayout6.setOnClickListener {
             viewModel?.setLessonType(LessonType.LANGUAGE)
+            viewModel?.loadLesson()
         }
         index_act_linearlayout7.setOnClickListener {
             viewModel?.setLessonType(LessonType.SOCIAL)
+            viewModel?.loadLesson()
         }
         index_act_linearlayout8.setOnClickListener {
             viewModel?.setLessonType(LessonType.SCIENCE)
+            viewModel?.loadLesson()
         }
         index_act_linearlayout9.setOnClickListener {
             viewModel?.setLessonType(LessonType.ART)
+            viewModel?.loadLesson()
         }
         //refresh button
         index_act_view1.setOnClickListener {
@@ -183,7 +188,7 @@ class IndexActivity : BaseActivity() {
             }
         })
         viewModel?.getRole()?.observe(this, Observer {
-            Log.e("Fuck", "Status: ${it?.status.toString()}; Message: ${it?.message}; Size: ${it?.data?.size}")
+            Log.e("Role", "Status: ${it?.status.toString()}; Message: ${it?.message}; Size: ${it?.data?.size}")
             if (it == null) {
 
             } else {
@@ -195,6 +200,9 @@ class IndexActivity : BaseActivity() {
                     }
                 }
             }
+        })
+        viewModel?.getLesson()?.observe(this, Observer {
+            Log.e("Lesson", "Status: ${it?.status.toString()}; Message: ${it?.message}; Size: ${it?.data?.size}")
         })
     }
 

@@ -1,14 +1,12 @@
 package com.tipchou.sunshineboxiii.support.dao
 
-import android.os.LocaleList
-import com.tipchou.sunshineboxiii.entity.local.RoleLocal
-import com.tipchou.sunshineboxiii.entity.local.RoleLocal_
-import com.tipchou.sunshineboxiii.entity.local.TestLocal
-import com.tipchou.sunshineboxiii.entity.local.TestLocal_
+import com.tipchou.sunshineboxiii.entity.local.*
 import com.tipchou.sunshineboxiii.support.App
+import com.tipchou.sunshineboxiii.support.LessonType
 import io.objectbox.Box
 import io.objectbox.BoxStore
 import io.objectbox.android.ObjectBoxLiveData
+import io.objectbox.query.QueryBuilder
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -80,4 +78,52 @@ class DbDao @Inject constructor() {
             roleBox.remove(roleLocaleList)
         }
     }
+
+    fun getLesson(lessonType: LessonType): ObjectBoxLiveData<LessonLocal> {
+        if (boxStore == null) {
+            //should not be here!!!!!!
+            throw Exception("App.getBoxStore() get null!!!")
+        } else {
+            val lessonBox: Box<LessonLocal> = boxStore!!.boxFor(LessonLocal::class.java)
+            val queryBuilder: QueryBuilder<LessonLocal>? = lessonBox.query()
+            if (queryBuilder == null) {
+                //should not be here!!
+                throw Exception("queryBuilder is null!!!")
+            } else {
+                when (lessonType) {
+                    LessonType.NURSERY -> queryBuilder.equal(LessonLocal_.subject, "NURSERY")
+                    LessonType.MUSIC -> queryBuilder.equal(LessonLocal_.subject, "MUSIC")
+                    LessonType.READING -> queryBuilder.equal(LessonLocal_.subject, "READING")
+                    LessonType.GAME -> queryBuilder.equal(LessonLocal_.subject, "GAME")
+                    LessonType.HEALTH -> queryBuilder.contains(LessonLocal_.tags, "domain.健康")
+                    LessonType.LANGUAGE -> queryBuilder.contains(LessonLocal_.tags, "domain.语言")
+                    LessonType.SOCIAL -> queryBuilder.contains(LessonLocal_.tags, "domain.社会")
+                    LessonType.SCIENCE -> queryBuilder.contains(LessonLocal_.tags, "domain.科学")
+                    LessonType.ART -> queryBuilder.contains(LessonLocal_.tags, "domain.艺术")
+                }
+                return ObjectBoxLiveData(queryBuilder.build())
+            }
+        }
+    }
+
+    fun saveLesson(lessonLocalList: List<LessonLocal>) {
+        if (boxStore == null) {
+            //should not be here!!!!!!
+            throw Exception("App.getBoxStore() get null!!!")
+        } else {
+            val lessonBox = boxStore!!.boxFor(LessonLocal::class.java)
+            lessonBox.put(lessonLocalList)
+        }
+    }
+
+    fun removeLesson(lessonLocalList: List<LessonLocal>) {
+        if (boxStore == null) {
+            //should not be here!!!!!!
+            throw Exception("App.getBoxStore() get null!!!")
+        } else {
+            val lessonBox = boxStore!!.boxFor(LessonLocal::class.java)
+            lessonBox.remove(lessonLocalList)
+        }
+    }
+
 }

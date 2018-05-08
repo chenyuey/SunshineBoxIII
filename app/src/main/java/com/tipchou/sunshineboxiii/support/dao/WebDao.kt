@@ -1,11 +1,9 @@
 package com.tipchou.sunshineboxiii.support.dao
 
+
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
-import android.util.Log
 import com.avos.avoscloud.*
-import com.google.protobuf.Api
-import com.tencent.qc.stat.StatConfig.e
 import com.tipchou.sunshineboxiii.entity.web.LessonWeb
 import com.tipchou.sunshineboxiii.entity.web.RoleWeb
 import com.tipchou.sunshineboxiii.entity.web.TestWeb
@@ -67,6 +65,9 @@ class WebDao @Inject constructor() {
         return data
     }
 
+    /**
+     * 获取Lesson表中的数据
+     */
     fun getLesson(lessonType: LessonType): LiveData<ApiResponse<List<LessonWeb>>> {
         val data = MutableLiveData<ApiResponse<List<LessonWeb>>>()
         val query = AVQuery<AVObject>("Lesson")

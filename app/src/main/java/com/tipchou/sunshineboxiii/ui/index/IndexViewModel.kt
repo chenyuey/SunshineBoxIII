@@ -21,14 +21,14 @@ class IndexViewModel : ViewModel() {
 
     //observed data
     private val role: MutableLiveData<Resource<List<RoleLocal>>> = MutableLiveData()
-    private val lesson: MutableLiveData<Resource<LessonLocal>> = MutableLiveData()
+    private val lesson: MutableLiveData<Resource<List<LessonLocal>>> = MutableLiveData()
     private val downloadedLesson: MutableLiveData<Resource<DownloadLocal>> = MutableLiveData()
     private val netStatus: MutableLiveData<Boolean> = MutableLiveData()
     private val lessonType: MutableLiveData<LessonType> = MutableLiveData()
 
     //data observer
     private val roleObserver: GeneralObserver<Resource<List<RoleLocal>>>
-//    private val lessonObserver: GeneralObserver<Resource<LessonLocal>>
+    private val lessonObserver: GeneralObserver<Resource<List<LessonLocal>>>
 //    private val downloadedLessonObserver: GeneralObserver<Resource<DownloadLocal>>
 
     init {
@@ -37,7 +37,11 @@ class IndexViewModel : ViewModel() {
         roleObserver = GeneralObserver(role) {
             repository.getUserRole()
         }
-//        lessonObserver = GeneralObserver(lesson) {}
+
+        lessonObserver = GeneralObserver(lesson) {
+            repository.getLesson(lessonType = lessonType.value!!)
+        }
+
 //        downloadedLessonObserver = GeneralObserver(downloadedLesson) {}
     }
 
@@ -60,5 +64,14 @@ class IndexViewModel : ViewModel() {
 
     fun loadRole() {
         roleObserver.load()
+    }
+
+    fun getLesson(): MutableLiveData<Resource<List<LessonLocal>>> {
+        loadLesson()
+        return lesson
+    }
+
+    fun loadLesson() {
+        lessonObserver.load()
     }
 }
