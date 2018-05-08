@@ -37,7 +37,6 @@ class IndexViewModel : ViewModel() {
         roleObserver = GeneralObserver(role) {
             repository.getUserRole()
         }
-
         lessonObserver = GeneralObserver(lesson) {
             repository.getLesson(lessonType = lessonType.value!!)
         }

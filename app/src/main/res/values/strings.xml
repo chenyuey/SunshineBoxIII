@@ -53,14 +53,13 @@
     <string name="index_act_string17">社会</string>
     <string name="index_act_string18">科学</string>
     <string name="index_act_string19">艺术</string>
+    <string name="index_act_string20">刷新</string>
+    <string name="index_act_string21">课程</string>
 
     <!--IndexDrawer-->
     <string name="index_drawer_string1">加入教师社区</string>
     <string name="index_drawer_string2">扫描下方二维码加入教师社区</string>
     <string name="index_drawer_string3">二维码</string>
-
-    <!--IndexFragment-->
-    <string name="index_fgm_string1">课程</string>
 
     <!--CourseActivity-->
     <string name="course_act_string1">返回上一个界面</string>
@@ -73,6 +72,6 @@
     <string name="album_act_string1">下一图</string>
     <string name="album_act_string2">上一图</string>
     <string name="album_act_string3">关闭</string>
-    <string name="index_act_string20">刷新</string>
+    <string name="index_act_string22">待审核</string>
 
 </resources>

@@ -360,11 +360,32 @@
                 </LinearLayout>
             </RelativeLayout>
 
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/index_act_recyclerview"
+            <android.support.v4.widget.NestedScrollView
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="607" />
+                android:layout_weight="607">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:descendantFocusability="blocksDescendants"
+                    android:orientation="vertical">
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="35dp" />
+
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/index_act_recyclerview"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:nestedScrollingEnabled="false" />
+
+                </LinearLayout>
+
+            </android.support.v4.widget.NestedScrollView>
+
+
         </LinearLayout>
     </LinearLayout>
 
