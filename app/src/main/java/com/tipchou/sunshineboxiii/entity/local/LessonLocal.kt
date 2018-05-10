@@ -9,6 +9,7 @@ import io.objectbox.annotation.Id
  */
 @Entity
 class LessonLocal(@Id var id: Long = 0,
+                  val objectId: String,
                   val isPublish: Boolean?,
                   val tags: String?,
                   val packageUrl: String?,

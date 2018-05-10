@@ -41,6 +41,7 @@
     <!-- shareSDK需要的权限 -->
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+    <uses-permission android:name="android.permission.DOWNLOAD_WITHOUT_NOTIFICATION" />
 
     <application
         android:name=".support.App"
@@ -51,6 +52,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".ui.test.TestActivity">
+
         </activity>
         <activity android:name=".ui.index.IndexActivity">
             <intent-filter>

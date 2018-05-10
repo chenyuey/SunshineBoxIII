@@ -1,7 +1,10 @@
 package com.tipchou.sunshineboxiii.ui.index
 
 import android.arch.lifecycle.LiveData
+import android.util.Log
 import com.tipchou.sunshineboxiii.entity.local.LessonLocal
+import com.tipchou.sunshineboxiii.entity.local.LessonLocal_.isPublish
+import com.tipchou.sunshineboxiii.entity.local.LessonLocal_.packageUrl
 import com.tipchou.sunshineboxiii.entity.local.RoleLocal
 import com.tipchou.sunshineboxiii.entity.web.LessonWeb
 import com.tipchou.sunshineboxiii.entity.web.RoleWeb
@@ -56,6 +59,7 @@ class IndexRepository @Inject constructor() {
                     val databaseList = ArrayList<LessonLocal>()
                     for (item in it) {
                         val dbData = LessonLocal(
+                                objectId = item.objectId,
                                 isPublish = item.isPublish,
                                 tags = item.tags,
                                 packageUrl = item.packageUrl,

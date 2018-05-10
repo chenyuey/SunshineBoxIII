@@ -8,6 +8,7 @@ import com.avos.avoscloud.AVObject
  * Perfect Code
  */
 class LessonWeb constructor(avObject: AVObject) {
+    val objectId: String = avObject.objectId
     val isPublish: Boolean? = avObject.getBoolean("isPublished")
     val tags: String? = avObject.getList("tags")?.toString()
     val packageUrl: String? = avObject.getAVFile<AVFile>("package")?.url

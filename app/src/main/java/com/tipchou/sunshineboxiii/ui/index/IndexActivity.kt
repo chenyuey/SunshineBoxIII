@@ -1,5 +1,6 @@
 package com.tipchou.sunshineboxiii.ui.index
 
+import android.Manifest
 import android.animation.ObjectAnimator
 import android.animation.ValueAnimator
 import android.arch.lifecycle.Observer
@@ -8,11 +9,15 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.content.pm.PackageManager
 import android.graphics.Color
 import android.net.ConnectivityManager
 import android.net.NetworkInfo
 import android.os.Bundle
+import android.os.Environment
 import android.support.design.widget.Snackbar
+import android.support.v4.app.ActivityCompat
+import android.support.v4.content.ContextCompat
 import android.support.v4.view.GravityCompat
 import android.support.v4.widget.DrawerLayout
 import android.support.v7.widget.GridLayoutManager
@@ -20,6 +25,9 @@ import android.util.Log
 import android.view.View
 import android.view.animation.LinearInterpolator
 import android.widget.ImageView
+import com.avos.avoscloud.AVException
+import com.avos.avoscloud.AVUser
+import com.avos.avoscloud.LogInCallback
 import com.tipchou.sunshineboxiii.R
 import com.tipchou.sunshineboxiii.R.id.*
 import com.tipchou.sunshineboxiii.entity.local.RoleLocal
@@ -27,6 +35,7 @@ import com.tipchou.sunshineboxiii.support.LessonType
 import com.tipchou.sunshineboxiii.ui.base.BaseActivity
 import kotlinx.android.synthetic.main.activity_index.*
 import kotlinx.android.synthetic.main.activity_index_content.*
+import java.io.File
 
 
 /**
@@ -213,6 +222,23 @@ class IndexActivity : BaseActivity() {
         })
     }
 
+    private fun checkPermissions(): Boolean {
+        ContextCompat.checkSelfPermission(this, Manifest.permission.MOUNT_UNMOUNT_FILESYSTEMS) != PackageManager.PERMISSION_GRANTED
+        val permission = ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED
+        if (permission) {
+            ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.MOUNT_UNMOUNT_FILESYSTEMS, Manifest.permission.WRITE_EXTERNAL_STORAGE), 1)
+        }
+        return !permission
+    }
+
+    private fun createRootFolder(): File {
+        val file = File(Environment.getExternalStorageDirectory().path + File.separator + "SunshineBox_III")
+        if (!file.exists()) {
+            Log.i("Create Folder: ", file.mkdirs().toString())
+        }
+        return file
+    }
+
     //--------------------------------Main Method---------------------------------------------------
     override fun layoutId(): Int = R.layout.activity_index
 
@@ -222,6 +248,9 @@ class IndexActivity : BaseActivity() {
         setUpNetWorkChangeBroadcast()
         setUpViewModel()
         setUpRecyclerView()
+        checkPermissions()
+        createRootFolder()
+
     }
 
     private fun setUpRecyclerView() {
@@ -272,9 +301,9 @@ class IndexActivity : BaseActivity() {
         // 获取手机所有连接管理对象（包括对wi-fi,net等连接的管理）
         val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
         // 获取NetworkInfo对象
-        val lotOfNetworkInfo = connectivityManager.allNetworkInfo
+        val allNetworkInfo = connectivityManager.allNetworkInfo
         // 遍历每一个对象
-        for (networkInfo in lotOfNetworkInfo) {
+        for (networkInfo in allNetworkInfo) {
             if (networkInfo.state == NetworkInfo.State.CONNECTED) {
                 // 网络状态可用
                 return true
