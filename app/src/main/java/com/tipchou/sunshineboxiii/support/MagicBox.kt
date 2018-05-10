@@ -1,5 +1,6 @@
 package com.tipchou.sunshineboxiii.support
 
+import com.tipchou.sunshineboxiii.ui.index.IndexRecyclerViewAdapter
 import com.tipchou.sunshineboxiii.ui.index.IndexRepository
 import com.tipchou.sunshineboxiii.ui.index.IndexViewModel
 import com.tipchou.sunshineboxiii.ui.test.TestRepository
@@ -18,4 +19,5 @@ interface MagicBox {
     fun poke(testRepository: TestRepository)
     fun poke(indexViewModel: IndexViewModel)
     fun poke(indexRepository: IndexRepository)
+    fun poke(indexRecyclerViewAdapter: IndexRecyclerViewAdapter)
 }

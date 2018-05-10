@@ -8,4 +8,4 @@ import io.objectbox.annotation.Id
  * Perfect Code
  */
 @Entity
-class DownloadLocal(@Id var id: Long = 0, val objectId: String, val publishedUrl: String?, val stagingUrl: String?)
+class DownloadLocal(@Id var id: Long = 0, val objectId: String, var publishedUrl: String?, var stagingUrl: String?)

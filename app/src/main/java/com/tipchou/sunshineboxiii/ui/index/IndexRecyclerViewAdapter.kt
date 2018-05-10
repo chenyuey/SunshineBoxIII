@@ -10,16 +10,23 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import com.tipchou.sunshineboxiii.R
+import com.tipchou.sunshineboxiii.entity.local.DownloadLocal
 import com.tipchou.sunshineboxiii.entity.local.LessonLocal
 import com.tipchou.sunshineboxiii.entity.local.RoleLocal
+import com.tipchou.sunshineboxiii.support.DaggerMagicBox
 import com.tipchou.sunshineboxiii.support.Resource
+import com.tipchou.sunshineboxiii.support.dao.DbDao
+import javax.inject.Inject
 
 /**
  * Created by 邵励治 on 2018/5/8.
  * Perfect Code
  */
-class IndexRecyclerViewAdapter(activity: IndexActivity) : RecyclerView.Adapter<IndexRecyclerViewAdapter.ViewHolder>() {
+class IndexRecyclerViewAdapter(private val activity: IndexActivity) : RecyclerView.Adapter<IndexRecyclerViewAdapter.ViewHolder>() {
     class ItemData(val LessonLocal: LessonLocal, val editor: Boolean)
+
+    @Inject
+    lateinit var dbDao: DbDao
 
     private val netStatusLiveData: LiveData<Boolean>
     private val roleLiveData: LiveData<Resource<List<RoleLocal>>>
@@ -30,6 +37,7 @@ class IndexRecyclerViewAdapter(activity: IndexActivity) : RecyclerView.Adapter<I
     private val itemDataList = ArrayList<ItemData>()
 
     init {
+        DaggerMagicBox.create().poke(this)
         val viewModel: IndexViewModel = ViewModelProviders.of(activity).get(IndexViewModel::class.java)
         netStatusLiveData = viewModel.getNetStatus()
         netStatusLiveData.observe(activity, Observer { })
@@ -109,15 +117,73 @@ class IndexRecyclerViewAdapter(activity: IndexActivity) : RecyclerView.Adapter<I
         private val downloadStatusTextView: TextView
         private val lessonNameTextView: TextView
 
+        //useful data
         private var lesson: LessonLocal? = null
         private var editor: Boolean? = null
+        private var downloadLiveData: LiveData<List<DownloadLocal>>? = null
 
         fun bind(itemData: ItemData?) {
-            lesson = itemData?.LessonLocal
-            editor = itemData?.editor
+            getUsefulData(itemData)
+            val editor = this.editor
+                    ?: throw Exception("IndexRecyclerViewAdapter's bind() editor is null")
+            val lesson = this.lesson
+                    ?: throw Exception("IndexRecyclerViewAdapter's bind() lesson is null")
+            val downloadLiveData = this.downloadLiveData
+                    ?: throw Exception("IndexRecyclerViewAdapter's bind() downloadLiveData is null")
 
-            lessonNameTextView.text = lesson?.name
+            //now we get all useful data
+            setUpLessonName()
+            setUpEditorTip()
 
+            downloadLiveData.observe(activity, Observer {
+                //啥都没查到,直接加载灰色图片
+                if (it?.size == 0) {
+                    when (lesson.subject) {
+                        "NURSERY" -> backgroundImageView.setBackgroundResource(R.drawable.nursery_gray)
+                        "MUSIC" -> backgroundImageView.setBackgroundResource(R.drawable.music_gray)
+                        "READING" -> backgroundImageView.setBackgroundResource(R.drawable.reading_gray)
+                        "GAME" -> backgroundImageView.setBackgroundResource(R.drawable.game_gray)
+                    }
+                } else {
+                    //查到了
+                    if (editor) {
+                        if (it?.get(0)?.stagingUrl == null) {
+                            when (lesson.subject) {
+                                "NURSERY" -> backgroundImageView.setBackgroundResource(R.drawable.nursery_gray)
+                                "MUSIC" -> backgroundImageView.setBackgroundResource(R.drawable.music_gray)
+                                "READING" -> backgroundImageView.setBackgroundResource(R.drawable.reading_gray)
+                                "GAME" -> backgroundImageView.setBackgroundResource(R.drawable.game_gray)
+                            }
+                        } else {
+                            when (lesson.subject) {
+                                "NURSERY" -> backgroundImageView.setBackgroundResource(R.drawable.nursery)
+                                "MUSIC" -> backgroundImageView.setBackgroundResource(R.drawable.music)
+                                "READING" -> backgroundImageView.setBackgroundResource(R.drawable.reading)
+                                "GAME" -> backgroundImageView.setBackgroundResource(R.drawable.game)
+                            }
+                        }
+                    } else {
+                        if (it?.get(0)?.publishedUrl == null) {
+                            when (lesson.subject) {
+                                "NURSERY" -> backgroundImageView.setBackgroundResource(R.drawable.nursery_gray)
+                                "MUSIC" -> backgroundImageView.setBackgroundResource(R.drawable.music_gray)
+                                "READING" -> backgroundImageView.setBackgroundResource(R.drawable.reading_gray)
+                                "GAME" -> backgroundImageView.setBackgroundResource(R.drawable.game_gray)
+                            }
+                        } else {
+                            when (lesson.subject) {
+                                "NURSERY" -> backgroundImageView.setBackgroundResource(R.drawable.nursery)
+                                "MUSIC" -> backgroundImageView.setBackgroundResource(R.drawable.music)
+                                "READING" -> backgroundImageView.setBackgroundResource(R.drawable.reading)
+                                "GAME" -> backgroundImageView.setBackgroundResource(R.drawable.game)
+                            }
+                        }
+                    }
+                }
+            })
+        }
+
+        private fun setUpEditorTip() {
             when (editor) {
                 true -> {
                     isAuditedImageView.visibility = View.VISIBLE
@@ -126,15 +192,22 @@ class IndexRecyclerViewAdapter(activity: IndexActivity) : RecyclerView.Adapter<I
                     isAuditedImageView.visibility = View.GONE
                 }
             }
+        }
 
-            when (lesson?.subject) {
-                "NURSERY" -> backgroundImageView.setBackgroundResource(R.drawable.nursery)
-                "MUSIC" -> backgroundImageView.setBackgroundResource(R.drawable.music)
-                "READING" -> backgroundImageView.setBackgroundResource(R.drawable.reading)
-                "GAME" -> backgroundImageView.setBackgroundResource(R.drawable.game)
+        private fun getUsefulData(itemData: ItemData?) {
+            lesson = itemData?.LessonLocal
+            editor = itemData?.editor
+            val objectId = itemData?.LessonLocal?.objectId
+            if (objectId == null) {
+                //should not be here!!
+                throw Exception("IndexRecyclerViewAdapter's ViewHolder object is null")
+            } else {
+                downloadLiveData = dbDao.getDownload(objectId)
             }
+        }
 
-
+        private fun setUpLessonName() {
+            lessonNameTextView.text = lesson?.name
         }
 
         init {
