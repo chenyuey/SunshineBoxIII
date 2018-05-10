@@ -20,6 +20,7 @@ import com.tipchou.sunshineboxiii.support.Resource
  * Perfect Code
  */
 class IndexRecyclerViewAdapter(activity: IndexActivity) : RecyclerView.Adapter<IndexRecyclerViewAdapter.ViewHolder>() {
+    class Lesson(val LessonLocal: LessonLocal, val editor: Boolean)
 
     private val netStatusLiveData: LiveData<Boolean>
     private val roleLiveData: LiveData<Resource<List<RoleLocal>>>
@@ -27,7 +28,7 @@ class IndexRecyclerViewAdapter(activity: IndexActivity) : RecyclerView.Adapter<I
 
     private val layoutInflater: LayoutInflater = LayoutInflater.from(activity)
 
-    private val lesson = ArrayList<LessonLocal>()
+    private val lesson = ArrayList<Lesson>()
 
     init {
         val viewModel: IndexViewModel = ViewModelProviders.of(activity).get(IndexViewModel::class.java)
@@ -39,12 +40,12 @@ class IndexRecyclerViewAdapter(activity: IndexActivity) : RecyclerView.Adapter<I
         lessonLiveData.observe(activity, Observer {
             lesson.clear()
             notifyDataSetChanged()
-            buildLessonList(it, roleLiveData)
+            buildLessonList(it)
             notifyDataSetChanged()
         })
     }
 
-    private fun buildLessonList(it: Resource<List<LessonLocal>>?, roleLiveData: MutableLiveData<Resource<List<RoleLocal>>>) {
+    private fun buildLessonList(it: Resource<List<LessonLocal>>?) {
         if (it?.status == Resource.Status.SUCCESS || it?.status == Resource.Status.ERROR || it?.status == Resource.Status.LOADING) {
             val roleList: List<RoleLocal>? = roleLiveData.value?.data
             val lessonList = it.data
@@ -57,8 +58,13 @@ class IndexRecyclerViewAdapter(activity: IndexActivity) : RecyclerView.Adapter<I
                         //should not be here
                     } else {
                         for (item in lessonList) {
-                            if (item.isPublish == true || item.areChecked == 1) {
-                                lesson.add(item)
+                            if (item.isPublish == true) {
+                                lesson.add(Lesson(item, false))
+                            }
+                        }
+                        for (item in lessonList) {
+                            if (item.areChecked == 1) {
+                                lesson.add(Lesson(item, true))
                             }
                         }
                     }
@@ -68,7 +74,7 @@ class IndexRecyclerViewAdapter(activity: IndexActivity) : RecyclerView.Adapter<I
                     } else {
                         for (item in lessonList) {
                             if (item.isPublish == true) {
-                                lesson.add(item)
+                                lesson.add(Lesson(item, false))
                             }
                         }
                     }
@@ -104,19 +110,17 @@ class IndexRecyclerViewAdapter(activity: IndexActivity) : RecyclerView.Adapter<I
         private val downloadStatusTextView: TextView
         private val lessonNameTextView: TextView
 
-        fun bind(lesson: LessonLocal?) {
-            lessonNameTextView.text = lesson?.name
-            when (lesson?.subject) {
+        fun bind(lesson: Lesson?) {
+            lessonNameTextView.text = lesson?.LessonLocal?.name
+            when (lesson?.LessonLocal?.subject) {
                 "NURSERY" -> backgroundImageView.setBackgroundResource(R.drawable.nursery)
                 "MUSIC" -> backgroundImageView.setBackgroundResource(R.drawable.music)
                 "READING" -> backgroundImageView.setBackgroundResource(R.drawable.reading)
                 "GAME" -> backgroundImageView.setBackgroundResource(R.drawable.game)
             }
-            when (lesson?.areChecked) {
-                0 -> isAuditedImageView.visibility = View.GONE
-                1 -> isAuditedImageView.visibility = View.VISIBLE
-                2 -> isAuditedImageView.visibility = View.GONE
-                3 -> isAuditedImageView.visibility = View.GONE
+            when (lesson?.editor) {
+                false -> isAuditedImageView.visibility = View.GONE
+                true -> isAuditedImageView.visibility = View.VISIBLE
             }
         }
 

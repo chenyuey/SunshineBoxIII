@@ -25,11 +25,7 @@ import android.util.Log
 import android.view.View
 import android.view.animation.LinearInterpolator
 import android.widget.ImageView
-import com.avos.avoscloud.AVException
-import com.avos.avoscloud.AVUser
-import com.avos.avoscloud.LogInCallback
 import com.tipchou.sunshineboxiii.R
-import com.tipchou.sunshineboxiii.R.id.*
 import com.tipchou.sunshineboxiii.entity.local.RoleLocal
 import com.tipchou.sunshineboxiii.support.LessonType
 import com.tipchou.sunshineboxiii.ui.base.BaseActivity
@@ -250,7 +246,6 @@ class IndexActivity : BaseActivity() {
         setUpRecyclerView()
         checkPermissions()
         createRootFolder()
-
     }
 
     private fun setUpRecyclerView() {
@@ -262,6 +257,7 @@ class IndexActivity : BaseActivity() {
     override fun resume() {
         viewModel?.setNetStatus(getNetworkState(this))
         viewModel?.loadRole()
+        viewModel?.loadLesson()
     }
 
     //--------------------------------Snack Bar-----------------------------------------------------
