@@ -1,7 +1,6 @@
 package com.tipchou.sunshineboxiii.ui.index
 
 import android.arch.lifecycle.LiveData
-import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
 import android.support.v7.widget.RecyclerView
@@ -20,7 +19,7 @@ import com.tipchou.sunshineboxiii.support.Resource
  * Perfect Code
  */
 class IndexRecyclerViewAdapter(activity: IndexActivity) : RecyclerView.Adapter<IndexRecyclerViewAdapter.ViewHolder>() {
-    class Lesson(val LessonLocal: LessonLocal, val editor: Boolean)
+    class ItemData(val LessonLocal: LessonLocal, val editor: Boolean)
 
     private val netStatusLiveData: LiveData<Boolean>
     private val roleLiveData: LiveData<Resource<List<RoleLocal>>>
@@ -28,7 +27,7 @@ class IndexRecyclerViewAdapter(activity: IndexActivity) : RecyclerView.Adapter<I
 
     private val layoutInflater: LayoutInflater = LayoutInflater.from(activity)
 
-    private val lesson = ArrayList<Lesson>()
+    private val itemDataList = ArrayList<ItemData>()
 
     init {
         val viewModel: IndexViewModel = ViewModelProviders.of(activity).get(IndexViewModel::class.java)
@@ -38,7 +37,7 @@ class IndexRecyclerViewAdapter(activity: IndexActivity) : RecyclerView.Adapter<I
         roleLiveData.observe(activity, Observer { })
         lessonLiveData = viewModel.getLesson()
         lessonLiveData.observe(activity, Observer {
-            lesson.clear()
+            itemDataList.clear()
             notifyDataSetChanged()
             buildLessonList(it)
             notifyDataSetChanged()
@@ -58,13 +57,13 @@ class IndexRecyclerViewAdapter(activity: IndexActivity) : RecyclerView.Adapter<I
                         //should not be here
                     } else {
                         for (item in lessonList) {
-                            if (item.isPublish == true) {
-                                lesson.add(Lesson(item, false))
+                            if (item.areChecked == 1) {
+                                itemDataList.add(ItemData(item, true))
                             }
                         }
                         for (item in lessonList) {
-                            if (item.areChecked == 1) {
-                                lesson.add(Lesson(item, true))
+                            if (item.isPublish == true) {
+                                itemDataList.add(ItemData(item, false))
                             }
                         }
                     }
@@ -74,7 +73,7 @@ class IndexRecyclerViewAdapter(activity: IndexActivity) : RecyclerView.Adapter<I
                     } else {
                         for (item in lessonList) {
                             if (item.isPublish == true) {
-                                lesson.add(Lesson(item, false))
+                                itemDataList.add(ItemData(item, false))
                             }
                         }
                     }
@@ -97,10 +96,10 @@ class IndexRecyclerViewAdapter(activity: IndexActivity) : RecyclerView.Adapter<I
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder = ViewHolder(layoutInflater.inflate(R.layout.item_index_recyclerview, parent, false))
 
-    override fun getItemCount(): Int = lesson.size
+    override fun getItemCount(): Int = itemDataList.size
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bind(lesson = lesson[position])
+        holder.bind(itemData = itemDataList[position])
     }
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView), View.OnClickListener {
@@ -110,18 +109,32 @@ class IndexRecyclerViewAdapter(activity: IndexActivity) : RecyclerView.Adapter<I
         private val downloadStatusTextView: TextView
         private val lessonNameTextView: TextView
 
-        fun bind(lesson: Lesson?) {
-            lessonNameTextView.text = lesson?.LessonLocal?.name
-            when (lesson?.LessonLocal?.subject) {
+        private var lesson: LessonLocal? = null
+        private var editor: Boolean? = null
+
+        fun bind(itemData: ItemData?) {
+            lesson = itemData?.LessonLocal
+            editor = itemData?.editor
+
+            lessonNameTextView.text = lesson?.name
+
+            when (editor) {
+                true -> {
+                    isAuditedImageView.visibility = View.VISIBLE
+                }
+                false -> {
+                    isAuditedImageView.visibility = View.GONE
+                }
+            }
+
+            when (lesson?.subject) {
                 "NURSERY" -> backgroundImageView.setBackgroundResource(R.drawable.nursery)
                 "MUSIC" -> backgroundImageView.setBackgroundResource(R.drawable.music)
                 "READING" -> backgroundImageView.setBackgroundResource(R.drawable.reading)
                 "GAME" -> backgroundImageView.setBackgroundResource(R.drawable.game)
             }
-            when (lesson?.editor) {
-                false -> isAuditedImageView.visibility = View.GONE
-                true -> isAuditedImageView.visibility = View.VISIBLE
-            }
+
+
         }
 
         init {
