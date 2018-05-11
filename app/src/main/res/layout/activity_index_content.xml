@@ -370,7 +370,7 @@
                     android:layout_width="118dp"
                     android:layout_height="118dp"
                     android:layout_gravity="center_horizontal"
-                    android:layout_marginTop="158dp"
+                    android:layout_marginTop="180dp"
                     android:background="@drawable/tip_no_content"
                     android:contentDescription="@string/index_act_string23"
                     android:visibility="gone" />
@@ -380,7 +380,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
-                    android:layout_marginTop="300dp"
+                    android:layout_marginTop="360dp"
                     android:text="@string/index_act_string23"
                     android:textColor="#333333"
                     android:textSize="19sp"

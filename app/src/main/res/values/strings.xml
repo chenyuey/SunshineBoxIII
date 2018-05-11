@@ -74,5 +74,6 @@
     <string name="album_act_string3">关闭</string>
     <string name="index_act_string22">待审核</string>
     <string name="index_act_string23">暂时没有内容</string>
+    <string name="index_act_string24">点击下载</string>
 
 </resources>

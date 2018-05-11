@@ -155,6 +155,7 @@ class IndexRecyclerViewAdapter(private val activity: IndexActivity) : RecyclerVi
 
         private val backgroundImageView: ImageView
         private val isAuditedImageView: ImageView
+        private val fileDownloadImageView: ImageView
         private val downloadStatusTextView: TextView
         private val lessonNameTextView: TextView
 
@@ -162,6 +163,15 @@ class IndexRecyclerViewAdapter(private val activity: IndexActivity) : RecyclerVi
         private var lesson: LessonLocal? = null
         private var editor: Boolean? = null
         private var download: Boolean? = null
+
+        init {
+            itemView.setOnClickListener(this)
+            backgroundImageView = itemView.findViewById(R.id.index_rcv_imageview1)
+            isAuditedImageView = itemView.findViewById(R.id.index_rcv_imageview2)
+            downloadStatusTextView = itemView.findViewById(R.id.index_rcv_textview1)
+            lessonNameTextView = itemView.findViewById(R.id.index_rcv_textview2)
+            fileDownloadImageView = itemView.findViewById(R.id.index_rcv_imageview3)
+        }
 
         fun bind(itemData: ItemData?) {
             getUsefulData(itemData)
@@ -176,6 +186,8 @@ class IndexRecyclerViewAdapter(private val activity: IndexActivity) : RecyclerVi
             setUpLessonName()
             setUpEditorTip()
             if (download) {
+                fileDownloadImageView.visibility = View.GONE
+                downloadStatusTextView.text = ""
                 when (lesson.subject) {
                     "NURSERY" -> backgroundImageView.setBackgroundResource(R.drawable.nursery)
                     "MUSIC" -> backgroundImageView.setBackgroundResource(R.drawable.music)
@@ -183,6 +195,8 @@ class IndexRecyclerViewAdapter(private val activity: IndexActivity) : RecyclerVi
                     "GAME" -> backgroundImageView.setBackgroundResource(R.drawable.game)
                 }
             } else {
+                fileDownloadImageView.visibility = View.VISIBLE
+                downloadStatusTextView.text = "点击下载"
                 when (lesson.subject) {
                     "NURSERY" -> backgroundImageView.setBackgroundResource(R.drawable.nursery_gray)
                     "MUSIC" -> backgroundImageView.setBackgroundResource(R.drawable.music_gray)
@@ -190,6 +204,8 @@ class IndexRecyclerViewAdapter(private val activity: IndexActivity) : RecyclerVi
                     "GAME" -> backgroundImageView.setBackgroundResource(R.drawable.game_gray)
                 }
             }
+
+
         }
 
         private fun setUpEditorTip() {
@@ -211,14 +227,6 @@ class IndexRecyclerViewAdapter(private val activity: IndexActivity) : RecyclerVi
 
         private fun setUpLessonName() {
             lessonNameTextView.text = lesson?.name
-        }
-
-        init {
-            itemView.setOnClickListener(this)
-            backgroundImageView = itemView.findViewById(R.id.index_rcv_imageview1)
-            isAuditedImageView = itemView.findViewById(R.id.index_rcv_imageview2)
-            downloadStatusTextView = itemView.findViewById(R.id.index_rcv_textview1)
-            lessonNameTextView = itemView.findViewById(R.id.index_rcv_textview2)
         }
 
         override fun onClick(v: View?) {
