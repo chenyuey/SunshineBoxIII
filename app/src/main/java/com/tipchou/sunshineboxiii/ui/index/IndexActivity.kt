@@ -270,6 +270,14 @@ class IndexActivity : BaseActivity() {
         if (!file.exists()) {
             Log.i("Create Folder: ", file.mkdirs().toString())
         }
+        val file1 = File(Environment.getExternalStorageDirectory().path + File.separator + "Sunshinebox_III" + File.separator + "normal")
+        if (!file1.exists()) {
+            Log.i("Create Folder", file1.mkdirs().toString())
+        }
+        val file2 = File(Environment.getExternalStorageDirectory().path + File.separator + "Sunshinebox_III" + File.separator + "editor")
+        if (!file2.exists()) {
+            Log.i("Create Folder", file2.mkdirs().toString())
+        }
         return file
     }
 
