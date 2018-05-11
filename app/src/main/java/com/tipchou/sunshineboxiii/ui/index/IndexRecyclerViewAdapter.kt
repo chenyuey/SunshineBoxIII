@@ -4,6 +4,7 @@ import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
 import android.support.v7.widget.RecyclerView
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -23,7 +24,7 @@ import javax.inject.Inject
  * Perfect Code
  */
 class IndexRecyclerViewAdapter(private val activity: IndexActivity) : RecyclerView.Adapter<IndexRecyclerViewAdapter.ViewHolder>() {
-    class ItemData(val LessonLocal: LessonLocal, val editor: Boolean)
+    class ItemData(val LessonLocal: LessonLocal, val editor: Boolean, val download: Boolean)
 
     @Inject
     lateinit var dbDao: DbDao
@@ -31,6 +32,8 @@ class IndexRecyclerViewAdapter(private val activity: IndexActivity) : RecyclerVi
     private val netStatusLiveData: LiveData<Boolean>
     private val roleLiveData: LiveData<Resource<List<RoleLocal>>>
     private val lessonLiveData: LiveData<Resource<List<LessonLocal>>>
+    private val downloadedLessonLiveData: LiveData<List<DownloadLocal>>
+
 
     private val layoutInflater: LayoutInflater = LayoutInflater.from(activity)
 
@@ -41,12 +44,14 @@ class IndexRecyclerViewAdapter(private val activity: IndexActivity) : RecyclerVi
         val viewModel: IndexViewModel = ViewModelProviders.of(activity).get(IndexViewModel::class.java)
         netStatusLiveData = viewModel.getNetStatus()
         netStatusLiveData.observe(activity, Observer { })
+        downloadedLessonLiveData = viewModel.getDownloadedLesson()
+        downloadedLessonLiveData.observe(activity, Observer { })
         roleLiveData = viewModel.getRole()
         roleLiveData.observe(activity, Observer { })
         lessonLiveData = viewModel.getLesson()
         lessonLiveData.observe(activity, Observer {
             itemDataList.clear()
-            notifyDataSetChanged()
+//            notifyDataSetChanged()
             buildLessonList(it)
             notifyDataSetChanged()
         })
@@ -55,33 +60,62 @@ class IndexRecyclerViewAdapter(private val activity: IndexActivity) : RecyclerVi
     private fun buildLessonList(it: Resource<List<LessonLocal>>?) {
         if (it?.status == Resource.Status.SUCCESS || it?.status == Resource.Status.ERROR || it?.status == Resource.Status.LOADING) {
             val roleList: List<RoleLocal>? = roleLiveData.value?.data
+            val downloadedLessonList: List<DownloadLocal>? = downloadedLessonLiveData.value
             val lessonList = it.data
             if (roleList == null) {
                 //should not be here
             } else {
-                val isEditor = isUserEditor(roleList)
-                if (isEditor) {
-                    if (lessonList == null) {
-                        //should not be here
-                    } else {
-                        for (item in lessonList) {
-                            if (item.areChecked == 1) {
-                                itemDataList.add(ItemData(item, true))
-                            }
-                        }
-                        for (item in lessonList) {
-                            if (item.isPublish == true) {
-                                itemDataList.add(ItemData(item, false))
-                            }
-                        }
-                    }
+                if (downloadedLessonList == null) {
+                    //should not be here
                 } else {
-                    if (lessonList == null) {
-                        //should not be here
+                    val isEditor = isUserEditor(roleList)
+                    if (isEditor) {
+                        if (lessonList == null) {
+                            //should not be here
+                        } else {
+                            for (lesson in lessonList) {
+                                if (lesson.areChecked == 1) {
+                                    var download = false
+                                    for (downloadedLesson in downloadedLessonList) {
+                                        if (downloadedLesson.objectId == lesson.objectId) {
+                                            if (downloadedLesson.stagingUrl != null) {
+                                                download = true
+                                            }
+                                        }
+                                    }
+                                    itemDataList.add(ItemData(lesson, true, download))
+                                }
+                            }
+                            for (lesson in lessonList) {
+                                if (lesson.isPublish == true) {
+                                    var download = false
+                                    for (downloadedLesson in downloadedLessonList) {
+                                        if (downloadedLesson.objectId == lesson.objectId) {
+                                            if (downloadedLesson.stagingUrl != null) {
+                                                download = true
+                                            }
+                                        }
+                                    }
+                                    itemDataList.add(ItemData(lesson, false, download))
+                                }
+                            }
+                        }
                     } else {
-                        for (item in lessonList) {
-                            if (item.isPublish == true) {
-                                itemDataList.add(ItemData(item, false))
+                        if (lessonList == null) {
+                            //should not be here
+                        } else {
+                            for (lesson in lessonList) {
+                                if (lesson.isPublish == true) {
+                                    var download = false
+                                    for (downloadedLesson in downloadedLessonList) {
+                                        if (downloadedLesson.objectId == lesson.objectId) {
+                                            if (downloadedLesson.publishedUrl != null) {
+                                                download = true
+                                            }
+                                        }
+                                    }
+                                    itemDataList.add(ItemData(lesson, false, download))
+                                }
                             }
                         }
                     }
@@ -120,7 +154,7 @@ class IndexRecyclerViewAdapter(private val activity: IndexActivity) : RecyclerVi
         //useful data
         private var lesson: LessonLocal? = null
         private var editor: Boolean? = null
-        private var downloadLiveData: LiveData<List<DownloadLocal>>? = null
+        private var download: Boolean? = null
 
         fun bind(itemData: ItemData?) {
             getUsefulData(itemData)
@@ -128,59 +162,27 @@ class IndexRecyclerViewAdapter(private val activity: IndexActivity) : RecyclerVi
                     ?: throw Exception("IndexRecyclerViewAdapter's bind() editor is null")
             val lesson = this.lesson
                     ?: throw Exception("IndexRecyclerViewAdapter's bind() lesson is null")
-            val downloadLiveData = this.downloadLiveData
-                    ?: throw Exception("IndexRecyclerViewAdapter's bind() downloadLiveData is null")
+            val download = this.download
+                    ?: throw Exception("IndexRecyclerViewAdapter's bind() download is null")
 
             //now we get all useful data
             setUpLessonName()
             setUpEditorTip()
-
-            downloadLiveData.observe(activity, Observer {
-                //啥都没查到,直接加载灰色图片
-                if (it?.size == 0) {
-                    when (lesson.subject) {
-                        "NURSERY" -> backgroundImageView.setBackgroundResource(R.drawable.nursery_gray)
-                        "MUSIC" -> backgroundImageView.setBackgroundResource(R.drawable.music_gray)
-                        "READING" -> backgroundImageView.setBackgroundResource(R.drawable.reading_gray)
-                        "GAME" -> backgroundImageView.setBackgroundResource(R.drawable.game_gray)
-                    }
-                } else {
-                    //查到了
-                    if (editor) {
-                        if (it?.get(0)?.stagingUrl == null) {
-                            when (lesson.subject) {
-                                "NURSERY" -> backgroundImageView.setBackgroundResource(R.drawable.nursery_gray)
-                                "MUSIC" -> backgroundImageView.setBackgroundResource(R.drawable.music_gray)
-                                "READING" -> backgroundImageView.setBackgroundResource(R.drawable.reading_gray)
-                                "GAME" -> backgroundImageView.setBackgroundResource(R.drawable.game_gray)
-                            }
-                        } else {
-                            when (lesson.subject) {
-                                "NURSERY" -> backgroundImageView.setBackgroundResource(R.drawable.nursery)
-                                "MUSIC" -> backgroundImageView.setBackgroundResource(R.drawable.music)
-                                "READING" -> backgroundImageView.setBackgroundResource(R.drawable.reading)
-                                "GAME" -> backgroundImageView.setBackgroundResource(R.drawable.game)
-                            }
-                        }
-                    } else {
-                        if (it?.get(0)?.publishedUrl == null) {
-                            when (lesson.subject) {
-                                "NURSERY" -> backgroundImageView.setBackgroundResource(R.drawable.nursery_gray)
-                                "MUSIC" -> backgroundImageView.setBackgroundResource(R.drawable.music_gray)
-                                "READING" -> backgroundImageView.setBackgroundResource(R.drawable.reading_gray)
-                                "GAME" -> backgroundImageView.setBackgroundResource(R.drawable.game_gray)
-                            }
-                        } else {
-                            when (lesson.subject) {
-                                "NURSERY" -> backgroundImageView.setBackgroundResource(R.drawable.nursery)
-                                "MUSIC" -> backgroundImageView.setBackgroundResource(R.drawable.music)
-                                "READING" -> backgroundImageView.setBackgroundResource(R.drawable.reading)
-                                "GAME" -> backgroundImageView.setBackgroundResource(R.drawable.game)
-                            }
-                        }
-                    }
+            if (download) {
+                when (lesson.subject) {
+                    "NURSERY" -> backgroundImageView.setBackgroundResource(R.drawable.nursery)
+                    "MUSIC" -> backgroundImageView.setBackgroundResource(R.drawable.music)
+                    "READING" -> backgroundImageView.setBackgroundResource(R.drawable.reading)
+                    "GAME" -> backgroundImageView.setBackgroundResource(R.drawable.game)
                 }
-            })
+            } else {
+                when (lesson.subject) {
+                    "NURSERY" -> backgroundImageView.setBackgroundResource(R.drawable.nursery_gray)
+                    "MUSIC" -> backgroundImageView.setBackgroundResource(R.drawable.music_gray)
+                    "READING" -> backgroundImageView.setBackgroundResource(R.drawable.reading_gray)
+                    "GAME" -> backgroundImageView.setBackgroundResource(R.drawable.game_gray)
+                }
+            }
         }
 
         private fun setUpEditorTip() {
@@ -197,13 +199,7 @@ class IndexRecyclerViewAdapter(private val activity: IndexActivity) : RecyclerVi
         private fun getUsefulData(itemData: ItemData?) {
             lesson = itemData?.LessonLocal
             editor = itemData?.editor
-            val objectId = itemData?.LessonLocal?.objectId
-            if (objectId == null) {
-                //should not be here!!
-                throw Exception("IndexRecyclerViewAdapter's ViewHolder object is null")
-            } else {
-                downloadLiveData = dbDao.getDownload(objectId)
-            }
+            download = itemData?.download
         }
 
         private fun setUpLessonName() {

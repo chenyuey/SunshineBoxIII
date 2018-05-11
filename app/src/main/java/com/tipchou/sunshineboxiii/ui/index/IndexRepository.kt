@@ -2,6 +2,7 @@ package com.tipchou.sunshineboxiii.ui.index
 
 import android.arch.lifecycle.LiveData
 import android.util.Log
+import com.tipchou.sunshineboxiii.entity.local.DownloadLocal
 import com.tipchou.sunshineboxiii.entity.local.LessonLocal
 import com.tipchou.sunshineboxiii.entity.local.LessonLocal_.isPublish
 import com.tipchou.sunshineboxiii.entity.local.LessonLocal_.packageUrl
@@ -33,21 +34,23 @@ class IndexRepository @Inject constructor() {
         DaggerMagicBox.create().poke(this)
     }
 
-    fun getUserRole(): LiveData<Resource<List<RoleLocal>>> = GeneralDataRequest<RoleLocal, RoleWeb>(
-            loadFromDb = { dbDao.getRole() },
-            shouldFetch = { true },
-            createCall = { webDao.getRole() },
-            deleteDb = { dbDao.removeRole(it) },
-            buildSavedList = {
-                val databaseList = ArrayList<RoleLocal>()
-                for (item in it) {
-                    val dbData = RoleLocal(name = item.name)
-                    databaseList.add(dbData)
-                }
-                databaseList
-            },
-            saveCallResult = { dbDao.saveRole(it) }
-    ).getAsLiveData()
+    fun getUserRole(): LiveData<Resource<List<RoleLocal>>> {
+        return GeneralDataRequest<RoleLocal, RoleWeb>(
+                loadFromDb = { dbDao.getRole() },
+                shouldFetch = { true },
+                createCall = { webDao.getRole() },
+                deleteDb = { dbDao.removeRole(it) },
+                buildSavedList = {
+                    val databaseList = ArrayList<RoleLocal>()
+                    for (item in it) {
+                        val dbData = RoleLocal(name = item.name)
+                        databaseList.add(dbData)
+                    }
+                    databaseList
+                },
+                saveCallResult = { dbDao.saveRole(it) }
+        ).getAsLiveData()
+    }
 
     fun getLesson(lessonType: LessonType): LiveData<Resource<List<LessonLocal>>> {
         return GeneralDataRequest<LessonLocal, LessonWeb>(
@@ -76,5 +79,9 @@ class IndexRepository @Inject constructor() {
                 },
                 saveCallResult = { dbDao.saveLesson(it) }
         ).getAsLiveData()
+    }
+
+    fun getDownload(): LiveData<List<DownloadLocal>> {
+        return dbDao.getDownload()
     }
 }

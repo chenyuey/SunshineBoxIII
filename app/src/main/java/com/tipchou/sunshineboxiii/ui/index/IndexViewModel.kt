@@ -22,14 +22,14 @@ class IndexViewModel : ViewModel() {
     //observed data
     private val role: MutableLiveData<Resource<List<RoleLocal>>> = MutableLiveData()
     private val lesson: MutableLiveData<Resource<List<LessonLocal>>> = MutableLiveData()
-    private val downloadedLesson: MutableLiveData<Resource<DownloadLocal>> = MutableLiveData()
+    private val downloadedLesson: MutableLiveData<List<DownloadLocal>> = MutableLiveData()
     private val netStatus: MutableLiveData<Boolean> = MutableLiveData()
     private val lessonType: MutableLiveData<LessonType> = MutableLiveData()
 
     //data observer
     private val roleObserver: GeneralObserver<Resource<List<RoleLocal>>>
     private val lessonObserver: GeneralObserver<Resource<List<LessonLocal>>>
-//    private val downloadedLessonObserver: GeneralObserver<Resource<DownloadLocal>>
+    private val downloadedLessonObserver: GeneralObserver<List<DownloadLocal>>
 
     init {
         DaggerMagicBox.create().poke(this)
@@ -40,8 +40,9 @@ class IndexViewModel : ViewModel() {
         lessonObserver = GeneralObserver(lesson) {
             repository.getLesson(lessonType = lessonType.value!!)
         }
-
-//        downloadedLessonObserver = GeneralObserver(downloadedLesson) {}
+        downloadedLessonObserver = GeneralObserver(downloadedLesson) {
+            repository.getDownload()
+        }
     }
 
     fun getLessonType() = lessonType
@@ -72,5 +73,14 @@ class IndexViewModel : ViewModel() {
 
     fun loadLesson() {
         lessonObserver.load()
+    }
+
+    fun getDownloadedLesson(): MutableLiveData<List<DownloadLocal>> {
+        loadDownloadedLesson()
+        return downloadedLesson
+    }
+
+    fun loadDownloadedLesson() {
+        downloadedLessonObserver.load()
     }
 }

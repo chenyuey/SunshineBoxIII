@@ -126,7 +126,7 @@ class DbDao @Inject constructor() {
         }
     }
 
-    fun getDownload(objectId: String): ObjectBoxLiveData<DownloadLocal> {
+    fun getDownload(): ObjectBoxLiveData<DownloadLocal> {
         if (boxStore == null) {
             //should not be here!!!!!!
             throw Exception("App.getBoxStore() get null!!!")
@@ -137,7 +137,6 @@ class DbDao @Inject constructor() {
                 //should not be here
                 throw Exception("queryBuilder is null!!!")
             } else {
-                queryBuilder.equal(DownloadLocal_.objectId, objectId)
                 return ObjectBoxLiveData(queryBuilder.build())
             }
         }
