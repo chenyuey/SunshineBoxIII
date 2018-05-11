@@ -54,10 +54,12 @@ class IndexRecyclerViewAdapter(private val activity: IndexActivity) : RecyclerVi
             buildLessonList(it)
             notifyDataSetChanged()
 
-            if (itemDataList.size == 0) {
-                activity.showNoDataHint(true)
-            } else {
-                activity.showNoDataHint(false)
+            if (it?.status == Resource.Status.SUCCESS || it?.status == Resource.Status.ERROR) {
+                if (itemDataList.size == 0) {
+                    activity.showNoDataHint(true)
+                } else {
+                    activity.showNoDataHint(false)
+                }
             }
         })
     }
