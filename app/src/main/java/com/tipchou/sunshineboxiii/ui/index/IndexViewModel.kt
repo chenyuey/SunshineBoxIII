@@ -25,6 +25,7 @@ class IndexViewModel : ViewModel() {
     private val downloadedLesson: MutableLiveData<List<DownloadLocal>> = MutableLiveData()
     private val netStatus: MutableLiveData<Boolean> = MutableLiveData()
     private val lessonType: MutableLiveData<LessonType> = MutableLiveData()
+    private val downloadProcess: MutableLiveData<Boolean> = MutableLiveData()
 
     //data observer
     private val roleObserver: GeneralObserver<Resource<List<RoleLocal>>>
@@ -43,6 +44,12 @@ class IndexViewModel : ViewModel() {
         downloadedLessonObserver = GeneralObserver(downloadedLesson) {
             repository.getDownload()
         }
+    }
+
+    fun getDownloadProcess() = downloadProcess
+
+    fun setDownloadProcess() {
+        downloadProcess.value = downloadProcess.value != true
     }
 
     fun getLessonType() = lessonType

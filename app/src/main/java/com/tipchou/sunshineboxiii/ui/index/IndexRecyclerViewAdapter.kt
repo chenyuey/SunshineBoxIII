@@ -1,8 +1,12 @@
 package com.tipchou.sunshineboxiii.ui.index
 
+import android.app.DownloadManager
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
+import android.content.Context
+import android.database.Cursor
+import android.net.Uri
 import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.view.LayoutInflater
@@ -33,13 +37,16 @@ class IndexRecyclerViewAdapter(private val activity: IndexActivity) : RecyclerVi
     private val roleLiveData: LiveData<Resource<List<RoleLocal>>>
     private val lessonLiveData: LiveData<Resource<List<LessonLocal>>>
     private val downloadedLessonLiveData: LiveData<List<DownloadLocal>>
+    private val downloadProcessLiveData: LiveData<Boolean>
 
     private val layoutInflater: LayoutInflater = LayoutInflater.from(activity)
+    private val downloadManager: DownloadManager
 
     private val itemDataList = ArrayList<ItemData>()
 
     init {
         DaggerMagicBox.create().poke(this)
+        downloadManager = activity.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
         val viewModel: IndexViewModel = ViewModelProviders.of(activity).get(IndexViewModel::class.java)
         netStatusLiveData = viewModel.getNetStatus()
         netStatusLiveData.observe(activity, Observer { })
@@ -59,6 +66,29 @@ class IndexRecyclerViewAdapter(private val activity: IndexActivity) : RecyclerVi
                     activity.showNoDataHint(true)
                 } else {
                     activity.showNoDataHint(false)
+                }
+            }
+        })
+        downloadProcessLiveData = viewModel.getDownloadProcess()
+        downloadProcessLiveData.observe(activity, Observer {
+            val query = DownloadManager.Query()
+//            query.setFilterById(downloadId)
+            val downloadManager: DownloadManager = activity.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
+            val cursor: Cursor? = downloadManager.query(query)
+            if (cursor == null) {
+                //should not be here
+            } else {
+                cursor.moveToFirst()
+                val totalColumn: Int = cursor.getColumnIndex(DownloadManager.COLUMN_TOTAL_SIZE_BYTES)
+                val currentColumn: Int = cursor.getColumnIndex(DownloadManager.COLUMN_BYTES_DOWNLOADED_SO_FAR)
+                val totalSize: Int = cursor.getInt(totalColumn)
+                val currentSize: Int = cursor.getInt(currentColumn)
+                val percent: Float = currentSize.toFloat() / totalSize.toFloat()
+                val progress = Math.round(percent * 100)
+                if (progress == 100) {
+                    Log.e("download", "done!!!")
+                } else {
+                    Log.e("download", progress.toString())
                 }
             }
         })
@@ -204,8 +234,6 @@ class IndexRecyclerViewAdapter(private val activity: IndexActivity) : RecyclerVi
                     "GAME" -> backgroundImageView.setBackgroundResource(R.drawable.game_gray)
                 }
             }
-
-
         }
 
         private fun setUpEditorTip() {
@@ -230,7 +258,11 @@ class IndexRecyclerViewAdapter(private val activity: IndexActivity) : RecyclerVi
         }
 
         override fun onClick(v: View?) {
-
+            val imageUri = Uri.parse("http://lc-cqbvih8f.cn-n1.lcfile.com/b88aaa2cb784398e5559.jpg")
+            val request = DownloadManager.Request(imageUri)
+            request.setDestinationInExternalPublicDir("SunshineBox_III", "3.jpg")
+            request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_HIDDEN)
+            val downloadId = downloadManager.enqueue(request)
         }
     }
 }
