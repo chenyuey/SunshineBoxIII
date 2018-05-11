@@ -43,6 +43,19 @@ class IndexActivity : BaseActivity() {
 
     private var refreshAnimator: ObjectAnimator? = null
 
+    //-------------------------------public Method--------------------------------------------------
+    fun showNoDataHint(should: Boolean) {
+        if (should) {
+            index_act_imageview11.visibility = View.VISIBLE
+            index_act_textview12.visibility = View.VISIBLE
+            index_act_nestedscrollview1.visibility = View.GONE
+        } else {
+            index_act_imageview11.visibility = View.GONE
+            index_act_textview12.visibility = View.GONE
+            index_act_nestedscrollview1.visibility = View.VISIBLE
+        }
+    }
+
     //-------------------------------onCreate Method------------------------------------------------
     private fun setUpClickEvent() {
         //drawer layout
@@ -215,6 +228,7 @@ class IndexActivity : BaseActivity() {
         })
         viewModel?.getLesson()?.observe(this, Observer {
             Log.e("Lesson", "Status: ${it?.status.toString()}; Message: ${it?.message}; Size: ${it?.data?.size}")
+
         })
     }
 

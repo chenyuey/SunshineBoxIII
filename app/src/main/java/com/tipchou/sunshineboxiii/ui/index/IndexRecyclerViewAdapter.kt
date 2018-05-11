@@ -34,7 +34,6 @@ class IndexRecyclerViewAdapter(private val activity: IndexActivity) : RecyclerVi
     private val lessonLiveData: LiveData<Resource<List<LessonLocal>>>
     private val downloadedLessonLiveData: LiveData<List<DownloadLocal>>
 
-
     private val layoutInflater: LayoutInflater = LayoutInflater.from(activity)
 
     private val itemDataList = ArrayList<ItemData>()
@@ -54,6 +53,12 @@ class IndexRecyclerViewAdapter(private val activity: IndexActivity) : RecyclerVi
 //            notifyDataSetChanged()
             buildLessonList(it)
             notifyDataSetChanged()
+
+            if (itemDataList.size == 0) {
+                activity.showNoDataHint(true)
+            } else {
+                activity.showNoDataHint(false)
+            }
         })
     }
 
