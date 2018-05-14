@@ -3,7 +3,6 @@ package com.tipchou.sunshineboxiii.ui.index
 import android.Manifest
 import android.animation.ObjectAnimator
 import android.animation.ValueAnimator
-import android.annotation.SuppressLint
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
 import android.content.BroadcastReceiver
@@ -11,15 +10,11 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.content.pm.PackageManager
-import android.database.ContentObserver
 import android.graphics.Color
 import android.net.ConnectivityManager
 import android.net.NetworkInfo
-import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
-import android.os.Handler
-import android.os.Message
 import android.support.design.widget.Snackbar
 import android.support.v4.app.ActivityCompat
 import android.support.v4.content.ContextCompat
@@ -48,8 +43,6 @@ class IndexActivity : BaseActivity() {
 
     private var refreshAnimator: ObjectAnimator? = null
 
-    private var downloadObserver: DownloadObserver? = null
-
     //-------------------------------public Method--------------------------------------------------
     fun showNoDataHint(should: Boolean) {
         if (should) {
@@ -60,23 +53,6 @@ class IndexActivity : BaseActivity() {
             index_act_imageview11.visibility = View.GONE
             index_act_textview12.visibility = View.GONE
             index_act_nestedscrollview1.visibility = View.VISIBLE
-        }
-    }
-
-    //-------------------------------inner class----------------------------------------------------
-    class DownloadObserver(private val handler: Handler, private val viewModel: IndexViewModel, private val activity: IndexActivity) : ContentObserver(handler) {
-        override fun onChange(selfChange: Boolean) {
-            super.onChange(selfChange)
-
-            handler.sendEmptyMessage(0)
-        }
-    }
-
-    private val handler = @SuppressLint("HandlerLeak")
-    object : Handler() {
-        override fun handleMessage(msg: Message?) {
-            super.handleMessage(msg)
-            viewModel?.setDownloadProcess()
         }
     }
 
@@ -292,8 +268,6 @@ class IndexActivity : BaseActivity() {
         setUpRecyclerView()
         checkPermissions()
         createRootFolder()
-        downloadObserver = DownloadObserver(handler, viewModel!!, this)
-        contentResolver.registerContentObserver(Uri.parse("content://downloads/my_downloads"), true, downloadObserver)
     }
 
     private fun setUpRecyclerView() {
@@ -306,11 +280,6 @@ class IndexActivity : BaseActivity() {
         viewModel?.setNetStatus(getNetworkState(this))
         viewModel?.loadRole()
         viewModel?.loadLesson()
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        contentResolver.unregisterContentObserver(downloadObserver)
     }
 
     //--------------------------------Snack Bar-----------------------------------------------------
