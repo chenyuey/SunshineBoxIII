@@ -2,13 +2,12 @@ package com.tipchou.sunshineboxiii.ui.index
 
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
+import com.bumptech.glide.Glide.init
+import com.tipchou.sunshineboxiii.entity.DownloadHolder
 import com.tipchou.sunshineboxiii.entity.local.DownloadLocal
 import com.tipchou.sunshineboxiii.entity.local.LessonLocal
 import com.tipchou.sunshineboxiii.entity.local.RoleLocal
-import com.tipchou.sunshineboxiii.support.DaggerMagicBox
-import com.tipchou.sunshineboxiii.support.GeneralObserver
-import com.tipchou.sunshineboxiii.support.LessonType
-import com.tipchou.sunshineboxiii.support.Resource
+import com.tipchou.sunshineboxiii.support.*
 import javax.inject.Inject
 
 /**
@@ -25,12 +24,19 @@ class IndexViewModel : ViewModel() {
     private val downloadedLesson: MutableLiveData<List<DownloadLocal>> = MutableLiveData()
     private val netStatus: MutableLiveData<Boolean> = MutableLiveData()
     private val lessonType: MutableLiveData<LessonType> = MutableLiveData()
-    private val downloadProcess: MutableLiveData<Boolean> = MutableLiveData()
 
     //data observer
     private val roleObserver: GeneralObserver<Resource<List<RoleLocal>>>
     private val lessonObserver: GeneralObserver<Resource<List<LessonLocal>>>
     private val downloadedLessonObserver: GeneralObserver<List<DownloadLocal>>
+
+    private val lessonDownloadHelper = LessonDownloadHelper { lessonObjectId, storageUrl, editor ->
+        if (editor) {
+            repository.dbDao.saveDownload(lessonObjectId, null, storageUrl)
+        } else {
+            repository.dbDao.saveDownload(lessonObjectId, storageUrl, null)
+        }
+    }
 
     init {
         DaggerMagicBox.create().poke(this)
@@ -46,11 +52,9 @@ class IndexViewModel : ViewModel() {
         }
     }
 
-    fun getDownloadProcess() = downloadProcess
+    fun getDownloadQueue() = lessonDownloadHelper.getDownloadQueue()
 
-    fun setDownloadProcess() {
-        downloadProcess.value = downloadProcess.value != true
-    }
+    fun downloadLesson(downloadHolder: DownloadHolder) = lessonDownloadHelper.enqueueDownloaded(downloadHolder)
 
     fun getLessonType() = lessonType
 

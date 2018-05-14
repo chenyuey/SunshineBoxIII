@@ -1,29 +1,21 @@
 package com.tipchou.sunshineboxiii.ui.index
 
-import android.annotation.SuppressLint
-import android.app.DownloadManager
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
-import android.content.Context
-import android.database.Cursor
-import android.net.Uri
 import android.support.v7.widget.RecyclerView
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import com.tipchou.sunshineboxiii.R
+import com.tipchou.sunshineboxiii.entity.DownloadHolder
 import com.tipchou.sunshineboxiii.entity.local.DownloadLocal
 import com.tipchou.sunshineboxiii.entity.local.LessonLocal
 import com.tipchou.sunshineboxiii.entity.local.RoleLocal
 import com.tipchou.sunshineboxiii.support.DaggerMagicBox
 import com.tipchou.sunshineboxiii.support.Resource
-import com.tipchou.sunshineboxiii.support.dao.DbDao
-import java.io.File
-import javax.inject.Inject
 
 /**
  * Created by 邵励治 on 2018/5/8.
@@ -32,46 +24,45 @@ import javax.inject.Inject
 class IndexRecyclerViewAdapter(private val activity: IndexActivity) : RecyclerView.Adapter<IndexRecyclerViewAdapter.ViewHolder>() {
     class ItemData(val LessonLocal: LessonLocal, val editor: Boolean, val download: Boolean)
 
-    @Inject
-    lateinit var dbDao: DbDao
-
     private val netStatusLiveData: LiveData<Boolean>
     private val roleLiveData: LiveData<Resource<List<RoleLocal>>>
     private val lessonLiveData: LiveData<Resource<List<LessonLocal>>>
     private val downloadedLessonLiveData: LiveData<List<DownloadLocal>>
-    private val downloadProcessLiveData: LiveData<Boolean>
+    private val downloadQueueLiveData: LiveData<HashMap<DownloadHolder, String>>
+    private val downloadLesson: (downloadHolder: DownloadHolder) -> Unit
 
     private val layoutInflater: LayoutInflater = LayoutInflater.from(activity)
-    private val downloadManager: DownloadManager
 
     private val itemDataList = ArrayList<ItemData>()
 
     init {
         DaggerMagicBox.create().poke(this)
-        downloadManager = activity.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
         val viewModel: IndexViewModel = ViewModelProviders.of(activity).get(IndexViewModel::class.java)
         netStatusLiveData = viewModel.getNetStatus()
         netStatusLiveData.observe(activity, Observer { })
+        downloadLesson = { viewModel.downloadLesson(it) }
         downloadedLessonLiveData = viewModel.getDownloadedLesson()
         downloadedLessonLiveData.observe(activity, Observer { })
+        downloadQueueLiveData = viewModel.getDownloadQueue()
         roleLiveData = viewModel.getRole()
         roleLiveData.observe(activity, Observer { })
         lessonLiveData = viewModel.getLesson()
         lessonLiveData.observe(activity, Observer {
             itemDataList.clear()
-//            notifyDataSetChanged()
             buildLessonList(it)
             notifyDataSetChanged()
-
-            if (it?.status == Resource.Status.SUCCESS || it?.status == Resource.Status.ERROR) {
-                if (itemDataList.size == 0) {
-                    activity.showNoDataHint(true)
-                } else {
-                    activity.showNoDataHint(false)
-                }
-            }
+            showNoDataHint(it)
         })
-        downloadProcessLiveData = viewModel.getDownloadProcess()
+    }
+
+    private fun showNoDataHint(it: Resource<List<LessonLocal>>?) {
+        if (it?.status == Resource.Status.SUCCESS || it?.status == Resource.Status.ERROR) {
+            if (itemDataList.size == 0) {
+                activity.showNoDataHint(true)
+            } else {
+                activity.showNoDataHint(false)
+            }
+        }
     }
 
     private fun buildLessonList(it: Resource<List<LessonLocal>>?) {
@@ -157,9 +148,8 @@ class IndexRecyclerViewAdapter(private val activity: IndexActivity) : RecyclerVi
 
     override fun getItemCount(): Int = itemDataList.size
 
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bind(itemData = itemDataList[position])
-    }
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) = holder.bind(itemData = itemDataList[position])
+
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView), View.OnClickListener {
 
@@ -185,16 +175,69 @@ class IndexRecyclerViewAdapter(private val activity: IndexActivity) : RecyclerVi
 
         fun bind(itemData: ItemData?) {
             getUsefulData(itemData)
-            val editor = this.editor
-                    ?: throw Exception("IndexRecyclerViewAdapter's bind() editor is null")
-            val lesson = this.lesson
-                    ?: throw Exception("IndexRecyclerViewAdapter's bind() lesson is null")
-            val download = this.download
-                    ?: throw Exception("IndexRecyclerViewAdapter's bind() download is null")
-
-            //now we get all useful data
+            val (editor, lesson, download) = getValueNotNull()
             setUpLessonName()
             setUpEditorTip()
+            setUpBackground(download, lesson)
+            observerDownload(editor, lesson)
+        }
+
+        fun bind(lesson: LessonLocal, editor: Boolean, download: Boolean) {
+            this.lesson = lesson
+            this.editor = editor
+            this.download = download
+            setUpLessonName()
+            setUpEditorTip()
+            setUpBackground(download, lesson)
+            observerDownload(editor, lesson)
+        }
+
+        private fun observerDownload(editor: Boolean, lesson: LessonLocal) {
+            val (isDownloading, myDownloadHolder: DownloadHolder?) = isDownloading(editor, lesson)
+            if (isDownloading && myDownloadHolder != null) {
+                downloadQueueLiveData.observe(activity, object : Observer<HashMap<DownloadHolder, String>> {
+                    override fun onChanged(t: HashMap<DownloadHolder, String>?) {
+                        if (t != null) {
+                            var isMyHolderInMap = false
+                            for (downloadHolder in t.keys) {
+                                if (downloadHolder == myDownloadHolder) {
+                                    isMyHolderInMap = true
+                                    break
+                                }
+                            }
+                            if (isMyHolderInMap) {
+                                downloadStatusTextView.text = t[myDownloadHolder]
+                            } else {
+                                downloadQueueLiveData.removeObserver(this)
+                                bind(lesson, editor, true)
+                            }
+                        } else {
+                            //should not be here!!!
+                        }
+                    }
+                })
+            }
+        }
+
+        private fun isDownloading(editor: Boolean, lesson: LessonLocal): Pair<Boolean, DownloadHolder?> {
+            val downloadHolderMap = downloadQueueLiveData.value
+            var isDownloading = false
+            var myDownloadHolder: DownloadHolder? = null
+            if (downloadHolderMap != null) {
+                for (downloadHolder in downloadHolderMap.keys) {
+                    if (downloadHolder.editor == editor && downloadHolder.lessonObjectId == lesson.objectId) {
+                        isDownloading = true
+                        myDownloadHolder = downloadHolder
+                        break
+                    }
+                }
+            } else {
+                //should not be here
+            }
+            return Pair(isDownloading, myDownloadHolder)
+        }
+
+        private fun setUpBackground(download: Boolean, lesson: LessonLocal) {
             if (download) {
                 fileDownloadImageView.visibility = View.GONE
                 downloadStatusTextView.text = ""
@@ -214,6 +257,16 @@ class IndexRecyclerViewAdapter(private val activity: IndexActivity) : RecyclerVi
                     "GAME" -> backgroundImageView.setBackgroundResource(R.drawable.game_gray)
                 }
             }
+        }
+
+        private fun getValueNotNull(): Triple<Boolean, LessonLocal, Boolean> {
+            val editor = this.editor
+                    ?: throw Exception("IndexRecyclerViewAdapter's bind() editor is null")
+            val lesson = this.lesson
+                    ?: throw Exception("IndexRecyclerViewAdapter's bind() lesson is null")
+            val download = this.download
+                    ?: throw Exception("IndexRecyclerViewAdapter's bind() download is null")
+            return Triple(editor, lesson, download)
         }
 
         private fun setUpEditorTip() {
@@ -238,26 +291,12 @@ class IndexRecyclerViewAdapter(private val activity: IndexActivity) : RecyclerVi
         }
 
         override fun onClick(v: View?) {
-
-        }
-
-        private fun download(): Long {
-            var downloadUrl: String? = null
-            var storageName: String? = null
-            when (editor) {
-                true -> {
-                    downloadUrl = lesson?.stagingPackageUrl!!
-                    storageName = "editor" + File.separator + lesson?.objectId + ".zip"
-                }
-                false -> {
-                    downloadUrl = lesson?.packageUrl!!
-                    storageName = "normal" + File.separator + lesson?.objectId + ".zip"
-                }
-            }
-            val request = DownloadManager.Request(Uri.parse(downloadUrl))
-            request.setDestinationInExternalPublicDir("SunshineBox_III", storageName)
-            request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_HIDDEN)
-            return downloadManager.enqueue(request)
+            downloadLesson(DownloadHolder(lessonObjectId = lesson!!.objectId, editor = editor!!, downloadUrl = if (editor!!) {
+                lesson!!.stagingPackageUrl!!
+            } else {
+                lesson!!.packageUrl!!
+            }))
+            observerDownload(editor!!, lesson!!)
         }
     }
 }
