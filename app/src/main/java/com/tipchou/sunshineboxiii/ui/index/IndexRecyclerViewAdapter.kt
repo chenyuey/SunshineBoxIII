@@ -238,52 +238,7 @@ class IndexRecyclerViewAdapter(private val activity: IndexActivity) : RecyclerVi
         }
 
         override fun onClick(v: View?) {
-            when (download) {
-                true -> {
-                    //已下载
-                    when (editor) {
-                        true -> {
-                            Log.e("onClick", lesson?.stagingPackageUrl)
-                        }
-                        false -> {
-                            Log.e("onClick", lesson?.packageUrl)
-                        }
-                    }
-                }
-                false -> {
-                    //未下载
-                    val downloadId = download()
-                    fileDownloadImageView.visibility = View.GONE
-                    downloadStatusTextView.text = "正在下载：0%"
-                    downloadProcessLiveData.observeForever(object : Observer<Boolean> {
-                        @SuppressLint("SetTextI18n")
-                        override fun onChanged(t: Boolean?) {
-                            val query = DownloadManager.Query()
-                            query.setFilterById(downloadId)
-                            val cursor: Cursor = downloadManager.query(query)
-                            cursor.moveToFirst()
-                            val totalColumn: Int = cursor.getColumnIndex(DownloadManager.COLUMN_TOTAL_SIZE_BYTES)
-                            val currentColumn: Int = cursor.getColumnIndex(DownloadManager.COLUMN_BYTES_DOWNLOADED_SO_FAR)
-                            val totalSize: Int = cursor.getInt(totalColumn)
-                            val currentSize: Int = cursor.getInt(currentColumn)
-                            val percent: Float = currentSize.toFloat() / totalSize.toFloat()
-                            val progress = Math.round(percent * 100)
-                            downloadStatusTextView.text = "正在下载: $progress%"
-                            if (downloadManager.getUriForDownloadedFile(downloadId) != null) {
-                                downloadProcessLiveData.removeObserver(this)
-                                when (lesson?.subject) {
-                                    "NURSERY" -> backgroundImageView.setBackgroundResource(R.drawable.nursery)
-                                    "MUSIC" -> backgroundImageView.setBackgroundResource(R.drawable.music)
-                                    "READING" -> backgroundImageView.setBackgroundResource(R.drawable.reading)
-                                    "GAME" -> backgroundImageView.setBackgroundResource(R.drawable.game)
-                                }
-                                download = true
-                                downloadStatusTextView.text = ""
-                            }
-                        }
-                    })
-                }
-            }
+
         }
 
         private fun download(): Long {
