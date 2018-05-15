@@ -9,6 +9,7 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import java.io.File
+import java.io.IOException
 
 /**
  * Created by 邵励治 on 2018/5/14.
@@ -56,7 +57,9 @@ constructor(saveDownloadResult: (lessonObjectId: String, storageUrl: String, edi
 
                                         DownloadTask(response, downloadHolder.lessonObjectId + ".zip", folder, object : DownloadTask.DownloadCallback {
                                             override fun downloadSuccess(file: File) {
-                                                saveDownloadResult(downloadHolder.lessonObjectId, file.absolutePath, downloadHolder.editor)
+                                                //将下载的文件解压缩!!!
+                                                val outPutFolder = decompressZip(file, File(folder, downloadHolder.lessonObjectId))
+                                                saveDownloadResult(downloadHolder.lessonObjectId, outPutFolder.absolutePath, downloadHolder.editor)
                                                 isDownloading = false
                                                 val newValue = hashMapOf<DownloadHolder, String>()
                                                 newValue.putAll(downloadQueue.value!!)
@@ -104,4 +107,14 @@ constructor(saveDownloadResult: (lessonObjectId: String, storageUrl: String, edi
     }
 
     fun getDownloadQueue() = downloadQueue
+
+    private fun decompressZip(fileForUnzip: File, outputFolder: File): File {
+        try {
+            ZipUtils.unzip(fileForUnzip.absolutePath, outputFolder.absolutePath)
+        } catch (e: IOException) {
+            e.printStackTrace()
+            Log.e("LessonDownloadHelper", "解压失败！！！${fileForUnzip.absolutePath}")
+        }
+        return outputFolder
+    }
 }
