@@ -46,6 +46,8 @@ class IndexActivity : BaseActivity() {
 
     private var refreshAnimator: ObjectAnimator? = null
 
+    private var netWorkChangeBroadcast: BroadcastReceiver? = null
+
     //-------------------------------public Method--------------------------------------------------
     fun showNoDataHint(should: Boolean) {
         if (should) {
@@ -140,7 +142,7 @@ class IndexActivity : BaseActivity() {
     private fun setUpNetWorkChangeBroadcast() {
         val intentFilter = IntentFilter()
         intentFilter.addAction("android.net.conn.CONNECTIVITY_CHANGE")
-        val netWorkChangeBroadcast = NetworkChangeBroadcast()
+        netWorkChangeBroadcast = NetworkChangeBroadcast()
         registerReceiver(netWorkChangeBroadcast, intentFilter)
     }
 
@@ -277,7 +279,6 @@ class IndexActivity : BaseActivity() {
         setUpRecyclerView()
         checkPermissions()
         createRootFolder()
-
     }
 
     private fun setUpRecyclerView() {
@@ -290,6 +291,11 @@ class IndexActivity : BaseActivity() {
         viewModel?.setNetStatus(getNetworkState(this))
         viewModel?.loadRole()
         viewModel?.loadLesson()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        unregisterReceiver(netWorkChangeBroadcast)
     }
 
     //--------------------------------Snack Bar-----------------------------------------------------
