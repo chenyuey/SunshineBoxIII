@@ -291,13 +291,53 @@ class IndexRecyclerViewAdapter(private val activity: IndexActivity) : RecyclerVi
         }
 
         override fun onClick(v: View?) {
-            fileDownloadImageView.visibility = View.GONE
-            downloadLesson(DownloadHolder(lessonObjectId = lesson!!.objectId, editor = editor!!, downloadUrl = if (editor!!) {
-                lesson!!.stagingPackageUrl!!
+            if (netStatusLiveData.value!!) {
+                //当前网络可用
+                if (download!!) {
+                    //如果已下载
+                    when (editor) {
+                        true -> {
+                            for (downloadedLesson in downloadedLessonLiveData.value!!) {
+                                if (downloadedLesson.objectId == lesson?.objectId) {
+                                    if (downloadedLesson.stagingUrl != null) {
+                                        activity.showSnackBar(downloadedLesson.stagingUrl!!)
+                                    } else {
+                                        throw Exception("FUCK")
+                                    }
+                                }
+                            }
+
+                        }
+                        false -> {
+                            for (downloadedLesson in downloadedLessonLiveData.value!!) {
+                                if (downloadedLesson.objectId == lesson?.objectId) {
+                                    if (downloadedLesson.publishedUrl != null) {
+                                        activity.showSnackBar(downloadedLesson.publishedUrl!!)
+                                    } else {
+                                        throw Exception("FUCK")
+                                    }
+                                }
+                            }
+                        }
+                    }
+                } else {
+                    val (isDownloading, myDownloadHolder: DownloadHolder?) = isDownloading(editor!!, lesson!!)
+                    if (isDownloading && myDownloadHolder != null) {
+                        activity.showSnackBar("该课程正在下载队列中，请稍等片刻")
+                    } else {
+                        //如果没下载
+                        fileDownloadImageView.visibility = View.GONE
+                        downloadLesson(DownloadHolder(lessonObjectId = lesson!!.objectId, editor = editor!!, downloadUrl = if (editor!!) {
+                            lesson!!.stagingPackageUrl!!
+                        } else {
+                            lesson!!.packageUrl!!
+                        }))
+                        observerDownload(editor!!, lesson!!)
+                    }
+                }
             } else {
-                lesson!!.packageUrl!!
-            }))
-            observerDownload(editor!!, lesson!!)
+                activity.showSnackBar("当前网络不可用，请连接网络后下载")
+            }
         }
     }
 }

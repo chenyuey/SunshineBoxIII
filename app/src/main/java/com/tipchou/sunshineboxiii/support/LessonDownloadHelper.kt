@@ -59,6 +59,7 @@ constructor(saveDownloadResult: (lessonObjectId: String, storageUrl: String, edi
                                             override fun downloadSuccess(file: File) {
                                                 //将下载的文件解压缩!!!
                                                 val outPutFolder = decompressZip(file, File(folder, downloadHolder.lessonObjectId))
+                                                Log.e("outputFolder", outPutFolder.absolutePath)
                                                 saveDownloadResult(downloadHolder.lessonObjectId, outPutFolder.absolutePath, downloadHolder.editor)
                                                 isDownloading = false
                                                 val newValue = hashMapOf<DownloadHolder, String>()

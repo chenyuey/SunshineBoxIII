@@ -299,7 +299,7 @@ class IndexActivity : BaseActivity() {
     }
 
     //--------------------------------Snack Bar-----------------------------------------------------
-    private fun showSnackBar(message: String) {
+    public fun showSnackBar(message: String) {
         Snackbar.make(index_act_coordinatorlayout, message, Snackbar.LENGTH_LONG).show()
     }
 
