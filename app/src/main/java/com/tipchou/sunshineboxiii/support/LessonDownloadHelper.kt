@@ -2,6 +2,7 @@ package com.tipchou.sunshineboxiii.support
 
 import android.arch.lifecycle.MediatorLiveData
 import android.os.Environment
+import android.util.Log
 import com.tipchou.sunshineboxiii.entity.DownloadHolder
 import okhttp3.ResponseBody
 import retrofit2.Call
@@ -16,12 +17,16 @@ import java.io.File
 class LessonDownloadHelper
 constructor(saveDownloadResult: (lessonObjectId: String, storageUrl: String, editor: Boolean) -> Unit) {
     private val downloadQueue = MediatorLiveData<HashMap<DownloadHolder, String>>()
-    private var isDownloading: Boolean = false
+    private var isDownloading: Boolean
     private val service = ServiceGenerator.createService(RetrofitWebService::class.java)
 
     init {
         downloadQueue.value = hashMapOf()
+        isDownloading = false
         downloadQueue.observeForever {
+            if (it != null) {
+                Log.e("DownloadHelper", it.size.toString())
+            }
             if (it != null) {
                 if (isDownloading) {
                     //当前正在下载
@@ -53,7 +58,10 @@ constructor(saveDownloadResult: (lessonObjectId: String, storageUrl: String, edi
                                             override fun downloadSuccess(file: File) {
                                                 saveDownloadResult(downloadHolder.lessonObjectId, file.absolutePath, downloadHolder.editor)
                                                 isDownloading = false
-                                                it.remove(downloadHolder)
+                                                val newValue = hashMapOf<DownloadHolder, String>()
+                                                newValue.putAll(downloadQueue.value!!)
+                                                newValue.remove(downloadHolder)
+                                                downloadQueue.value = newValue
                                             }
 
                                             override fun downloadFailure(file: File) {
@@ -61,7 +69,10 @@ constructor(saveDownloadResult: (lessonObjectId: String, storageUrl: String, edi
                                             }
 
                                             override fun progressUpdate(value: Long?) {
-                                                it[downloadHolder] = "正在下载：$value%"
+                                                val newValue = hashMapOf<DownloadHolder, String>()
+                                                newValue.putAll(downloadQueue.value!!)
+                                                newValue[downloadHolder] = "正在下载：$value%"
+                                                downloadQueue.value = newValue
                                             }
 
                                         }).execute()
@@ -85,7 +96,11 @@ constructor(saveDownloadResult: (lessonObjectId: String, storageUrl: String, edi
     }
 
     fun enqueueDownloaded(downloadHolder: DownloadHolder) {
-        downloadQueue.value?.put(downloadHolder, "等待下载中")
+        val newValue = hashMapOf<DownloadHolder, String>()
+        newValue.putAll(downloadQueue.value!!)
+        newValue[downloadHolder] = "等待下载中"
+        downloadQueue.value = newValue
+//        downloadQueue.value?.put(downloadHolder, "等待下载中")
     }
 
     fun getDownloadQueue() = downloadQueue

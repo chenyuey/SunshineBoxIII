@@ -34,20 +34,23 @@ class DownloadTask constructor(private val responseBodyResponse: Response<Respon
     }
 
     override fun doInBackground(vararg voids: Void): Void? {
+        Log.e("DownloadTask", "doInBackground")
         isFileDownloadSuccess = writeResponseBodyToDisk(responseBodyResponse.body()!!, downloadFileAddress)
         Log.e("IndexAdapter", "file download was a success?$isFileDownloadSuccess")
         return null
     }
 
-    override fun onPostExecute(aVoid: Void) {
+    override fun onPostExecute(result: Void?) {
+        Log.e("DownloadTask", "onPostExecute, isFileDownloadSuccess:$isFileDownloadSuccess")
         when (isFileDownloadSuccess) {
             true -> downloadCallback.downloadSuccess(downloadFileAddress)
             false -> downloadCallback.downloadFailure(downloadFileAddress)
         }
-        super.onPostExecute(aVoid)
+        super.onPostExecute(result)
     }
 
     override fun onProgressUpdate(vararg values: Long?) {
+        Log.e("DownloadTask", "onProgressUpdate:${values[0]}")
         super.onProgressUpdate(*values)
         val progress = values[0]
         if (progress != null) {

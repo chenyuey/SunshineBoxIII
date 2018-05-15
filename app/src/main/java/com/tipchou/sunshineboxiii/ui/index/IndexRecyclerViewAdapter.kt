@@ -99,7 +99,7 @@ class IndexRecyclerViewAdapter(private val activity: IndexActivity) : RecyclerVi
                                     var download = false
                                     for (downloadedLesson in downloadedLessonList) {
                                         if (downloadedLesson.objectId == lesson.objectId) {
-                                            if (downloadedLesson.stagingUrl != null) {
+                                            if (downloadedLesson.publishedUrl != null) {
                                                 download = true
                                             }
                                         }
@@ -177,7 +177,7 @@ class IndexRecyclerViewAdapter(private val activity: IndexActivity) : RecyclerVi
             getUsefulData(itemData)
             val (editor, lesson, download) = getValueNotNull()
             setUpLessonName()
-            setUpEditorTip()
+            setUpEditorTip(editor)
             setUpBackground(download, lesson)
             observerDownload(editor, lesson)
         }
@@ -187,7 +187,7 @@ class IndexRecyclerViewAdapter(private val activity: IndexActivity) : RecyclerVi
             this.editor = editor
             this.download = download
             setUpLessonName()
-            setUpEditorTip()
+            setUpEditorTip(editor)
             setUpBackground(download, lesson)
             observerDownload(editor, lesson)
         }
@@ -269,7 +269,7 @@ class IndexRecyclerViewAdapter(private val activity: IndexActivity) : RecyclerVi
             return Triple(editor, lesson, download)
         }
 
-        private fun setUpEditorTip() {
+        private fun setUpEditorTip(editor: Boolean) {
             when (editor) {
                 true -> {
                     isAuditedImageView.visibility = View.VISIBLE
@@ -291,6 +291,7 @@ class IndexRecyclerViewAdapter(private val activity: IndexActivity) : RecyclerVi
         }
 
         override fun onClick(v: View?) {
+            fileDownloadImageView.visibility = View.GONE
             downloadLesson(DownloadHolder(lessonObjectId = lesson!!.objectId, editor = editor!!, downloadUrl = if (editor!!) {
                 lesson!!.stagingPackageUrl!!
             } else {
