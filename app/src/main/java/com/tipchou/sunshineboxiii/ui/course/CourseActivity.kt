@@ -1,27 +1,86 @@
 package com.tipchou.sunshineboxiii.ui.course
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
+import android.media.MediaPlayer
+import android.net.Uri
 import android.os.Bundle
+import android.os.Handler
+import android.os.Message
 import android.support.v7.widget.LinearLayoutManager
 import android.util.Log
+import android.view.View
 import android.widget.Toast
+import com.bumptech.glide.Glide
 import com.google.gson.Gson
 import com.tipchou.sunshineboxiii.R
 import com.tipchou.sunshineboxiii.support.IOUtils
 import com.tipchou.sunshineboxiii.ui.base.BaseActivity
+import com.tipchou.sunshineboxiii.ui.video.VideoActivity
 import kotlinx.android.synthetic.main.activity_course.*
 import java.io.File
 import java.io.FileInputStream
 import java.io.IOException
+import java.lang.ref.WeakReference
+import java.text.SimpleDateFormat
 import java.util.*
 
-class CourseActivity : BaseActivity() {
+class CourseActivity : BaseActivity(), CourseMediaPlayer {
+    private val mediaPlayer: MediaPlayer = MediaPlayer()
+
     private var resourceStorageAddress: String? = null
+
+    private var handlerSwitch: Boolean = true
+
+    private fun setUpClickEvent() {
+        //back
+        course_act_imagebutton.setOnClickListener {
+            handlerSwitch = false
+            if (mediaPlayer.isPlaying) {
+                mediaPlayer.stop()
+                mediaPlayer.release()
+            }
+            finish()
+        }
+        //music-player replay
+        course_act_imageview2.setOnClickListener {
+            if (mediaPlayer.isPlaying) {
+                mediaPlayer.seekTo(0)
+            }
+        }
+        //music-player play or pause
+        course_act_imageview1.setOnClickListener {
+            if (!mediaPlayer.isPlaying) {
+                //此时没有播放
+                mediaPlayer.start()
+                Glide.with(this).load(R.drawable.pause).into(course_act_imageview1)
+            } else {
+                mediaPlayer.pause()
+                Glide.with(this).load(R.drawable.play).into(course_act_imageview1)
+            }
+        }
+        //music-player close
+        course_act_imageview3.setOnClickListener {
+            mediaPlayer.reset()
+            course_act_cardview1.visibility = View.GONE
+        }
+    }
+
+    override fun onBackPressed() {
+        handlerSwitch = false
+
+        if (mediaPlayer.isPlaying) {
+            mediaPlayer.stop()
+            mediaPlayer.release()
+        }
+        super.onBackPressed()
+    }
 
     override fun layoutId(): Int = R.layout.activity_course
 
     override fun created(bundle: Bundle?) {
+        setUpClickEvent()
         //获取resource存储地址
         resourceStorageAddress = intent.getStringExtra(RESOURCE_STORAGE_ADDRESS)
         //根据resource的地址构建Json和Material的存储地址
@@ -56,6 +115,77 @@ class CourseActivity : BaseActivity() {
                 courseAdapter.setMaterialData(materialsList)
             }
         }
+    }
+
+    override fun resume() {
+
+    }
+
+    private val handler: Handler = MyHandler(this)
+
+    class MyHandler constructor(courseActivity: CourseActivity) : Handler() {
+        private val weakReference = WeakReference<CourseActivity>(courseActivity)
+
+        override fun handleMessage(msg: Message?) {
+            super.handleMessage(msg)
+            val activity = weakReference.get()
+            if (activity != null) {
+                if (activity.handlerSwitch) {
+                    if (msg?.what == 100) {
+                        activity.course_act_textview6.text = activity.getFormatTime(activity.mediaPlayer.currentPosition)
+                    }
+                } else {
+
+                }
+            }
+        }
+    }
+
+    @SuppressLint("SetTextI18n")
+    override fun playAudio(materials: Materials) {
+        if (mediaPlayer.isPlaying) {
+            mediaPlayer.reset()
+        }
+        val uri = Uri.parse(materials.resourceStorageAddress)
+        course_act_cardview1.visibility = View.VISIBLE
+        course_act_textview5.text = materials.name
+        course_act_textview6.text = "00:00"
+        course_act_textview7.text = "00:00"
+
+        Glide.with(this).load(R.drawable.pause).into(course_act_imageview1)
+
+        try {
+            mediaPlayer.setDataSource(uri.toString())
+            mediaPlayer.prepare()
+            mediaPlayer.start()
+
+            course_act_textview7.text = getFormatTime(mediaPlayer.duration)
+
+            val timer = Timer()
+            val timerTask = object : TimerTask() {
+                override fun run() {
+                    handler.sendEmptyMessage(100)
+                }
+
+            }
+            timer.schedule(timerTask, 0, 10)
+        } catch (e: IOException) {
+            e.printStackTrace()
+        } catch (e: IllegalStateException) {
+            e.printStackTrace()
+        }
+    }
+
+    override fun playVideo(materials: Materials) {
+        if (mediaPlayer.isPlaying) {
+            mediaPlayer.reset()
+            course_act_cardview1.visibility = View.GONE
+        }
+        val intent = VideoActivity.newIntent(this, materials.resourceStorageAddress)
+        startActivity(intent)
+    }
+
+    override fun openAlbum(materials: Materials) {
     }
 
     private fun getMaterialsList(materialFolder: File, bean: CourseBean): List<Materials> {
@@ -155,8 +285,11 @@ class CourseActivity : BaseActivity() {
         return materialFolder
     }
 
-    override fun resume() {
-
+    @SuppressLint("SimpleDateFormat")
+    private fun getFormatTime(time: Int): String {
+        val date = Date(time.toLong())
+        val simpleDateFormat = SimpleDateFormat("mm:ss")
+        return simpleDateFormat.format(date)
     }
 
     companion object {
