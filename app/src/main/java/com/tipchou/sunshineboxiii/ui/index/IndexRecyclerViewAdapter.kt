@@ -3,6 +3,7 @@ package com.tipchou.sunshineboxiii.ui.index
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
+import android.content.Intent
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
@@ -16,6 +17,7 @@ import com.tipchou.sunshineboxiii.entity.local.LessonLocal
 import com.tipchou.sunshineboxiii.entity.local.RoleLocal
 import com.tipchou.sunshineboxiii.support.DaggerMagicBox
 import com.tipchou.sunshineboxiii.support.Resource
+import com.tipchou.sunshineboxiii.ui.course.CourseActivity
 
 /**
  * Created by 邵励治 on 2018/5/8.
@@ -300,7 +302,9 @@ class IndexRecyclerViewAdapter(private val activity: IndexActivity) : RecyclerVi
                             for (downloadedLesson in downloadedLessonLiveData.value!!) {
                                 if (downloadedLesson.objectId == lesson?.objectId) {
                                     if (downloadedLesson.stagingUrl != null) {
-                                        activity.showSnackBar(downloadedLesson.stagingUrl!!)
+                                        val intent = Intent(activity, CourseActivity::class.java)
+                                        intent.putExtra("resource storage address", downloadedLesson.stagingUrl!!)
+                                        activity.startActivity(intent)
                                     } else {
                                         throw Exception("FUCK")
                                     }
@@ -312,7 +316,9 @@ class IndexRecyclerViewAdapter(private val activity: IndexActivity) : RecyclerVi
                             for (downloadedLesson in downloadedLessonLiveData.value!!) {
                                 if (downloadedLesson.objectId == lesson?.objectId) {
                                     if (downloadedLesson.publishedUrl != null) {
-                                        activity.showSnackBar(downloadedLesson.publishedUrl!!)
+                                        val intent = Intent(activity, CourseActivity::class.java)
+                                        intent.putExtra("resource storage address", downloadedLesson.publishedUrl!!)
+                                        activity.startActivity(intent)
                                     } else {
                                         throw Exception("FUCK")
                                     }

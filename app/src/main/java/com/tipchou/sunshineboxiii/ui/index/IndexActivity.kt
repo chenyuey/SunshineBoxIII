@@ -31,6 +31,7 @@ import com.avos.avoscloud.LogInCallback
 import com.tipchou.sunshineboxiii.R
 import com.tipchou.sunshineboxiii.entity.local.RoleLocal
 import com.tipchou.sunshineboxiii.support.LessonType
+import com.tipchou.sunshineboxiii.support.Resource
 import com.tipchou.sunshineboxiii.ui.base.BaseActivity
 import kotlinx.android.synthetic.main.activity_index.*
 import kotlinx.android.synthetic.main.activity_index_content.*
@@ -112,6 +113,7 @@ class IndexActivity : BaseActivity() {
         }
         //refresh button
         index_act_view1.setOnClickListener {
+            viewModel?.loadLesson()
         }
     }
 
@@ -233,7 +235,11 @@ class IndexActivity : BaseActivity() {
         })
         viewModel?.getLesson()?.observe(this, Observer {
             Log.e("Lesson", "Status: ${it?.status.toString()}; Message: ${it?.message}; Size: ${it?.data?.size}")
-
+            when (it?.status) {
+                Resource.Status.SUCCESS -> stopRefresh()
+                Resource.Status.ERROR -> stopRefresh()
+                Resource.Status.LOADING -> startRefresh()
+            }
         })
     }
 
@@ -299,7 +305,7 @@ class IndexActivity : BaseActivity() {
     }
 
     //--------------------------------Snack Bar-----------------------------------------------------
-    public fun showSnackBar(message: String) {
+    fun showSnackBar(message: String) {
         Snackbar.make(index_act_coordinatorlayout, message, Snackbar.LENGTH_LONG).show()
     }
 
