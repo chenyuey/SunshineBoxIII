@@ -11,7 +11,6 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import com.tipchou.sunshineboxiii.R
-import com.tipchou.sunshineboxiii.entity.DownloadHolder
 import com.tipchou.sunshineboxiii.entity.local.DownloadLocal
 import com.tipchou.sunshineboxiii.entity.local.LessonLocal
 import com.tipchou.sunshineboxiii.entity.local.RoleLocal
@@ -342,7 +341,40 @@ class IndexRecyclerViewAdapter(private val activity: IndexActivity) : RecyclerVi
                     }
                 }
             } else {
-                activity.showSnackBar("当前网络不可用，请连接网络后下载")
+                if (download!!) {
+                    //如果已下载
+                    when (editor) {
+                        true -> {
+                            for (downloadedLesson in downloadedLessonLiveData.value!!) {
+                                if (downloadedLesson.objectId == lesson?.objectId) {
+                                    if (downloadedLesson.stagingUrl != null) {
+                                        val intent = Intent(activity, CourseActivity::class.java)
+                                        intent.putExtra("resource storage address", downloadedLesson.stagingUrl!!)
+                                        activity.startActivity(intent)
+                                    } else {
+                                        throw Exception("FUCK")
+                                    }
+                                }
+                            }
+
+                        }
+                        false -> {
+                            for (downloadedLesson in downloadedLessonLiveData.value!!) {
+                                if (downloadedLesson.objectId == lesson?.objectId) {
+                                    if (downloadedLesson.publishedUrl != null) {
+                                        val intent = Intent(activity, CourseActivity::class.java)
+                                        intent.putExtra("resource storage address", downloadedLesson.publishedUrl!!)
+                                        activity.startActivity(intent)
+                                    } else {
+                                        throw Exception("FUCK")
+                                    }
+                                }
+                            }
+                        }
+                    }
+                } else {
+                    activity.showSnackBar("当前网络不可用，请连接网络后下载")
+                }
             }
         }
     }

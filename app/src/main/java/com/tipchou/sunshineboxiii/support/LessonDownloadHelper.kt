@@ -3,7 +3,7 @@ package com.tipchou.sunshineboxiii.support
 import android.arch.lifecycle.MediatorLiveData
 import android.os.Environment
 import android.util.Log
-import com.tipchou.sunshineboxiii.entity.DownloadHolder
+import com.tipchou.sunshineboxiii.ui.index.DownloadHolder
 import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.Callback

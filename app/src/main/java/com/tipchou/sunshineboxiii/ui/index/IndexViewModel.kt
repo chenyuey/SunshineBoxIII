@@ -2,8 +2,6 @@ package com.tipchou.sunshineboxiii.ui.index
 
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
-import com.bumptech.glide.Glide.init
-import com.tipchou.sunshineboxiii.entity.DownloadHolder
 import com.tipchou.sunshineboxiii.entity.local.DownloadLocal
 import com.tipchou.sunshineboxiii.entity.local.LessonLocal
 import com.tipchou.sunshineboxiii.entity.local.RoleLocal
