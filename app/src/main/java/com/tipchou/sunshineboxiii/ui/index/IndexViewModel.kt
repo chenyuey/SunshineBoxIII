@@ -3,6 +3,7 @@ package com.tipchou.sunshineboxiii.ui.index
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
 import com.tipchou.sunshineboxiii.entity.local.DownloadLocal
+import com.tipchou.sunshineboxiii.entity.local.FavoriteLocal
 import com.tipchou.sunshineboxiii.entity.local.LessonLocal
 import com.tipchou.sunshineboxiii.entity.local.RoleLocal
 import com.tipchou.sunshineboxiii.support.*
@@ -19,13 +20,14 @@ class IndexViewModel : ViewModel() {
     //observed data
     private val role: MutableLiveData<Resource<List<RoleLocal>>> = MutableLiveData()
     private val lesson: MutableLiveData<Resource<List<LessonLocal>>> = MutableLiveData()
+    private val favorite: MutableLiveData<Resource<List<FavoriteLocal>>> = MutableLiveData()
     private val downloadedLesson: MutableLiveData<List<DownloadLocal>> = MutableLiveData()
     private val netStatus: MutableLiveData<Boolean> = MutableLiveData()
     private val lessonType: MutableLiveData<LessonType> = MutableLiveData()
-
     //data observer
     private val roleObserver: GeneralObserver<Resource<List<RoleLocal>>>
     private val lessonObserver: GeneralObserver<Resource<List<LessonLocal>>>
+    private val favoriteObserver: GeneralObserver<Resource<List<FavoriteLocal>>>
     private val downloadedLessonObserver: GeneralObserver<List<DownloadLocal>>
 
     private val lessonDownloadHelper = LessonDownloadHelper { lessonObjectId, storageUrl, editor ->
@@ -45,9 +47,21 @@ class IndexViewModel : ViewModel() {
         lessonObserver = GeneralObserver(lesson) {
             repository.getLesson(lessonType = lessonType.value!!)
         }
+        favoriteObserver = GeneralObserver(favorite) {
+            repository.getFavorite()
+        }
         downloadedLessonObserver = GeneralObserver(downloadedLesson) {
             repository.getDownload()
         }
+    }
+
+    fun getFavorite(): MutableLiveData<Resource<List<FavoriteLocal>>> {
+        loadFavorite()
+        return favorite
+    }
+
+    fun loadFavorite() {
+        favoriteObserver.load()
     }
 
     fun getDownloadQueue() = lessonDownloadHelper.getDownloadQueue()

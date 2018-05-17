@@ -12,6 +12,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import com.tipchou.sunshineboxiii.R
 import com.tipchou.sunshineboxiii.entity.local.DownloadLocal
+import com.tipchou.sunshineboxiii.entity.local.FavoriteLocal
 import com.tipchou.sunshineboxiii.entity.local.LessonLocal
 import com.tipchou.sunshineboxiii.entity.local.RoleLocal
 import com.tipchou.sunshineboxiii.support.DaggerMagicBox
@@ -28,6 +29,7 @@ class IndexRecyclerViewAdapter(private val activity: IndexActivity) : RecyclerVi
     private val netStatusLiveData: LiveData<Boolean>
     private val roleLiveData: LiveData<Resource<List<RoleLocal>>>
     private val lessonLiveData: LiveData<Resource<List<LessonLocal>>>
+    private val favoriteLiveData: LiveData<Resource<List<FavoriteLocal>>>
     private val downloadedLessonLiveData: LiveData<List<DownloadLocal>>
     private val downloadQueueLiveData: LiveData<HashMap<DownloadHolder, String>>
     private val downloadLesson: (downloadHolder: DownloadHolder) -> Unit
@@ -53,6 +55,10 @@ class IndexRecyclerViewAdapter(private val activity: IndexActivity) : RecyclerVi
             buildLessonList(it)
             notifyDataSetChanged()
             showNoDataHint(it)
+        })
+        favoriteLiveData = viewModel.getFavorite()
+        favoriteLiveData.observe(activity, Observer {
+
         })
     }
 
@@ -151,9 +157,9 @@ class IndexRecyclerViewAdapter(private val activity: IndexActivity) : RecyclerVi
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) = holder.bind(itemData = itemDataList[position])
 
-
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView), View.OnClickListener {
 
+        private val favoriteImageView: ImageView
         private val backgroundImageView: ImageView
         private val isAuditedImageView: ImageView
         private val fileDownloadImageView: ImageView
@@ -167,6 +173,7 @@ class IndexRecyclerViewAdapter(private val activity: IndexActivity) : RecyclerVi
 
         init {
             itemView.setOnClickListener(this)
+            favoriteImageView = itemView.findViewById(R.id.index_rcv_imageview4)
             backgroundImageView = itemView.findViewById(R.id.index_rcv_imageview1)
             isAuditedImageView = itemView.findViewById(R.id.index_rcv_imageview2)
             downloadStatusTextView = itemView.findViewById(R.id.index_rcv_textview1)
@@ -180,7 +187,18 @@ class IndexRecyclerViewAdapter(private val activity: IndexActivity) : RecyclerVi
             setUpLessonName()
             setUpEditorTip(editor)
             setUpBackground(download, lesson)
+            setUpFavorite(lesson)
             observerDownload(editor, lesson)
+        }
+
+        private fun setUpFavorite(lesson: LessonLocal) {
+            favoriteImageView.visibility = View.GONE
+            for (favorite in favoriteLiveData.value?.data!!) {
+                if (favorite.lessonId == lesson.objectId) {
+                    favoriteImageView.visibility = View.VISIBLE
+                    break
+                }
+            }
         }
 
         fun bind(lesson: LessonLocal, editor: Boolean, download: Boolean) {
@@ -190,6 +208,7 @@ class IndexRecyclerViewAdapter(private val activity: IndexActivity) : RecyclerVi
             setUpLessonName()
             setUpEditorTip(editor)
             setUpBackground(download, lesson)
+            setUpFavorite(lesson)
             observerDownload(editor, lesson)
         }
 

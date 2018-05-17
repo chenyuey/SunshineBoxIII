@@ -1,12 +1,11 @@
 package com.tipchou.sunshineboxiii.ui.index
 
 import android.arch.lifecycle.LiveData
-import android.util.Log
 import com.tipchou.sunshineboxiii.entity.local.DownloadLocal
+import com.tipchou.sunshineboxiii.entity.local.FavoriteLocal
 import com.tipchou.sunshineboxiii.entity.local.LessonLocal
-import com.tipchou.sunshineboxiii.entity.local.LessonLocal_.isPublish
-import com.tipchou.sunshineboxiii.entity.local.LessonLocal_.packageUrl
 import com.tipchou.sunshineboxiii.entity.local.RoleLocal
+import com.tipchou.sunshineboxiii.entity.web.FavoriteWeb
 import com.tipchou.sunshineboxiii.entity.web.LessonWeb
 import com.tipchou.sunshineboxiii.entity.web.RoleWeb
 import com.tipchou.sunshineboxiii.support.DaggerMagicBox
@@ -78,6 +77,24 @@ class IndexRepository @Inject constructor() {
                     databaseList
                 },
                 saveCallResult = { dbDao.saveLesson(it) }
+        ).getAsLiveData()
+    }
+
+    fun getFavorite(): LiveData<Resource<List<FavoriteLocal>>> {
+        return GeneralDataRequest<FavoriteLocal, FavoriteWeb>(
+                loadFromDb = { dbDao.getFavorite() },
+                shouldFetch = { true },
+                createCall = { webDao.getFavorite() },
+                deleteDb = { dbDao.removeFavorite(it) },
+                buildSavedList = {
+                    val databaseList = ArrayList<FavoriteLocal>()
+                    for (item in it) {
+                        val dbData = FavoriteLocal(action = item.action, lessonId = item.lessonId)
+                        databaseList.add(dbData)
+                    }
+                    databaseList
+                },
+                saveCallResult = { dbDao.saveFavorite(it) }
         ).getAsLiveData()
     }
 

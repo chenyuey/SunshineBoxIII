@@ -178,4 +178,34 @@ class DbDao @Inject constructor() {
             downloadBox.removeAll()
         }
     }
+
+    fun getFavorite(): ObjectBoxLiveData<FavoriteLocal> {
+        if (boxStore == null) {
+            //should not be here!!!!!!
+            throw Exception("App.getBoxStore() get null!!!")
+        } else {
+            val favoriteBox: Box<FavoriteLocal> = boxStore!!.boxFor(FavoriteLocal::class.java)
+            return ObjectBoxLiveData(favoriteBox.query().build())
+        }
+    }
+
+    fun saveFavorite(favoriteList: List<FavoriteLocal>) {
+        if (boxStore == null) {
+            //should not be here!!!!!!
+            throw Exception("App.getBoxStore() get null!!!")
+        } else {
+            val favoriteBox = boxStore!!.boxFor(FavoriteLocal::class.java)
+            favoriteBox.put(favoriteList)
+        }
+    }
+
+    fun removeFavorite(favoriteList: List<FavoriteLocal>) {
+        if (boxStore == null) {
+            //should not be here!!!!!!
+            throw Exception("App.getBoxStore() get null!!!")
+        } else {
+            val favoriteBox = boxStore!!.boxFor(FavoriteLocal::class.java)
+            favoriteBox.remove(favoriteList)
+        }
+    }
 }

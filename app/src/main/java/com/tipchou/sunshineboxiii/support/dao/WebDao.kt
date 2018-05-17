@@ -4,6 +4,7 @@ package com.tipchou.sunshineboxiii.support.dao
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import com.avos.avoscloud.*
+import com.tipchou.sunshineboxiii.entity.web.FavoriteWeb
 import com.tipchou.sunshineboxiii.entity.web.LessonWeb
 import com.tipchou.sunshineboxiii.entity.web.RoleWeb
 import com.tipchou.sunshineboxiii.entity.web.TestWeb
@@ -97,6 +98,34 @@ class WebDao @Inject constructor() {
                 data.value = ApiResponse(result, exception)
             }
         })
+        return data
+    }
+
+    /**
+     * 获取Favorite表中的数据
+     */
+    fun getFavorite(): LiveData<ApiResponse<List<FavoriteWeb>>> {
+        val data = MutableLiveData<ApiResponse<List<FavoriteWeb>>>()
+        val currentUser = AVUser.getCurrentUser()
+        if (currentUser == null) {
+            //当前用户未登录
+            throw Exception("getFavorite(): 当前用户未登录！")
+        } else {
+            val query = AVQuery<AVObject>("Favourite")
+            query.whereEqualTo("user", currentUser)
+            query.limit = 1000
+            query.findInBackground(object : FindCallback<AVObject>() {
+                override fun done(response: MutableList<AVObject>?, exception: AVException?) {
+                    val result = ArrayList<FavoriteWeb>()
+                    if (response != null) {
+                        for (item in response) {
+                            result.add(FavoriteWeb(item))
+                        }
+                    }
+                    data.value = ApiResponse(result, exception)
+                }
+            })
+        }
         return data
     }
 }

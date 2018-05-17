@@ -55,6 +55,10 @@
     <string name="index_act_string19">艺术</string>
     <string name="index_act_string20">刷新</string>
     <string name="index_act_string21">课程</string>
+    <string name="index_act_string22">待审核</string>
+    <string name="index_act_string23">暂时没有内容</string>
+    <string name="index_act_string24">点击下载</string>
+    <string name="index_act_string25">收藏按钮</string>
 
     <!--IndexDrawer-->
     <string name="index_drawer_string1">加入教师社区</string>
@@ -69,11 +73,11 @@
 
     <!--CourseItem-->
     <string name="course_act_item_string1">课程类别图片</string>
+
+    <!--AlbumActivity-->
     <string name="album_act_string1">下一图</string>
     <string name="album_act_string2">上一图</string>
     <string name="album_act_string3">关闭</string>
-    <string name="index_act_string22">待审核</string>
-    <string name="index_act_string23">暂时没有内容</string>
-    <string name="index_act_string24">点击下载</string>
+
 
 </resources>
