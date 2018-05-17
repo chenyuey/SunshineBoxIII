@@ -1,6 +1,7 @@
 package com.tipchou.sunshineboxiii.ui.course
 
 import android.annotation.SuppressLint
+import android.arch.lifecycle.ViewModelProviders
 import android.content.Context
 import android.content.Intent
 import android.media.MediaPlayer
@@ -12,11 +13,16 @@ import android.support.v7.widget.LinearLayoutManager
 import android.util.Log
 import android.view.View
 import android.widget.Toast
+import com.avos.avoscloud.AVCloud
+import com.avos.avoscloud.AVException
+import com.avos.avoscloud.FunctionCallback
 import com.bumptech.glide.Glide
 import com.google.gson.Gson
 import com.tipchou.sunshineboxiii.R
+import com.tipchou.sunshineboxiii.entity.local.FavoriteActionLocal
 import com.tipchou.sunshineboxiii.support.IOUtils
 import com.tipchou.sunshineboxiii.ui.base.BaseActivity
+import com.tipchou.sunshineboxiii.ui.index.IndexViewModel
 import com.tipchou.sunshineboxiii.ui.video.VideoActivity
 import kotlinx.android.synthetic.main.activity_course.*
 import java.io.File
@@ -32,6 +38,10 @@ class CourseActivity : BaseActivity(), CourseMediaPlayer {
     private var resourceStorageAddress: String? = null
 
     private var handlerSwitch: Boolean = true
+
+    private var lessonObjectId: String? = null
+
+    private var viewModel: IndexViewModel? = null
 
     private fun setUpClickEvent() {
         //back
@@ -65,6 +75,32 @@ class CourseActivity : BaseActivity(), CourseMediaPlayer {
             mediaPlayer.reset()
             course_act_cardview1.visibility = View.GONE
         }
+        //click favorite
+        course_act_imageview4.setOnClickListener {
+            if (favorite) {
+                val parameters = HashMap<String, ArrayList<FavoriteActionLocal>>()
+                val list = arrayListOf<FavoriteActionLocal>()
+                list.add(FavoriteActionLocal(lessonObjectId!!, System.currentTimeMillis(), false))
+                parameters["collectionActionArr"] = list
+
+                AVCloud.callFunctionInBackground("collection", parameters, object : FunctionCallback<HashMap<String, String>>() {
+                    override fun done(p0: HashMap<String, String>?, p1: AVException?) {
+                        viewModel?.loadFavorite()
+                    }
+                })
+            } else {
+                val parameters = HashMap<String, ArrayList<FavoriteActionLocal>>()
+                val list = arrayListOf<FavoriteActionLocal>()
+                list.add(FavoriteActionLocal(lessonObjectId!!, System.currentTimeMillis(), true))
+                parameters["collectionActionArr"] = list
+
+                AVCloud.callFunctionInBackground("collection", parameters, object : FunctionCallback<HashMap<String, String>>() {
+                    override fun done(p0: HashMap<String, String>?, p1: AVException?) {
+                        viewModel?.loadFavorite()
+                    }
+                })
+            }
+        }
     }
 
     override fun onBackPressed() {
@@ -83,6 +119,7 @@ class CourseActivity : BaseActivity(), CourseMediaPlayer {
         setUpClickEvent()
         //获取resource存储地址
         resourceStorageAddress = intent.getStringExtra(RESOURCE_STORAGE_ADDRESS)
+        lessonObjectId = intent.getStringExtra(LESSON_OBJECT_ID)
         //根据resource的地址构建Json和Material的存储地址
         val jsonStorageAddress: String = resourceStorageAddress + File.separator + "manifest.json"
         val materialStorageAddress: String = resourceStorageAddress + File.separator + "materials"
@@ -114,7 +151,33 @@ class CourseActivity : BaseActivity(), CourseMediaPlayer {
                 val materialsList = getMaterialsList(materialFolder, jsonBean)
                 courseAdapter.setMaterialData(materialsList)
             }
+            setUpViewModel()
         }
+    }
+
+    var favorite: Boolean = false
+
+    private fun setUpViewModel() {
+        viewModel = ViewModelProviders.of(this).get(IndexViewModel::class.java)
+        viewModel?.getFavorite()?.observe(this, android.arch.lifecycle.Observer {
+            val data = it?.data
+            if (data != null) {
+                for (item in data) {
+                    if (item.lessonId == lessonObjectId) {
+                        favorite = when (item.action) {
+                            true -> {
+                                course_act_imageview4.setBackgroundResource(R.drawable.favourite_red)
+                                true
+                            }
+                            false -> {
+                                course_act_imageview4.setBackgroundResource(R.drawable.default_favorite)
+                                false
+                            }
+                        }
+                    }
+                }
+            }
+        })
     }
 
     override fun resume() {
@@ -248,7 +311,6 @@ class CourseActivity : BaseActivity(), CourseMediaPlayer {
         val markdownReplace = "[$1](" + "file://" + materialFolder.absolutePath + "/$2)"
         val regex = "\\[(\\S+)]\\((\\S+)\\)".toRegex()
         val markdown = bean.content.replace(regex, markdownReplace)
-        Log.e("Markdown content", markdown)
         return markdown
     }
 
@@ -294,9 +356,11 @@ class CourseActivity : BaseActivity(), CourseMediaPlayer {
 
     companion object {
         private const val RESOURCE_STORAGE_ADDRESS = "resource storage address"
-        fun newIntent(packageContext: Context, resourceStorageAddress: String): Intent {
+        private const val LESSON_OBJECT_ID = "lesson object id"
+        fun newIntent(packageContext: Context, lessonObjectId: String, resourceStorageAddress: String): Intent {
             val intent = Intent(packageContext, CourseActivity::class.java)
             intent.putExtra(RESOURCE_STORAGE_ADDRESS, resourceStorageAddress)
+            intent.putExtra(LESSON_OBJECT_ID, lessonObjectId)
             return intent
         }
     }

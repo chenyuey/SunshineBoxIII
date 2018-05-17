@@ -195,7 +195,10 @@ class IndexRecyclerViewAdapter(private val activity: IndexActivity) : RecyclerVi
             favoriteImageView.visibility = View.GONE
             for (favorite in favoriteLiveData.value?.data!!) {
                 if (favorite.lessonId == lesson.objectId) {
-                    favoriteImageView.visibility = View.VISIBLE
+                    when (favorite.action) {
+                        true -> favoriteImageView.visibility = View.VISIBLE
+                        false -> favoriteImageView.visibility = View.GONE
+                    }
                     break
                 }
             }
@@ -322,6 +325,7 @@ class IndexRecyclerViewAdapter(private val activity: IndexActivity) : RecyclerVi
                                     if (downloadedLesson.stagingUrl != null) {
                                         val intent = Intent(activity, CourseActivity::class.java)
                                         intent.putExtra("resource storage address", downloadedLesson.stagingUrl!!)
+                                        intent.putExtra("lesson object id", lesson?.objectId)
                                         activity.startActivity(intent)
                                     } else {
                                         throw Exception("FUCK")
@@ -336,6 +340,7 @@ class IndexRecyclerViewAdapter(private val activity: IndexActivity) : RecyclerVi
                                     if (downloadedLesson.publishedUrl != null) {
                                         val intent = Intent(activity, CourseActivity::class.java)
                                         intent.putExtra("resource storage address", downloadedLesson.publishedUrl!!)
+                                        intent.putExtra("lesson object id", lesson?.objectId)
                                         activity.startActivity(intent)
                                     } else {
                                         throw Exception("FUCK")
@@ -369,6 +374,7 @@ class IndexRecyclerViewAdapter(private val activity: IndexActivity) : RecyclerVi
                                     if (downloadedLesson.stagingUrl != null) {
                                         val intent = Intent(activity, CourseActivity::class.java)
                                         intent.putExtra("resource storage address", downloadedLesson.stagingUrl!!)
+                                        intent.putExtra("lesson object id", lesson?.objectId)
                                         activity.startActivity(intent)
                                     } else {
                                         throw Exception("FUCK")
@@ -383,6 +389,7 @@ class IndexRecyclerViewAdapter(private val activity: IndexActivity) : RecyclerVi
                                     if (downloadedLesson.publishedUrl != null) {
                                         val intent = Intent(activity, CourseActivity::class.java)
                                         intent.putExtra("resource storage address", downloadedLesson.publishedUrl!!)
+                                        intent.putExtra("lesson object id", lesson?.objectId)
                                         activity.startActivity(intent)
                                     } else {
                                         throw Exception("FUCK")
