@@ -309,8 +309,11 @@ class CourseActivity : BaseActivity(), CourseMediaPlayer {
 
     private fun rebuildMarkdown(materialFolder: File, bean: CourseBean): String {
         val markdownReplace = "[$1](" + "file://" + materialFolder.absolutePath + "/$2)"
-        val regex = "\\[(\\S+)]\\((\\S+)\\)".toRegex()
-        val markdown = bean.content.replace(regex, markdownReplace)
+        val markdownReplaces = "<img src=" + "file://" + materialFolder.absolutePath + "/$2" + " width=\"520px\"/>"
+        val regex = "!\\[(\\S+)]\\((\\S+)\\)".toRegex()
+        Log.e("replaceBefore", bean.content)
+        val markdown = bean.content.replace(regex, markdownReplaces)
+        Log.e("replaceAfter", markdown)
         return markdown
     }
 
