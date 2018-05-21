@@ -93,16 +93,17 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.ViewHolder
 
         @Override
         public void onClick(View v) {
-            AVAnalytics.onEvent(activity, "资源被打开数");
-
             switch (materials.getMaterialType()) {
                 case ALBUM:
+                    AVAnalytics.onEvent(activity, "资源被打开数","绘本");
                     courseMediaPlayer.openAlbum(materials);
                     break;
                 case AUDIO:
+                    AVAnalytics.onEvent(activity, "资源被打开数","音频");
                     courseMediaPlayer.playAudio(materials);
                     break;
                 case VIDEO:
+                    AVAnalytics.onEvent(activity, "资源被打开数","视频");
                     courseMediaPlayer.playVideo(materials);
                     break;
                 default:

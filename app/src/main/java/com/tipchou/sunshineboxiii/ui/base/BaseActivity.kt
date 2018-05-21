@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.support.annotation.LayoutRes
 import android.support.v7.app.AppCompatActivity
 import android.view.WindowManager
+import com.avos.avoscloud.AVAnalytics
 
 /**
  * Created by 邵励治 on 2018/3/26.
@@ -31,6 +32,12 @@ abstract class BaseActivity : AppCompatActivity() {
         if (requestedOrientation != ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE) {
             requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
         }
+        AVAnalytics.onResume(this)
         resume()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        AVAnalytics.onPause(this)
     }
 }

@@ -8,6 +8,7 @@ import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.avos.avoscloud.AVAnalytics
 
 /**
  * Created by 邵励治 on 2018/3/26.
@@ -17,6 +18,7 @@ import android.view.ViewGroup
 abstract class BaseFragment : Fragment() {
     protected var mActivity: Activity? = null
     protected var mFragment: View? = null
+
 
     @LayoutRes
     protected abstract fun layoutId(): Int
@@ -37,10 +39,15 @@ abstract class BaseFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
+        AVAnalytics.onFragmentStart(javaClass.simpleName)
         resumed()
     }
 
 
+    override fun onPause() {
+        super.onPause()
+        AVAnalytics.onFragmentEnd(javaClass.simpleName)
+    }
 
     override fun onAttach(context: Context?) {
         super.onAttach(context)

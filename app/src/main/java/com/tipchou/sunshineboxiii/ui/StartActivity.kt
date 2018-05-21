@@ -3,6 +3,7 @@ package com.tipchou.sunshineboxiii.ui
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import com.avos.avoscloud.AVAnalytics
 import com.avos.avoscloud.AVUser
 import com.tipchou.sunshineboxiii.R
 import com.tipchou.sunshineboxiii.support.ActivationActivityManager
@@ -14,6 +15,7 @@ class StartActivity : ActivationActivityManager() {
 
     override fun created(bundle: Bundle?) {
         if (AVUser.getCurrentUser() != null) {
+            AVAnalytics.onEvent(this, "用户打开应用总数", AVUser.getCurrentUser().username)
             startActivity(IndexActivity.newIntent(this))
             finish()
         } else {

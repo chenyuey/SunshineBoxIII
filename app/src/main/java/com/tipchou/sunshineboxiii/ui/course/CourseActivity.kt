@@ -117,6 +117,7 @@ class CourseActivity : BaseActivity(), CourseMediaPlayer {
     override fun layoutId(): Int = R.layout.activity_course
 
     override fun created(bundle: Bundle?) {
+
         setUpClickEvent()
         //获取resource存储地址
         resourceStorageAddress = intent.getStringExtra(RESOURCE_STORAGE_ADDRESS)
@@ -154,6 +155,7 @@ class CourseActivity : BaseActivity(), CourseMediaPlayer {
             }
             setUpViewModel()
         }
+
     }
 
     var favorite: Boolean = false
@@ -316,7 +318,6 @@ class CourseActivity : BaseActivity(), CourseMediaPlayer {
     }
 
     private fun rebuildMarkdown(materialFolder: File, bean: CourseBean): String {
-        val markdownReplace = "[$1](" + "file://" + materialFolder.absolutePath + "/$2)"
         val markdownReplaces = "<img src=" + "file://" + materialFolder.absolutePath + "/$2" + " width=\"520px\"/>"
         val regex = "!\\[(\\S+)]\\((\\S+)\\)".toRegex()
         Log.e("replaceBefore", bean.content)

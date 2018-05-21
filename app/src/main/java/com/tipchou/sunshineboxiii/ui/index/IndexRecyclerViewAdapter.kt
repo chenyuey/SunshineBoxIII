@@ -9,6 +9,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import com.avos.avoscloud.AVAnalytics
+import com.avos.avoscloud.AVUser
 import com.tipchou.sunshineboxiii.R
 import com.tipchou.sunshineboxiii.entity.local.DownloadLocal
 import com.tipchou.sunshineboxiii.entity.local.FavoriteLocal
@@ -322,10 +324,10 @@ class IndexRecyclerViewAdapter(private val activity: IndexActivity) : RecyclerVi
                             for (downloadedLesson in downloadedLessonLiveData.value!!) {
                                 if (downloadedLesson.objectId == lesson?.objectId) {
                                     if (downloadedLesson.stagingUrl != null) {
-//                                        val intent = Intent(activity, CourseActivity::class.java)
-//                                        intent.putExtra("resource storage address", downloadedLesson.stagingUrl!!)
-//                                        intent.putExtra("lesson object id", lesson?.objectId)
-//                                        activity.startActivity(intent)
+                                        AVAnalytics.onEvent(activity, "单个课程被打开次数", lesson?.name)
+                                        AVAnalytics.onEvent(activity, "打开课程总数")
+                                        AVAnalytics.onEvent(activity, "用户打开课程数", AVUser.getCurrentUser().username + ":" + AVUser.getCurrentUser().mobilePhoneNumber)
+                                        AVAnalytics.onEvent(activity, "类目下课程打开数", lesson?.subject)
                                         activity.startActivity(CourseActivity.newIntent(activity, lesson?.objectId!!, downloadedLesson.stagingUrl!!))
                                     } else {
                                         throw Exception("FUCK")
@@ -338,10 +340,10 @@ class IndexRecyclerViewAdapter(private val activity: IndexActivity) : RecyclerVi
                             for (downloadedLesson in downloadedLessonLiveData.value!!) {
                                 if (downloadedLesson.objectId == lesson?.objectId) {
                                     if (downloadedLesson.publishedUrl != null) {
-//                                        val intent = Intent(activity, CourseActivity::class.java)
-//                                        intent.putExtra("resource storage address", downloadedLesson.publishedUrl!!)
-//                                        intent.putExtra("lesson object id", lesson?.objectId)
-//                                        activity.startActivity(intent)
+                                        AVAnalytics.onEvent(activity, "单个课程被打开次数", lesson?.name)
+                                        AVAnalytics.onEvent(activity, "打开课程总数")
+                                        AVAnalytics.onEvent(activity, "用户打开课程数", AVUser.getCurrentUser().username + ":" + AVUser.getCurrentUser().mobilePhoneNumber)
+                                        AVAnalytics.onEvent(activity, "类目下课程打开数", lesson?.subject)
                                         activity.startActivity(CourseActivity.newIntent(activity, lesson?.objectId!!, downloadedLesson.publishedUrl!!))
                                     } else {
                                         throw Exception("FUCK")
@@ -373,10 +375,11 @@ class IndexRecyclerViewAdapter(private val activity: IndexActivity) : RecyclerVi
                             for (downloadedLesson in downloadedLessonLiveData.value!!) {
                                 if (downloadedLesson.objectId == lesson?.objectId) {
                                     if (downloadedLesson.stagingUrl != null) {
-//                                        val intent = Intent(activity, CourseActivity::class.java)
-//                                        intent.putExtra("resource storage address", downloadedLesson.stagingUrl!!)
-//                                        intent.putExtra("lesson object id", lesson?.objectId)
-//                                        activity.startActivity(intent)
+                                        AVAnalytics.onEvent(activity, "单个课程被打开次数", lesson?.name)
+                                        AVAnalytics.onEvent(activity, "打开课程总数")
+                                        AVAnalytics.onEvent(activity, "用户打开课程数", AVUser.getCurrentUser().username + ":" + AVUser.getCurrentUser().mobilePhoneNumber)
+                                        AVAnalytics.onEvent(activity, "类目下课程打开数", lesson?.subject)
+
                                         activity.startActivity(CourseActivity.newIntent(activity, lesson?.objectId!!, downloadedLesson.stagingUrl!!))
                                     } else {
                                         throw Exception("FUCK")
@@ -389,10 +392,11 @@ class IndexRecyclerViewAdapter(private val activity: IndexActivity) : RecyclerVi
                             for (downloadedLesson in downloadedLessonLiveData.value!!) {
                                 if (downloadedLesson.objectId == lesson?.objectId) {
                                     if (downloadedLesson.publishedUrl != null) {
-//                                        val intent = Intent(activity, CourseActivity::class.java)
-//                                        intent.putExtra("resource storage address", downloadedLesson.publishedUrl!!)
-//                                        intent.putExtra("lesson object id", lesson?.objectId)
-//                                        activity.startActivity(intent)
+                                        AVAnalytics.onEvent(activity, "单个课程被打开次数", lesson?.name)
+                                        AVAnalytics.onEvent(activity, "打开课程总数")
+                                        AVAnalytics.onEvent(activity, "用户打开课程数", AVUser.getCurrentUser().username + ":" + AVUser.getCurrentUser().mobilePhoneNumber)
+                                        AVAnalytics.onEvent(activity, "类目下课程打开数", lesson?.subject)
+
                                         activity.startActivity(CourseActivity.newIntent(activity, lesson?.objectId!!, downloadedLesson.publishedUrl!!))
                                     } else {
                                         throw Exception("FUCK")
