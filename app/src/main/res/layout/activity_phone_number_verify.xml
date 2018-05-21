@@ -65,7 +65,7 @@
         android:layout_width="95dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="660dp"
-        android:layout_marginTop="190dp"
+        android:layout_marginTop="162dp"
         android:background="@drawable/shape_white_button"
         android:text="@string/phone_number_verify_act_string9"
         android:textColor="#6bcab2"

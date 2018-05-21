@@ -10,7 +10,8 @@
         android:layout_height="32dp"
         android:layout_marginStart="32dp"
         android:layout_marginTop="45dp"
-        android:background="@drawable/logo" />
+        android:background="@drawable/logo"
+        android:contentDescription="@string/index_drawer_string10" />
 
     <TextView
         android:layout_width="wrap_content"
