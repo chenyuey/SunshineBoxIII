@@ -21,6 +21,7 @@ import com.google.gson.Gson
 import com.tipchou.sunshineboxiii.R
 import com.tipchou.sunshineboxiii.entity.local.FavoriteActionLocal
 import com.tipchou.sunshineboxiii.support.IOUtils
+import com.tipchou.sunshineboxiii.ui.album.AlbumActivity
 import com.tipchou.sunshineboxiii.ui.base.BaseActivity
 import com.tipchou.sunshineboxiii.ui.index.IndexViewModel
 import com.tipchou.sunshineboxiii.ui.video.VideoActivity
@@ -249,6 +250,13 @@ class CourseActivity : BaseActivity(), CourseMediaPlayer {
     }
 
     override fun openAlbum(materials: Materials) {
+        if (mediaPlayer.isPlaying) {
+            mediaPlayer.reset()
+            course_act_cardview1.visibility = View.GONE
+        }
+        val intent = Intent(this, AlbumActivity::class.java)
+        intent.putExtra("materials", materials)
+        startActivity(intent)
     }
 
     private fun getMaterialsList(materialFolder: File, bean: CourseBean): List<Materials> {
