@@ -26,12 +26,14 @@ import android.util.Log
 import android.view.View
 import android.view.animation.LinearInterpolator
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
 import com.avos.avoscloud.AVUser
 import com.tipchou.sunshineboxiii.R
 import com.tipchou.sunshineboxiii.entity.local.RoleLocal
 import com.tipchou.sunshineboxiii.support.LessonType
 import com.tipchou.sunshineboxiii.support.Resource
+import com.tipchou.sunshineboxiii.support.ToastUtils
 import com.tipchou.sunshineboxiii.ui.StartActivity
 import com.tipchou.sunshineboxiii.ui.base.BaseActivity
 import kotlinx.android.synthetic.main.activity_index.*
@@ -120,6 +122,7 @@ class IndexActivity : BaseActivity() {
         val headView: View = index_act_navigationview.inflateHeaderView(R.layout.index_act_headerlayout)
         val resetTextView = headView.findViewById<TextView>(R.id.index_drawer_textview1)
         val signOutTextView = headView.findViewById<TextView>(R.id.index_drawer_textview2)
+        val favoriteLinearLayout = headView.findViewById<LinearLayout>(R.id.index_drawer_linearlayout1)
         resetTextView.setOnClickListener {
             val alertDialogBuilder = AlertDialog.Builder(this)
             alertDialogBuilder.setTitle("确定重置软件")
@@ -146,6 +149,9 @@ class IndexActivity : BaseActivity() {
 
             }
             alertDialogBuilder.create().show()
+        }
+        favoriteLinearLayout.setOnClickListener {
+            ToastUtils.showToast("该功能正在开发中！下个版本见！")
         }
     }
 

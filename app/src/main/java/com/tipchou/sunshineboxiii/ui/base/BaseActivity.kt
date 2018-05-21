@@ -33,5 +33,4 @@ abstract class BaseActivity : AppCompatActivity() {
         }
         resume()
     }
-
 }
