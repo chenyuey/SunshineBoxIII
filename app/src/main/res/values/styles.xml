@@ -11,4 +11,8 @@
         <item name="android:windowFullscreen">true</item>
     </style>
 
+    <style name="MyEditText" parent="Theme.AppCompat.Light">
+        <item name="colorControlNormal">#96f9f9f9</item>
+        <item name="colorControlActivated">#dcf9f9f9</item>
+    </style>
 </resources>

@@ -1,6 +1,7 @@
 package com.tipchou.sunshineboxiii.support
 
 import android.app.Application
+import android.content.Context
 import com.avos.avoscloud.AVOSCloud
 import com.tipchou.sunshineboxiii.entity.local.MyObjectBox
 import io.objectbox.BoxStore
@@ -13,10 +14,13 @@ class App : Application() {
     companion object {
         private var boxStore: BoxStore? = null
         fun getBoxStore() = boxStore
+
+        var mAppContext: Context? = null
     }
 
     override fun onCreate() {
         super.onCreate()
+        mAppContext = this
         boxStore = MyObjectBox.builder().androidContext(this@App).build()
         //Test Environment
 //        AVOSCloud.initialize(this, "TDJUy79LG3JzSqVw7Hj1emIr-gzGzoHsz", "P1wJ6vfje0bVezeeio4eqCJ7")

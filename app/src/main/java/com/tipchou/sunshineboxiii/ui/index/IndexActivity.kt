@@ -32,6 +32,7 @@ import com.tipchou.sunshineboxiii.R
 import com.tipchou.sunshineboxiii.entity.local.RoleLocal
 import com.tipchou.sunshineboxiii.support.LessonType
 import com.tipchou.sunshineboxiii.support.Resource
+import com.tipchou.sunshineboxiii.ui.StartActivity
 import com.tipchou.sunshineboxiii.ui.base.BaseActivity
 import kotlinx.android.synthetic.main.activity_index.*
 import kotlinx.android.synthetic.main.activity_index_content.*
@@ -138,7 +139,8 @@ class IndexActivity : BaseActivity() {
             alertDialogBuilder.setPositiveButton("确定") { _, _ ->
                 viewModel?.clearDatabase()
                 AVUser.logOut()
-
+                startActivity(StartActivity.newIntent(this))
+                finish()
             }
             alertDialogBuilder.setNegativeButton("取消") { _, _ ->
 
@@ -469,6 +471,12 @@ class IndexActivity : BaseActivity() {
             Log.e(localClassName, "stopRotating():animator==null")
         } else {
             animator.pause()
+        }
+    }
+
+    companion object {
+        fun newIntent(packageContext: Context): Intent {
+            return Intent(packageContext, IndexActivity::class.java)
         }
     }
 }

@@ -1,13 +1,31 @@
 package com.tipchou.sunshineboxiii.ui
 
-import android.support.v7.app.AppCompatActivity
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
+import com.avos.avoscloud.AVUser
 import com.tipchou.sunshineboxiii.R
+import com.tipchou.sunshineboxiii.support.ActivationActivityManager
+import com.tipchou.sunshineboxiii.ui.index.IndexActivity
+import com.tipchou.sunshineboxiii.ui.welcome.WelcomeActivity
 
-class StartActivity : AppCompatActivity() {
+class StartActivity : ActivationActivityManager() {
+    override fun layoutId(): Int = R.layout.activity_start
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_start)
+    override fun created(bundle: Bundle?) {
+        if (AVUser.getCurrentUser() != null) {
+            startActivity(IndexActivity.newIntent(this))
+            finish()
+        } else {
+            startActivity(WelcomeActivity.newIntent(this))
+            finish()
+        }
+    }
+
+    override fun resume() {
+    }
+
+    companion object {
+        fun newIntent(packageContext: Context): Intent = Intent(packageContext, StartActivity::class.java)
     }
 }
