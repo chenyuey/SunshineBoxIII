@@ -106,4 +106,8 @@ class IndexViewModel : ViewModel() {
     fun loadDownloadedLesson() {
         downloadedLessonObserver.load()
     }
+
+    fun clearDatabase() {
+        repository.dbDao.removeAll()
+    }
 }

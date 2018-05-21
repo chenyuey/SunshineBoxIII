@@ -12,11 +12,10 @@
 
     <android.support.design.widget.NavigationView
         android:id="@+id/index_act_navigationview"
-        android:layout_width="wrap_content"
+        android:layout_width="248dp"
         android:layout_height="match_parent"
         android:layout_gravity="start"
-        android:fitsSystemWindows="true"
-        app:headerLayout="@layout/index_act_headerlayout"
-        app:menu="@menu/activity_home_page_drawer" />
+        android:background="#ffffff"
+        android:fitsSystemWindows="true" />
 
 </android.support.v4.widget.DrawerLayout>

@@ -208,4 +208,20 @@ class DbDao @Inject constructor() {
             favoriteBox.remove(favoriteList)
         }
     }
+
+    fun removeAll() {
+        if (boxStore == null) {
+            //should not be here!!!!!!
+            throw Exception("App.getBoxStore() get null!!!")
+        } else {
+            val downloadBox = boxStore!!.boxFor(DownloadLocal::class.java)
+            val favoriteBox = boxStore!!.boxFor(FavoriteLocal::class.java)
+            val lessonBox = boxStore!!.boxFor(LessonLocal::class.java)
+            val roleBox = boxStore!!.boxFor(RoleLocal::class.java)
+            downloadBox.removeAll()
+            favoriteBox.removeAll()
+            lessonBox.removeAll()
+            roleBox.removeAll()
+        }
+    }
 }

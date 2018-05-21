@@ -20,14 +20,13 @@ import android.support.v4.app.ActivityCompat
 import android.support.v4.content.ContextCompat
 import android.support.v4.view.GravityCompat
 import android.support.v4.widget.DrawerLayout
+import android.support.v7.app.AlertDialog
 import android.support.v7.widget.GridLayoutManager
 import android.util.Log
 import android.view.View
 import android.view.animation.LinearInterpolator
 import android.widget.ImageView
-import com.avos.avoscloud.AVException
-import com.avos.avoscloud.AVUser
-import com.avos.avoscloud.LogInCallback
+import android.widget.TextView
 import com.tipchou.sunshineboxiii.R
 import com.tipchou.sunshineboxiii.entity.local.RoleLocal
 import com.tipchou.sunshineboxiii.support.LessonType
@@ -114,6 +113,25 @@ class IndexActivity : BaseActivity() {
         //refresh button
         index_act_view1.setOnClickListener {
             viewModel?.loadLesson()
+        }
+        //侧边菜单
+        val headView: View = index_act_navigationview.inflateHeaderView(R.layout.index_act_headerlayout)
+        val resetTextView = headView.findViewById<TextView>(R.id.index_drawer_textview1)
+        val signOutTextView = headView.findViewById<TextView>(R.id.index_drawer_textview2)
+        resetTextView.setOnClickListener {
+            val alertDialogBuilder = AlertDialog.Builder(this)
+            alertDialogBuilder.setTitle("确定重置软件")
+            alertDialogBuilder.setMessage("这会删除全部的本地文件")
+            alertDialogBuilder.setPositiveButton("确定") { _, _ ->
+                viewModel?.clearDatabase()
+            }
+            alertDialogBuilder.setNegativeButton("取消") { _, _ ->
+
+            }
+            alertDialogBuilder.create().show()
+        }
+        signOutTextView.setOnClickListener {
+
         }
     }
 
@@ -272,12 +290,6 @@ class IndexActivity : BaseActivity() {
     override fun layoutId(): Int = R.layout.activity_index
 
     override fun created(bundle: Bundle?) {
-        if (AVUser.getCurrentUser() == null) {
-            AVUser.logInInBackground("shaolizhi", "12345678", object : LogInCallback<AVUser>() {
-                override fun done(p0: AVUser?, p1: AVException?) {
-                }
-            })
-        }
         setUpClickEvent()
         setUpAnimator()
         setUpNetWorkChangeBroadcast()
