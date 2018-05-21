@@ -1,5 +1,6 @@
 package com.tipchou.sunshineboxiii.ui.base
 
+import android.content.pm.ActivityInfo
 import android.os.Bundle
 import android.support.annotation.LayoutRes
 import android.support.v7.app.AppCompatActivity
@@ -27,6 +28,9 @@ abstract class BaseActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
+        if (requestedOrientation != ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE) {
+            requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
+        }
         resume()
     }
 
