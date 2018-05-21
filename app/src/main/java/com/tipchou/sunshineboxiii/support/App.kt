@@ -3,6 +3,7 @@ package com.tipchou.sunshineboxiii.support
 import android.app.Application
 import android.content.Context
 import com.avos.avoscloud.AVOSCloud
+import com.tencent.bugly.Bugly
 import com.tipchou.sunshineboxiii.entity.local.MyObjectBox
 import io.objectbox.BoxStore
 
@@ -26,6 +27,7 @@ class App : Application() {
 //        AVOSCloud.initialize(this, "TDJUy79LG3JzSqVw7Hj1emIr-gzGzoHsz", "P1wJ6vfje0bVezeeio4eqCJ7")
         //Product Environment
         AVOSCloud.initialize(this, "CQBviH8f3TNrbRwzHfjTw7yk-gzGzoHsz", "5KnQsMhpWAAXYXvzbGV1YU62")
+        Bugly.init(applicationContext, "37eaf578cd", false)
     }
 
 }

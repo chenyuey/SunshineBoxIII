@@ -123,6 +123,8 @@ class IndexActivity : BaseActivity() {
         val resetTextView = headView.findViewById<TextView>(R.id.index_drawer_textview1)
         val signOutTextView = headView.findViewById<TextView>(R.id.index_drawer_textview2)
         val favoriteLinearLayout = headView.findViewById<LinearLayout>(R.id.index_drawer_linearlayout1)
+        val cellphoneTextView = headView.findViewById<TextView>(R.id.index_drawer_textview3)
+        cellphoneTextView.text = AVUser.getCurrentUser().mobilePhoneNumber
         resetTextView.setOnClickListener {
             val alertDialogBuilder = AlertDialog.Builder(this)
             alertDialogBuilder.setTitle("确定重置软件")
