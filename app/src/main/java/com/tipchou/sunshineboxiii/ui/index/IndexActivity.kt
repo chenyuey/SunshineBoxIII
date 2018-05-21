@@ -27,6 +27,7 @@ import android.view.View
 import android.view.animation.LinearInterpolator
 import android.widget.ImageView
 import android.widget.TextView
+import com.avos.avoscloud.AVUser
 import com.tipchou.sunshineboxiii.R
 import com.tipchou.sunshineboxiii.entity.local.RoleLocal
 import com.tipchou.sunshineboxiii.support.LessonType
@@ -131,7 +132,18 @@ class IndexActivity : BaseActivity() {
             alertDialogBuilder.create().show()
         }
         signOutTextView.setOnClickListener {
+            val alertDialogBuilder = AlertDialog.Builder(this)
+            alertDialogBuilder.setTitle("确定登出")
+            alertDialogBuilder.setMessage("这会退出当前账号，并丢失全部的本地文件")
+            alertDialogBuilder.setPositiveButton("确定") { _, _ ->
+                viewModel?.clearDatabase()
+                AVUser.logOut()
 
+            }
+            alertDialogBuilder.setNegativeButton("取消") { _, _ ->
+
+            }
+            alertDialogBuilder.create().show()
         }
     }
 
