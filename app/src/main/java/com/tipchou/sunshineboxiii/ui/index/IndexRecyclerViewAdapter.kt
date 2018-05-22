@@ -38,10 +38,11 @@ class IndexRecyclerViewAdapter(private val activity: IndexActivity) : RecyclerVi
     private val layoutInflater: LayoutInflater = LayoutInflater.from(activity)
 
     private val itemDataList = ArrayList<ItemData>()
+    private val viewModel: IndexViewModel
 
     init {
         DaggerMagicBox.create().poke(this)
-        val viewModel: IndexViewModel = ViewModelProviders.of(activity).get(IndexViewModel::class.java)
+        viewModel = ViewModelProviders.of(activity).get(IndexViewModel::class.java)
         netStatusLiveData = viewModel.getNetStatus()
         netStatusLiveData.observe(activity, Observer { })
         downloadLesson = { viewModel.downloadLesson(it) }
@@ -233,7 +234,35 @@ class IndexRecyclerViewAdapter(private val activity: IndexActivity) : RecyclerVi
                                 downloadStatusTextView.text = t[myDownloadHolder]
                             } else {
                                 downloadQueueLiveData.removeObserver(this)
-                                bind(lesson, editor, true)
+                                val downloadedLesson = viewModel.getDownloadedLesson()
+                                downloadedLesson.observeForever(object : Observer<List<DownloadLocal>> {
+                                    override fun onChanged(t: List<DownloadLocal>?) {
+                                        downloadedLesson.removeObserver(this)
+                                        if (t != null) {
+                                            var downloadSuccess = false
+                                            loop@ for (item in t) {
+                                                when (editor) {
+                                                    true -> {
+                                                        if (item.objectId == lesson.objectId && item.stagingUrl != null) {
+                                                            downloadSuccess = true
+                                                            break@loop
+                                                        }
+                                                    }
+                                                    false -> {
+                                                        if (item.objectId == lesson.objectId && item.publishedUrl != null) {
+                                                            downloadSuccess = true
+                                                            break@loop
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                            bind(lesson, editor, downloadSuccess)
+                                        } else {
+                                            //should not be here
+                                        }
+
+                                    }
+                                })
                             }
                         } else {
                             //should not be here!!!
