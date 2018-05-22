@@ -69,9 +69,7 @@ constructor(saveDownloadResult: (lessonObjectId: String, storageUrl: String, edi
                                             }
 
                                             override fun downloadFailure(file: File) {
-                                                //下载失败？
-                                                isDownloading = false
-                                                downloadQueue.value = hashMapOf()
+
                                             }
 
                                             override fun progressUpdate(value: Long?) {

@@ -234,35 +234,7 @@ class IndexRecyclerViewAdapter(private val activity: IndexActivity) : RecyclerVi
                                 downloadStatusTextView.text = t[myDownloadHolder]
                             } else {
                                 downloadQueueLiveData.removeObserver(this)
-                                val downloadedLesson = viewModel.getDownloadedLesson()
-                                downloadedLesson.observeForever(object : Observer<List<DownloadLocal>> {
-                                    override fun onChanged(t: List<DownloadLocal>?) {
-                                        downloadedLesson.removeObserver(this)
-                                        if (t != null) {
-                                            var downloadSuccess = false
-                                            loop@ for (item in t) {
-                                                when (editor) {
-                                                    true -> {
-                                                        if (item.objectId == lesson.objectId && item.stagingUrl != null) {
-                                                            downloadSuccess = true
-                                                            break@loop
-                                                        }
-                                                    }
-                                                    false -> {
-                                                        if (item.objectId == lesson.objectId && item.publishedUrl != null) {
-                                                            downloadSuccess = true
-                                                            break@loop
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                            bind(lesson, editor, downloadSuccess)
-                                        } else {
-                                            //should not be here
-                                        }
-
-                                    }
-                                })
+                                bind(lesson, editor, true)
                             }
                         } else {
                             //should not be here!!!
