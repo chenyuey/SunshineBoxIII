@@ -191,15 +191,7 @@ class IndexActivity : BaseActivity() {
     private fun setUpViewModel() {
         viewModel = ViewModelProviders.of(this).get(IndexViewModel::class.java)
         viewModel?.getNetStatus()?.observe(this, Observer {
-            if (it == null) {
-                //should not be here
-            } else {
-                if (it) {
-                    index_act_textview10.text = "阳光盒子"
-                } else {
-                    index_act_textview10.text = "阳光盒子（离线模式）"
-                }
-            }
+
         })
         viewModel?.getLessonType()?.observe(this, Observer {
             when (it) {
