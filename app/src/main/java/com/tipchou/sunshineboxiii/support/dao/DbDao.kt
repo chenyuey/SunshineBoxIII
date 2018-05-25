@@ -126,6 +126,29 @@ class DbDao @Inject constructor() {
         }
     }
 
+    fun getLesson(lessonObjectIdList: List<String>): ArrayList<LessonLocal> {
+        if (boxStore == null) {
+            //should not be here!!!!!!
+            throw Exception("App.getBoxStore() get null!!!")
+        } else {
+            val lessonBox: Box<LessonLocal> = boxStore!!.boxFor(LessonLocal::class.java)
+            val lessonList = arrayListOf<LessonLocal>()
+            for (lessonObjectId in lessonObjectIdList) {
+                val queryBuilder: QueryBuilder<LessonLocal>? = lessonBox.query()
+                if (queryBuilder == null) {
+                    //should not be here!!
+                    throw Exception("queryBuilder is null!!!")
+                } else {
+                    val lessonLocal = queryBuilder.equal(LessonLocal_.objectId, lessonObjectId).build().find()
+                    if (lessonLocal.size == 1) {
+                        lessonList.add(lessonLocal[0])
+                    }
+                }
+            }
+            return lessonList
+        }
+    }
+
     fun getDownload(): ObjectBoxLiveData<DownloadLocal> {
         if (boxStore == null) {
             //should not be here!!!!!!

@@ -128,4 +128,33 @@ class WebDao @Inject constructor() {
         }
         return data
     }
+
+    /**
+     * 根据LessonId查询Lesson表中的数据
+     */
+    fun getLesson(lessonObjectIdList: List<String>): LiveData<ApiResponse<List<LessonWeb>>> {
+        val data = MutableLiveData<ApiResponse<List<LessonWeb>>>()
+        if (lessonObjectIdList.isEmpty()) {
+            return data
+        }
+        val queryList = arrayListOf<AVQuery<AVObject>>()
+        for (lessonObjectId in lessonObjectIdList) {
+            val query = AVQuery<AVObject>("Lesson")
+            query.whereEqualTo("objectId", lessonObjectId)
+            queryList.add(query)
+        }
+        val query: AVQuery<AVObject> = AVQuery.or(queryList)
+        query.findInBackground(object : FindCallback<AVObject>() {
+            override fun done(response: MutableList<AVObject>?, exception: AVException?) {
+                val result = ArrayList<LessonWeb>()
+                if (response != null) {
+                    for (item in response) {
+                        result.add(LessonWeb(item))
+                    }
+                }
+                data.value = ApiResponse(result, exception)
+            }
+        })
+        return data
+    }
 }

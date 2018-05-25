@@ -15,7 +15,7 @@ import javax.inject.Inject
  */
 class IndexViewModel : ViewModel() {
     @Inject
-    lateinit var repository: IndexRepository
+    lateinit var repository: Repository
 
     //observed data
     private val role: MutableLiveData<Resource<List<RoleLocal>>> = MutableLiveData()

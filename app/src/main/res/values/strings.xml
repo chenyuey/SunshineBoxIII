@@ -86,6 +86,8 @@
     <string name="index_drawer_string8">登出</string>
     <string name="index_drawer_string9">微信扫描小程序码，参与阳光创育者教师支持计划。</string>
     <string name="index_drawer_string10">阳光盒子LOGO</string>
+    <string name="favorite_act_string1">我的收藏</string>
+    <string name="favorite_act_string2">返回</string>
 
 
 </resources>

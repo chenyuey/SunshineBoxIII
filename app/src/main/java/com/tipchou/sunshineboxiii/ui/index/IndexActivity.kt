@@ -28,7 +28,9 @@ import android.view.animation.LinearInterpolator
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
+import com.avos.avoscloud.AVException
 import com.avos.avoscloud.AVUser
+import com.avos.avoscloud.LogInCallback
 import com.tipchou.sunshineboxiii.R
 import com.tipchou.sunshineboxiii.entity.local.RoleLocal
 import com.tipchou.sunshineboxiii.support.LessonType
@@ -304,6 +306,11 @@ class IndexActivity : BaseActivity() {
     override fun layoutId(): Int = R.layout.activity_index
 
     override fun created(bundle: Bundle?) {
+        AVUser.logInInBackground("shaolizhi", "12345678", object : LogInCallback<AVUser>() {
+            override fun done(p0: AVUser?, p1: AVException?) {
+
+            }
+        })
         setUpClickEvent()
         setUpAnimator()
         setUpNetWorkChangeBroadcast()
