@@ -3,6 +3,7 @@ package com.tipchou.sunshineboxiii.ui.favorite
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
+import com.tipchou.sunshineboxiii.entity.local.DownloadLocal
 import com.tipchou.sunshineboxiii.entity.local.FavoriteLocal
 import com.tipchou.sunshineboxiii.entity.local.LessonLocal
 import com.tipchou.sunshineboxiii.support.DaggerMagicBox
@@ -19,17 +20,20 @@ class FavoriteViewModel : ViewModel() {
     @Inject
     lateinit var repository: Repository
 
-    private val favorite: MutableLiveData<Resource<List<FavoriteLocal>>> = MutableLiveData()
+    private val favorite = MutableLiveData<Resource<List<FavoriteLocal>>>()
     private val favoriteObserver: GeneralObserver<Resource<List<FavoriteLocal>>>
-    private val favoriteLesson: MutableLiveData<Resource<List<LessonLocal>>> = MutableLiveData()
-    private val lessonObserver: GeneralObserver<Resource<List<LessonLocal>>>
+    private val favoriteLesson = MutableLiveData<Resource<List<LessonLocal>>>()
+    private val favoriteLessonObserver: GeneralObserver<Resource<List<LessonLocal>>>
+    private val download = MutableLiveData<List<DownloadLocal>>()
+    private val downloadObserver: GeneralObserver<List<DownloadLocal>>
+
 
     init {
         DaggerMagicBox.create().poke(this)
         favoriteObserver = GeneralObserver(favorite) {
             repository.getFavorite()
         }
-        lessonObserver = GeneralObserver(favoriteLesson) {
+        favoriteLessonObserver = GeneralObserver(favoriteLesson) {
             val objectIdList = arrayListOf<String>()
             val favoriteList = favorite.value?.data
             if (favoriteList == null) {
@@ -41,6 +45,18 @@ class FavoriteViewModel : ViewModel() {
             }
             repository.getLesson(objectIdList)
         }
+        downloadObserver = GeneralObserver(download) {
+            repository.getDownload()
+        }
+    }
+
+    fun getDownload(): LiveData<List<DownloadLocal>> {
+        loadDownload()
+        return download
+    }
+
+    fun loadDownload() {
+        downloadObserver.load()
     }
 
     fun getFavorite(): LiveData<Resource<List<FavoriteLocal>>> {
@@ -49,7 +65,6 @@ class FavoriteViewModel : ViewModel() {
     }
 
     fun getFavoriteLesson(): LiveData<Resource<List<LessonLocal>>> {
-        loadFavoriteLesson()
         return favoriteLesson
     }
 
@@ -58,7 +73,7 @@ class FavoriteViewModel : ViewModel() {
     }
 
     fun loadFavoriteLesson() {
-        lessonObserver.load()
+        favoriteLessonObserver.load()
     }
 
 }

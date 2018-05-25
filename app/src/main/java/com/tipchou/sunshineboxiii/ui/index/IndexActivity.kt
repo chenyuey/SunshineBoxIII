@@ -28,16 +28,14 @@ import android.view.animation.LinearInterpolator
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
-import com.avos.avoscloud.AVException
 import com.avos.avoscloud.AVUser
-import com.avos.avoscloud.LogInCallback
 import com.tipchou.sunshineboxiii.R
 import com.tipchou.sunshineboxiii.entity.local.RoleLocal
 import com.tipchou.sunshineboxiii.support.LessonType
 import com.tipchou.sunshineboxiii.support.Resource
-import com.tipchou.sunshineboxiii.support.ToastUtils
 import com.tipchou.sunshineboxiii.ui.StartActivity
 import com.tipchou.sunshineboxiii.ui.base.BaseActivity
+import com.tipchou.sunshineboxiii.ui.favorite.FavoriteActivity
 import kotlinx.android.synthetic.main.activity_index.*
 import kotlinx.android.synthetic.main.activity_index_content.*
 import java.io.File
@@ -155,7 +153,7 @@ class IndexActivity : BaseActivity() {
             alertDialogBuilder.create().show()
         }
         favoriteLinearLayout.setOnClickListener {
-            ToastUtils.showToast("该功能正在开发中！下个版本见！")
+            startActivity(Intent(this, FavoriteActivity::class.java))
         }
     }
 
@@ -306,11 +304,6 @@ class IndexActivity : BaseActivity() {
     override fun layoutId(): Int = R.layout.activity_index
 
     override fun created(bundle: Bundle?) {
-        AVUser.logInInBackground("shaolizhi", "12345678", object : LogInCallback<AVUser>() {
-            override fun done(p0: AVUser?, p1: AVException?) {
-
-            }
-        })
         setUpClickEvent()
         setUpAnimator()
         setUpNetWorkChangeBroadcast()

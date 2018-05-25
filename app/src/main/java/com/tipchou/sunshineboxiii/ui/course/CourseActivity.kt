@@ -44,6 +44,8 @@ class CourseActivity : BaseActivity(), CourseMediaPlayer {
 
     private var viewModel: IndexViewModel? = null
 
+    var favorite: Boolean = false
+
     private fun setUpClickEvent() {
         //back
         course_act_imagebutton.setOnClickListener {
@@ -158,7 +160,6 @@ class CourseActivity : BaseActivity(), CourseMediaPlayer {
 
     }
 
-    var favorite: Boolean = false
 
     private fun setUpViewModel() {
         viewModel = ViewModelProviders.of(this).get(IndexViewModel::class.java)
