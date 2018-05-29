@@ -38,6 +38,7 @@ import com.tipchou.sunshineboxiii.ui.StartActivity
 import com.tipchou.sunshineboxiii.ui.base.BaseActivity
 import com.tipchou.sunshineboxiii.ui.favorite.FavoriteActivity
 import com.tipchou.sunshineboxiii.ui.index.lesson.LessonFragment
+import com.tipchou.sunshineboxiii.ui.index.special.SpecialFragment
 import kotlinx.android.synthetic.main.activity_index.*
 import kotlinx.android.synthetic.main.activity_index_content.*
 import java.io.File
@@ -212,13 +213,22 @@ class IndexActivity : BaseActivity() {
         override fun getItem(position: Int): Fragment {
             return when (position) {
                 0 -> LessonFragment()
+                else -> SpecialFragment()
+            }
+        }
+
+        override fun getPageTitle(position: Int): CharSequence? {
+            return when (position) {
+                0 -> {
+                    "全部课程"
+                }
                 else -> {
-                    throw Exception()
+                    "专题"
                 }
             }
         }
 
-        override fun getCount(): Int = 1
+        override fun getCount(): Int = 2
     }
 
     override fun resume() {
