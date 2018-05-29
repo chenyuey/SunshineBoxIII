@@ -51,12 +51,15 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ui.test.TestActivity">            <intent-filter>
-            <action android:name="android.intent.action.MAIN" />
+        <activity android:name=".ui.test.TestActivity">
 
-            <category android:name="android.intent.category.LAUNCHER" />
-        </intent-filter></activity>
-        <activity android:name=".ui.index.IndexActivity"></activity>
+        </activity>
+        <activity android:name=".ui.index.IndexActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
         <activity android:name=".ui.course.CourseActivity" />
         <activity android:name=".ui.video.VideoActivity" />
         <activity android:name=".ui.album.AlbumActivity" />

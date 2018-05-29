@@ -17,11 +17,13 @@ import android.os.Bundle
 import android.os.Environment
 import android.support.design.widget.Snackbar
 import android.support.v4.app.ActivityCompat
+import android.support.v4.app.Fragment
+import android.support.v4.app.FragmentManager
+import android.support.v4.app.FragmentPagerAdapter
 import android.support.v4.content.ContextCompat
 import android.support.v4.view.GravityCompat
 import android.support.v4.widget.DrawerLayout
 import android.support.v7.app.AlertDialog
-import android.support.v7.widget.GridLayoutManager
 import android.util.Log
 import android.view.View
 import android.view.animation.LinearInterpolator
@@ -31,11 +33,11 @@ import android.widget.TextView
 import com.avos.avoscloud.AVUser
 import com.tipchou.sunshineboxiii.R
 import com.tipchou.sunshineboxiii.entity.local.RoleLocal
-import com.tipchou.sunshineboxiii.support.LessonType
 import com.tipchou.sunshineboxiii.support.Resource
 import com.tipchou.sunshineboxiii.ui.StartActivity
 import com.tipchou.sunshineboxiii.ui.base.BaseActivity
 import com.tipchou.sunshineboxiii.ui.favorite.FavoriteActivity
+import com.tipchou.sunshineboxiii.ui.index.lesson.LessonFragment
 import kotlinx.android.synthetic.main.activity_index.*
 import kotlinx.android.synthetic.main.activity_index_content.*
 import java.io.File
@@ -52,19 +54,6 @@ class IndexActivity : BaseActivity() {
 
     private var netWorkChangeBroadcast: BroadcastReceiver? = null
 
-    //-------------------------------public Method--------------------------------------------------
-    fun showNoDataHint(should: Boolean) {
-        if (should) {
-            index_act_imageview11.visibility = View.VISIBLE
-            index_act_textview12.visibility = View.VISIBLE
-            index_act_nestedscrollview1.visibility = View.GONE
-        } else {
-            index_act_imageview11.visibility = View.GONE
-            index_act_textview12.visibility = View.GONE
-            index_act_nestedscrollview1.visibility = View.VISIBLE
-        }
-    }
-
     //-------------------------------onCreate Method------------------------------------------------
     private fun setUpClickEvent() {
         //drawer layout
@@ -75,44 +64,6 @@ class IndexActivity : BaseActivity() {
             } else if (drawerLockMode != DrawerLayout.LOCK_MODE_LOCKED_CLOSED) {
                 index_act_drawerlayout.openDrawer(GravityCompat.START)
             }
-        }
-        //subject button
-        index_act_linearlayout1.setOnClickListener {
-            viewModel?.setLessonType(LessonType.NURSERY)
-            viewModel?.loadLesson()
-        }
-        index_act_linearlayout2.setOnClickListener {
-            viewModel?.setLessonType(LessonType.MUSIC)
-            viewModel?.loadLesson()
-        }
-        index_act_linearlayout3.setOnClickListener {
-            viewModel?.setLessonType(LessonType.READING)
-            viewModel?.loadLesson()
-        }
-        index_act_linearlayout4.setOnClickListener {
-            viewModel?.setLessonType(LessonType.GAME)
-            viewModel?.loadLesson()
-        }
-        //tag button
-        index_act_linearlayout5.setOnClickListener {
-            viewModel?.setLessonType(LessonType.HEALTH)
-            viewModel?.loadLesson()
-        }
-        index_act_linearlayout6.setOnClickListener {
-            viewModel?.setLessonType(LessonType.LANGUAGE)
-            viewModel?.loadLesson()
-        }
-        index_act_linearlayout7.setOnClickListener {
-            viewModel?.setLessonType(LessonType.SOCIAL)
-            viewModel?.loadLesson()
-        }
-        index_act_linearlayout8.setOnClickListener {
-            viewModel?.setLessonType(LessonType.SCIENCE)
-            viewModel?.loadLesson()
-        }
-        index_act_linearlayout9.setOnClickListener {
-            viewModel?.setLessonType(LessonType.ART)
-            viewModel?.loadLesson()
         }
         //refresh button
         index_act_view1.setOnClickListener {
@@ -190,63 +141,6 @@ class IndexActivity : BaseActivity() {
 
     private fun setUpViewModel() {
         viewModel = ViewModelProviders.of(this).get(IndexViewModel::class.java)
-        viewModel?.getNetStatus()?.observe(this, Observer {
-
-        })
-        viewModel?.getLessonType()?.observe(this, Observer {
-            when (it) {
-                LessonType.NURSERY -> {
-                    makeEveryBodyGray()
-                    index_act_textview1.setTextColor(Color.parseColor("#f09038"))
-                    index_act_imageview1.background = getDrawable(R.drawable.ic_nursery_orange)
-                }
-                LessonType.MUSIC -> {
-                    makeEveryBodyGray()
-                    index_act_textview2.setTextColor(Color.parseColor("#f09038"))
-                    index_act_imageview2.background = getDrawable(R.drawable.ic_music_orange)
-
-                }
-                LessonType.READING -> {
-                    makeEveryBodyGray()
-                    index_act_textview3.setTextColor(Color.parseColor("#f09038"))
-                    index_act_imageview3.background = getDrawable(R.drawable.ic_reading_orange)
-
-                }
-                LessonType.GAME -> {
-                    makeEveryBodyGray()
-                    index_act_textview4.setTextColor(Color.parseColor("#f09038"))
-                    index_act_imageview4.background = getDrawable(R.drawable.ic_game_orange)
-
-                }
-                LessonType.HEALTH -> {
-                    makeEveryBodyGray()
-                    index_act_textview5.setTextColor(Color.parseColor("#f09038"))
-                    index_act_imageview5.background = getDrawable(R.drawable.ic_health_orange)
-                }
-                LessonType.LANGUAGE -> {
-                    makeEveryBodyGray()
-                    index_act_textview6.setTextColor(Color.parseColor("#f09038"))
-                    index_act_imageview6.background = getDrawable(R.drawable.ic_language_orange)
-                }
-                LessonType.SOCIAL -> {
-                    makeEveryBodyGray()
-                    index_act_textview7.setTextColor(Color.parseColor("#f09038"))
-                    index_act_imageview7.background = getDrawable(R.drawable.ic_social_orange)
-
-                }
-                LessonType.SCIENCE -> {
-                    makeEveryBodyGray()
-                    index_act_textview8.setTextColor(Color.parseColor("#f09038"))
-                    index_act_imageview8.background = getDrawable(R.drawable.ic_science_orange)
-                }
-                LessonType.ART -> {
-                    makeEveryBodyGray()
-                    index_act_textview9.setTextColor(Color.parseColor("#f09038"))
-                    index_act_imageview9.background = getDrawable(R.drawable.ic_art_orange)
-
-                }
-            }
-        })
         viewModel?.getRole()?.observe(this, Observer {
             Log.e("Role", "Status: ${it?.status.toString()}; Message: ${it?.message}; Size: ${it?.data?.size}")
             if (it == null) {
@@ -308,15 +202,23 @@ class IndexActivity : BaseActivity() {
         setUpAnimator()
         setUpNetWorkChangeBroadcast()
         setUpViewModel()
-        setUpRecyclerView()
         checkPermissions()
         createRootFolder()
+        index_act_viewpager.adapter = MyAdapter(supportFragmentManager)
+        index_act_tablayout.setupWithViewPager(index_act_viewpager)
     }
 
-    private fun setUpRecyclerView() {
-        val adapter = IndexRecyclerViewAdapter(this, viewModel!!)
-        index_act_recyclerview.layoutManager = GridLayoutManager(this, 4)
-        index_act_recyclerview.adapter = adapter
+    private class MyAdapter(fm: FragmentManager) : FragmentPagerAdapter(fm) {
+        override fun getItem(position: Int): Fragment {
+            return when (position) {
+                0 -> LessonFragment()
+                else -> {
+                    throw Exception()
+                }
+            }
+        }
+
+        override fun getCount(): Int = 1
     }
 
     override fun resume() {
@@ -377,54 +279,6 @@ class IndexActivity : BaseActivity() {
         }
         // 没有可用的网络
         return false
-    }
-
-    //---------------------------------Subject/Tag Button-------------------------------------------
-    private fun makeEveryBodyGray() {
-        if (index_act_textview1.currentTextColor == Color.parseColor("#f09038")) {
-            index_act_textview1.setTextColor(Color.parseColor("#666666"))
-            index_act_imageview1.background = getDrawable(R.drawable.ic_nursery_black)
-        }
-
-        if (index_act_textview2.currentTextColor == Color.parseColor("#f09038")) {
-            index_act_textview2.setTextColor(Color.parseColor("#666666"))
-            index_act_imageview2.background = getDrawable(R.drawable.ic_music_black)
-        }
-
-        if (index_act_textview3.currentTextColor == Color.parseColor("#f09038")) {
-            index_act_textview3.setTextColor(Color.parseColor("#666666"))
-            index_act_imageview3.background = getDrawable(R.drawable.ic_reading_black)
-        }
-
-        if (index_act_textview4.currentTextColor == Color.parseColor("#f09038")) {
-            index_act_textview4.setTextColor(Color.parseColor("#666666"))
-            index_act_imageview4.background = getDrawable(R.drawable.ic_game_black)
-        }
-
-        if (index_act_textview5.currentTextColor == Color.parseColor("#f09038")) {
-            index_act_textview5.setTextColor(Color.parseColor("#666666"))
-            index_act_imageview5.background = getDrawable(R.drawable.ic_health_black)
-        }
-
-        if (index_act_textview6.currentTextColor == Color.parseColor("#f09038")) {
-            index_act_textview6.setTextColor(Color.parseColor("#666666"))
-            index_act_imageview6.background = getDrawable(R.drawable.ic_language_black)
-        }
-
-        if (index_act_textview7.currentTextColor == Color.parseColor("#f09038")) {
-            index_act_textview7.setTextColor(Color.parseColor("#666666"))
-            index_act_imageview7.background = getDrawable(R.drawable.ic_social_black)
-        }
-
-        if (index_act_textview8.currentTextColor == Color.parseColor("#f09038")) {
-            index_act_textview8.setTextColor(Color.parseColor("#666666"))
-            index_act_imageview8.background = getDrawable(R.drawable.ic_science_black)
-        }
-
-        if (index_act_textview9.currentTextColor == Color.parseColor("#f09038")) {
-            index_act_textview9.setTextColor(Color.parseColor("#666666"))
-            index_act_imageview9.background = getDrawable(R.drawable.ic_art_black)
-        }
     }
 
     //---------------------------------Refresh Button-----------------------------------------------

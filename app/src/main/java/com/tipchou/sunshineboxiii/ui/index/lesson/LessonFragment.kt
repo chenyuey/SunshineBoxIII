@@ -4,12 +4,12 @@ import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
 import android.graphics.Color
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.GridLayoutManager
-import android.util.Log
+import android.view.View
 import com.tipchou.sunshineboxiii.R
 import com.tipchou.sunshineboxiii.support.LessonType
 import com.tipchou.sunshineboxiii.ui.base.BaseFragment
+import com.tipchou.sunshineboxiii.ui.index.IndexActivity
 import com.tipchou.sunshineboxiii.ui.index.IndexRecyclerViewAdapter
 import com.tipchou.sunshineboxiii.ui.index.IndexViewModel
 import kotlinx.android.synthetic.main.fragment_lesson.*
@@ -111,10 +111,7 @@ class LessonFragment : BaseFragment() {
     }
 
     private fun setUpViewModel() {
-        viewModel = ViewModelProviders.of(this).get(IndexViewModel::class.java)
-        viewModel?.getNetStatus()?.observe(this, Observer {
-
-        })
+        viewModel = ViewModelProviders.of(activity!!).get(IndexViewModel::class.java)
         viewModel?.getLessonType()?.observe(this, Observer {
             when (it) {
                 LessonType.NURSERY -> {
@@ -169,16 +166,10 @@ class LessonFragment : BaseFragment() {
                 }
             }
         })
-        viewModel?.getRole()?.observe(this, Observer {
-            Log.e("Role", "Status: ${it?.status.toString()}; Message: ${it?.message}; Size: ${it?.data?.size}")
-        })
-        viewModel?.getLesson()?.observe(this, Observer {
-            Log.e("Lesson", "Status: ${it?.status.toString()}; Message: ${it?.message}; Size: ${it?.data?.size}")
-        })
     }
 
     private fun setUpRecyclerView() {
-        val adapter = IndexRecyclerViewAdapter(mActivity as AppCompatActivity, viewModel!!)
+        val adapter = IndexRecyclerViewAdapter(activity as IndexActivity, this)
         lesson_fgm_recyclerview.layoutManager = GridLayoutManager(mActivity, 4)
         lesson_fgm_recyclerview.adapter = adapter
     }
@@ -189,6 +180,17 @@ class LessonFragment : BaseFragment() {
         setUpRecyclerView()
     }
 
+    fun showNoDataHint(should: Boolean) {
+        if (should) {
+            lesson_fgm_imageview11.visibility = View.VISIBLE
+            lesson_fgm_textview12.visibility = View.VISIBLE
+            lesson_fgm_nestedscrollview1.visibility = View.GONE
+        } else {
+            lesson_fgm_imageview11.visibility = View.GONE
+            lesson_fgm_textview12.visibility = View.GONE
+            lesson_fgm_nestedscrollview1.visibility = View.VISIBLE
+        }
+    }
 
     override fun resumed() {
 
