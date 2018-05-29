@@ -88,6 +88,18 @@
     <string name="index_drawer_string10">阳光盒子LOGO</string>
     <string name="favorite_act_string1">我的收藏</string>
     <string name="favorite_act_string2">返回</string>
+    <string name="lesson_fgm_string1">科目</string>
+    <string name="lesson_fgm_string2">儿歌</string>
+    <string name="lesson_fgm_string3">音乐</string>
+    <string name="lesson_fgm_string4">阅读</string>
+    <string name="lesson_fgm_string5">游戏</string>
+    <string name="lesson_fgm_string6">领域</string>
+    <string name="lesson_fgm_string7">健康</string>
+    <string name="lesson_fgm_string8">语言</string>
+    <string name="lesson_fgm_string9">社会</string>
+    <string name="lesson_fgm_string10">科学</string>
+    <string name="lesson_fgm_string11">艺术</string>
+    <string name="lesson_fgm_string12">暂时没有内容</string>
 
 
 </resources>

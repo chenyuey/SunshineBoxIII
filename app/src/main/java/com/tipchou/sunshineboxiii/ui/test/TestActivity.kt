@@ -2,18 +2,34 @@ package com.tipchou.sunshineboxiii.ui.test
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.support.v4.app.Fragment
+import android.support.v4.app.FragmentManager
+import android.support.v4.app.FragmentPagerAdapter
 import com.tipchou.sunshineboxiii.R
-import com.tipchou.sunshineboxiii.support.dao.WebDao
 import com.tipchou.sunshineboxiii.ui.base.BaseActivity
-import java.util.*
+import com.tipchou.sunshineboxiii.ui.index.lesson.LessonFragment
+import kotlinx.android.synthetic.main.activity_test.*
 
 class TestActivity : BaseActivity() {
-    private var viewModel: TestViewModel? = null
 
     override fun layoutId(): Int = R.layout.activity_test
 
+    private class MyAdapter(fm: FragmentManager) : FragmentPagerAdapter(fm) {
+        override fun getItem(position: Int): Fragment {
+            return when (position) {
+                0 -> LessonFragment()
+                else -> {
+                    throw Exception()
+                }
+            }
+        }
+
+        override fun getCount(): Int = 1
+    }
+
     @SuppressLint("SetTextI18n")
     override fun created(bundle: Bundle?) {
+        test_act_viewpager.adapter = MyAdapter(supportFragmentManager)
 //        viewModel = ViewModelProviders.of(this).get(TestViewModel::class.java)
 //
 //        viewModel?.getUser()?.observe(this, Observer {
@@ -43,7 +59,7 @@ class TestActivity : BaseActivity() {
 //        Log.e("FUCK", list.size.toString())
 //        Log.e("after", System.currentTimeMillis().toString())
 
-        WebDao().getLesson(Arrays.asList())
+//        WebDao().getLesson(Arrays.asList())
 
 //        val parameters = HashMap<String, ArrayList<FavoriteActionLocal>>()
 //        val list = arrayListOf<FavoriteActionLocal>()
@@ -60,5 +76,6 @@ class TestActivity : BaseActivity() {
 
     override fun resume() {
     }
+
 
 }

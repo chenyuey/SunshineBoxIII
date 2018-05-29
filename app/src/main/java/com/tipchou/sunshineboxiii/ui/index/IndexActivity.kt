@@ -314,7 +314,7 @@ class IndexActivity : BaseActivity() {
     }
 
     private fun setUpRecyclerView() {
-        val adapter = IndexRecyclerViewAdapter(this)
+        val adapter = IndexRecyclerViewAdapter(this, viewModel!!)
         index_act_recyclerview.layoutManager = GridLayoutManager(this, 4)
         index_act_recyclerview.adapter = adapter
     }

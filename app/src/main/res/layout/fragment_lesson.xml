@@ -1,0 +1,336 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:baselineAligned="false"
+    android:orientation="horizontal">
+
+
+    <RelativeLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="159"
+        tools:ignore="NestedWeights">
+
+        <!--分类-->
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginStart="32dp"
+            android:layout_marginTop="18dp"
+            android:text="@string/lesson_fgm_string1"
+            android:textColor="#a1a1a1"
+            android:textSize="16sp" />
+
+        <LinearLayout
+            android:id="@+id/lesson_fgm_linearlayout1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="32dp"
+            android:layout_marginTop="58dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            tools:ignore="UseCompoundDrawables">
+
+            <ImageView
+                android:id="@+id/lesson_fgm_imageview1"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:background="@drawable/ic_nursery_black"
+                android:contentDescription="@string/lesson_fgm_string2" />
+
+            <TextView
+                android:id="@+id/lesson_fgm_textview1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="25dp"
+                android:text="@string/lesson_fgm_string2"
+                android:textColor="#666666"
+                android:textSize="19sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/lesson_fgm_linearlayout2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="32dp"
+            android:layout_marginTop="104dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            tools:ignore="UseCompoundDrawables">
+
+            <ImageView
+                android:id="@+id/lesson_fgm_imageview2"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:background="@drawable/ic_music_black"
+                android:contentDescription="@string/lesson_fgm_string3" />
+
+            <TextView
+                android:id="@+id/lesson_fgm_textview2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="25dp"
+                android:text="@string/lesson_fgm_string3"
+                android:textColor="#666666"
+                android:textSize="19sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/lesson_fgm_linearlayout3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="32dp"
+            android:layout_marginTop="150dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            tools:ignore="UseCompoundDrawables">
+
+            <ImageView
+                android:id="@+id/lesson_fgm_imageview3"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:background="@drawable/ic_reading_black"
+                android:contentDescription="@string/lesson_fgm_string4" />
+
+            <TextView
+                android:id="@+id/lesson_fgm_textview3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="25dp"
+                android:text="@string/lesson_fgm_string4"
+                android:textColor="#666666"
+                android:textSize="19sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/lesson_fgm_linearlayout4"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="32dp"
+            android:layout_marginTop="196dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            tools:ignore="UseCompoundDrawables">
+
+            <ImageView
+                android:id="@+id/lesson_fgm_imageview4"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:background="@drawable/ic_game_black"
+                android:contentDescription="@string/lesson_fgm_string5" />
+
+            <TextView
+                android:id="@+id/lesson_fgm_textview4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="25dp"
+                android:text="@string/lesson_fgm_string5"
+                android:textColor="#666666"
+                android:textSize="19sp" />
+        </LinearLayout>
+
+        <!--领域-->
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="32dp"
+            android:layout_marginTop="265dp"
+            android:text="@string/lesson_fgm_string6"
+            android:textColor="#a1a1a1"
+            android:textSize="16sp" />
+
+        <LinearLayout
+            android:id="@+id/lesson_fgm_linearlayout5"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="32dp"
+            android:layout_marginTop="305dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            tools:ignore="UseCompoundDrawables">
+
+            <ImageView
+                android:id="@+id/lesson_fgm_imageview5"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:background="@drawable/ic_health_black"
+                android:contentDescription="@string/lesson_fgm_string7" />
+
+            <TextView
+                android:id="@+id/lesson_fgm_textview5"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="25dp"
+                android:text="@string/lesson_fgm_string7"
+                android:textColor="#666666"
+                android:textSize="19sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/lesson_fgm_linearlayout6"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="32dp"
+            android:layout_marginTop="351dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            tools:ignore="UseCompoundDrawables">
+
+            <ImageView
+                android:id="@+id/lesson_fgm_imageview6"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:background="@drawable/ic_language_black"
+                android:contentDescription="@string/lesson_fgm_string8" />
+
+            <TextView
+                android:id="@+id/lesson_fgm_textview6"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="25dp"
+                android:text="@string/lesson_fgm_string8"
+                android:textColor="#666666"
+                android:textSize="19sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/lesson_fgm_linearlayout7"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="32dp"
+            android:layout_marginTop="397dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            tools:ignore="UseCompoundDrawables">
+
+            <ImageView
+                android:id="@+id/lesson_fgm_imageview7"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:background="@drawable/ic_social_black"
+                android:contentDescription="@string/lesson_fgm_string9" />
+
+            <TextView
+                android:id="@+id/lesson_fgm_textview7"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="25dp"
+                android:text="@string/lesson_fgm_string9"
+                android:textColor="#666666"
+                android:textSize="19sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/lesson_fgm_linearlayout8"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="32dp"
+            android:layout_marginTop="443dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            tools:ignore="UseCompoundDrawables">
+
+            <ImageView
+                android:id="@+id/lesson_fgm_imageview8"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:background="@drawable/ic_science_black"
+                android:contentDescription="@string/lesson_fgm_string10" />
+
+            <TextView
+                android:id="@+id/lesson_fgm_textview8"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="25dp"
+                android:text="@string/lesson_fgm_string10"
+                android:textColor="#666666"
+                android:textSize="19sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/lesson_fgm_linearlayout9"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="32dp"
+            android:layout_marginTop="489dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            tools:ignore="UseCompoundDrawables">
+
+            <ImageView
+                android:id="@+id/lesson_fgm_imageview9"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:background="@drawable/ic_art_black"
+                android:contentDescription="@string/lesson_fgm_string11" />
+
+            <TextView
+                android:id="@+id/lesson_fgm_textview9"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="25dp"
+                android:text="@string/lesson_fgm_string11"
+                android:textColor="#666666"
+                android:textSize="19sp" />
+        </LinearLayout>
+    </RelativeLayout>
+
+    <FrameLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="607">
+
+        <ImageView
+            android:id="@+id/lesson_fgm_imageview11"
+            android:layout_width="118dp"
+            android:layout_height="118dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="180dp"
+            android:background="@drawable/tip_no_content"
+            android:contentDescription="@string/lesson_fgm_string12"
+            android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/lesson_fgm_textview12"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="360dp"
+            android:text="@string/lesson_fgm_string12"
+            android:textColor="#333333"
+            android:textSize="19sp"
+            android:visibility="gone" />
+
+        <android.support.v4.widget.NestedScrollView
+            android:id="@+id/lesson_fgm_nestedscrollview1"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:descendantFocusability="blocksDescendants"
+                android:orientation="vertical">
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="35dp" />
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/lesson_fgm_recyclerview"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:nestedScrollingEnabled="false" />
+
+            </LinearLayout>
+
+        </android.support.v4.widget.NestedScrollView>
+    </FrameLayout>
+
+</LinearLayout>

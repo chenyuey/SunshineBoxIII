@@ -2,7 +2,7 @@ package com.tipchou.sunshineboxiii.ui.index
 
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.Observer
-import android.arch.lifecycle.ViewModelProviders
+import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
@@ -24,7 +24,7 @@ import com.tipchou.sunshineboxiii.ui.course.CourseActivity
  * Created by 邵励治 on 2018/5/8.
  * Perfect Code
  */
-class IndexRecyclerViewAdapter(private val activity: IndexActivity) : RecyclerView.Adapter<IndexRecyclerViewAdapter.ViewHolder>() {
+class IndexRecyclerViewAdapter(private val activity: AppCompatActivity, private val viewModel: IndexViewModel) : RecyclerView.Adapter<IndexRecyclerViewAdapter.ViewHolder>() {
     class ItemData(val LessonLocal: LessonLocal, val editor: Boolean, val download: Boolean)
 
     private val netStatusLiveData: LiveData<Boolean>
@@ -38,11 +38,10 @@ class IndexRecyclerViewAdapter(private val activity: IndexActivity) : RecyclerVi
     private val layoutInflater: LayoutInflater = LayoutInflater.from(activity)
 
     private val itemDataList = ArrayList<ItemData>()
-    private val viewModel: IndexViewModel
 
     init {
         DaggerMagicBox.create().poke(this)
-        viewModel = ViewModelProviders.of(activity).get(IndexViewModel::class.java)
+//        viewModel = ViewModelProviders.of(activity).get(IndexViewModel::class.java)
         netStatusLiveData = viewModel.getNetStatus()
         netStatusLiveData.observe(activity, Observer { })
         downloadLesson = { viewModel.downloadLesson(it) }
@@ -66,11 +65,11 @@ class IndexRecyclerViewAdapter(private val activity: IndexActivity) : RecyclerVi
 
     private fun showNoDataHint(it: Resource<List<LessonLocal>>?) {
         if (it?.status == Resource.Status.SUCCESS || it?.status == Resource.Status.ERROR) {
-            if (itemDataList.size == 0) {
-                activity.showNoDataHint(true)
-            } else {
-                activity.showNoDataHint(false)
-            }
+//            if (itemDataList.size == 0) {
+//                activity.showNoDataHint(true)
+//            } else {
+//                activity.showNoDataHint(false)
+//            }
         }
     }
 
@@ -356,7 +355,7 @@ class IndexRecyclerViewAdapter(private val activity: IndexActivity) : RecyclerVi
                 } else {
                     val (isDownloading, myDownloadHolder: DownloadHolder?) = isDownloading(editor!!, lesson!!)
                     if (isDownloading && myDownloadHolder != null) {
-                        activity.showSnackBar("该课程正在下载队列中，请稍等片刻")
+//                        activity.showSnackBar("该课程正在下载队列中，请稍等片刻")
                     } else {
                         //如果没下载
                         fileDownloadImageView.visibility = View.GONE
@@ -407,7 +406,7 @@ class IndexRecyclerViewAdapter(private val activity: IndexActivity) : RecyclerVi
                         }
                     }
                 } else {
-                    activity.showSnackBar("当前网络不可用，请连接网络后下载")
+//                    activity.showSnackBar("当前网络不可用，请连接网络后下载")
                 }
             }
         }
