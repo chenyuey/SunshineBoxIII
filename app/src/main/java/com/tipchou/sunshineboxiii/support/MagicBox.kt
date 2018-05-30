@@ -4,6 +4,7 @@ import com.tipchou.sunshineboxiii.ui.favorite.FavoriteViewModel
 import com.tipchou.sunshineboxiii.ui.index.lesson.LessonRecyclerViewAdapter
 import com.tipchou.sunshineboxiii.ui.index.lesson.LessonViewModel
 import com.tipchou.sunshineboxiii.ui.index.special.SpecialViewModel
+import com.tipchou.sunshineboxiii.ui.specialdetail.SpecialDetailViewModel
 import com.tipchou.sunshineboxiii.ui.test.TestRepository
 import com.tipchou.sunshineboxiii.ui.test.TestViewModel
 import dagger.Component
@@ -23,4 +24,5 @@ interface MagicBox {
     fun poke(lessonRecyclerViewAdapter: LessonRecyclerViewAdapter)
     fun poke(favoriteViewModel: FavoriteViewModel)
     fun poke(specialViewModel: SpecialViewModel)
+    fun poke(specialDetailViewModel: SpecialDetailViewModel)
 }

@@ -3,10 +3,7 @@ package com.tipchou.sunshineboxiii.support
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import com.tipchou.sunshineboxiii.entity.local.*
-import com.tipchou.sunshineboxiii.entity.web.FavoriteWeb
-import com.tipchou.sunshineboxiii.entity.web.LessonWeb
-import com.tipchou.sunshineboxiii.entity.web.RoleWeb
-import com.tipchou.sunshineboxiii.entity.web.SpecialSubjectWeb
+import com.tipchou.sunshineboxiii.entity.web.*
 import com.tipchou.sunshineboxiii.support.dao.DbDao
 import com.tipchou.sunshineboxiii.support.dao.WebDao
 import javax.inject.Inject
@@ -115,35 +112,55 @@ class Repository @Inject constructor() {
         return dbDao.getDownload()
     }
 
-    fun getLesson(objectIdList: List<String>): LiveData<Resource<List<LessonLocal>>> =
-            GeneralDataRequest(
-                    loadFromDb = {
-                        val objectIdListLiveData = MutableLiveData<List<LessonLocal>>()
-                        objectIdListLiveData.value = dbDao.getLesson(objectIdList)
-                        objectIdListLiveData
-                    },
-                    shouldFetch = { true },
-                    createCall = { webDao.getLesson(objectIdList) },
-                    deleteDb = { dbDao.removeLesson(it) },
-                    buildSavedList = {
-                        val databaseList = ArrayList<LessonLocal>()
-                        for (item in it) {
-                            val dbData = LessonLocal(
-                                    objectId = item.objectId,
-                                    isPublish = item.isPublish,
-                                    tags = item.tags,
-                                    packageUrl = item.packageUrl,
-                                    name = item.name,
-                                    versionCode = item.versionCode,
-                                    draftVersionCode = item.draftVersionCode,
-                                    subject = item.subject,
-                                    compiler = item.compiler,
-                                    stagingPackageUrl = item.stagingPackageUrl,
-                                    areChecked = item.isChecked)
-                            databaseList.add(dbData)
-                        }
-                        databaseList
-                    },
-                    saveCallResult = { dbDao.saveLesson(it) }
-            ).getAsLiveData()
+    fun getLesson(objectIdList: List<String>): LiveData<Resource<List<LessonLocal>>> {
+        return GeneralDataRequest(
+                loadFromDb = {
+                    val objectIdListLiveData = MutableLiveData<List<LessonLocal>>()
+                    objectIdListLiveData.value = dbDao.getLesson(objectIdList)
+                    objectIdListLiveData
+                },
+                shouldFetch = { true },
+                createCall = { webDao.getLesson(objectIdList) },
+                deleteDb = { dbDao.removeLesson(it) },
+                buildSavedList = {
+                    val databaseList = ArrayList<LessonLocal>()
+                    for (item in it) {
+                        val dbData = LessonLocal(
+                                objectId = item.objectId,
+                                isPublish = item.isPublish,
+                                tags = item.tags,
+                                packageUrl = item.packageUrl,
+                                name = item.name,
+                                versionCode = item.versionCode,
+                                draftVersionCode = item.draftVersionCode,
+                                subject = item.subject,
+                                compiler = item.compiler,
+                                stagingPackageUrl = item.stagingPackageUrl,
+                                areChecked = item.isChecked)
+                        databaseList.add(dbData)
+                    }
+                    databaseList
+                },
+                saveCallResult = { dbDao.saveLesson(it) }
+        ).getAsLiveData()
+    }
+
+    fun getLessonSubject(specialObjectId: String): LiveData<Resource<List<LessonSubjectLocal>>> {
+        return GeneralDataRequest<LessonSubjectLocal, LessonSubjectWeb>(
+                loadFromDb = { dbDao.getLessonSubject(specialObjectId) },
+                shouldFetch = { true },
+                createCall = { webDao.getLessonSubject(specialObjectId) },
+                deleteDb = { dbDao.removeLessonSubject(it) },
+                buildSavedList = {
+                    val databaseList = arrayListOf<LessonSubjectLocal>()
+                    for (item in it) {
+                        val dbData = LessonSubjectLocal(objectId = item.objectId, specialObjectId = item.specialObjectId, lessonObjectId = item.lessonObjectId)
+                        databaseList.add(dbData)
+                    }
+                    databaseList
+                },
+                saveCallResult = { dbDao.saveLessonSubject(it) }
+        ).getAsLiveData()
+    }
+
 }

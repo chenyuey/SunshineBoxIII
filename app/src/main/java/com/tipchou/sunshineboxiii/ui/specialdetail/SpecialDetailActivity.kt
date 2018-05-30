@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.Snackbar
+import android.support.v7.widget.GridLayoutManager
 import android.view.View
 import com.tipchou.sunshineboxiii.R
 import com.tipchou.sunshineboxiii.entity.local.SpecialSubjectLocal
@@ -32,11 +33,12 @@ class SpecialDetailActivity : BaseActivity() {
             showSnackBar("数据解析失败，请尝试刷新或清空数据库！")
         } else {
             special_detail_act_textview1.text = "# " + specialSubjectLocal?.title
-
             if (specialSubjectLocal?.describe != null && specialSubjectLocal?.describe != "") {
                 special_detail_act_linearlayout1.visibility = View.VISIBLE
                 special_detail_act_textview2.text = specialSubjectLocal?.describe
             }
+            special_detail_act_recyclerview.layoutManager = GridLayoutManager(this, 4)
+            special_detail_act_recyclerview.adapter = SpecialDetailRecyclerViewAdapter(this, specialSubjectLocal?.objectId!!)
         }
     }
 

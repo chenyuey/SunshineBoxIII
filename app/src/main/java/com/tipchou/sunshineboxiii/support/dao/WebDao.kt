@@ -177,4 +177,25 @@ class WebDao @Inject constructor() {
         })
         return data
     }
+
+    fun getLessonSubject(specialObjectId: String): LiveData<ApiResponse<List<LessonSubjectWeb>>> {
+        val data = MutableLiveData<ApiResponse<List<LessonSubjectWeb>>>()
+        val query = AVQuery<AVObject>("LessonSpecial")
+        query.include("special")
+        query.include("lesson")
+        query.limit = 1000
+        query.whereEqualTo("special", AVObject.createWithoutData("SpecialSubject", specialObjectId))
+        query.findInBackground(object : FindCallback<AVObject>() {
+            override fun done(response: MutableList<AVObject>?, exception: AVException?) {
+                val result = arrayListOf<LessonSubjectWeb>()
+                if (response != null) {
+                    for (item in response) {
+                        result.add(LessonSubjectWeb(item))
+                    }
+                }
+                data.value = ApiResponse(result, exception)
+            }
+        })
+        return data
+    }
 }

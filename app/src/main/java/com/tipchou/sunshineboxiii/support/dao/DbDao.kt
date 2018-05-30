@@ -262,6 +262,44 @@ class DbDao @Inject constructor() {
         }
     }
 
+
+    fun getLessonSubject(specialObjectId: String): ObjectBoxLiveData<LessonSubjectLocal> {
+        if (boxStore == null) {
+            //should not be here!!!!!!
+            throw Exception("App.getBoxStore() get null!!!")
+        } else {
+            val lessonSubjectBox = boxStore!!.boxFor(LessonSubjectLocal::class.java)
+            val queryBuilder: QueryBuilder<LessonSubjectLocal>? = lessonSubjectBox.query()
+            if (queryBuilder == null) {
+                //should not be here!!
+                throw Exception("queryBuilder is null!!!")
+            } else {
+                queryBuilder.equal(LessonSubjectLocal_.specialObjectId, specialObjectId)
+                return ObjectBoxLiveData(queryBuilder.build())
+            }
+        }
+    }
+
+    fun saveLessonSubject(lessonSubjectLocalList: List<LessonSubjectLocal>) {
+        if (boxStore == null) {
+            //should not be here!!!!!!
+            throw Exception("App.getBoxStore() get null!!!")
+        } else {
+            val lessonSubjectBox = boxStore!!.boxFor(LessonSubjectLocal::class.java)
+            lessonSubjectBox.put(lessonSubjectLocalList)
+        }
+    }
+
+    fun removeLessonSubject(lessonSubjectLocalList: List<LessonSubjectLocal>) {
+        if (boxStore == null) {
+            //should not be here!!!!!!
+            throw Exception("App.getBoxStore() get null!!!")
+        } else {
+            val lessonSubjectBox = boxStore!!.boxFor(LessonSubjectLocal::class.java)
+            lessonSubjectBox.remove(lessonSubjectLocalList)
+        }
+    }
+
     fun removeAll() {
         if (boxStore == null) {
             //should not be here!!!!!!
