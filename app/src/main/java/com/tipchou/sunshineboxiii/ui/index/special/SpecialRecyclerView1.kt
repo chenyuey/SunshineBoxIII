@@ -11,6 +11,7 @@ import com.bumptech.glide.Glide
 import com.tipchou.sunshineboxiii.R
 import com.tipchou.sunshineboxiii.entity.local.SpecialSubjectLocal
 import com.tipchou.sunshineboxiii.ui.index.IndexActivity
+import com.tipchou.sunshineboxiii.ui.specialdetail.SpecialDetailActivity
 
 /**
  * Created by 邵励治 on 2018/5/29.
@@ -64,7 +65,7 @@ class SpecialRecyclerView1(private val activity: IndexActivity, fragment: Specia
         }
 
         override fun onClick(v: View?) {
-
+            activity.startActivity(SpecialDetailActivity.newIntent(activity, specialSubjectLocal!!))
         }
 
     }

@@ -103,6 +103,7 @@
     <string name="special_fgm_string1">推荐专题</string>
     <string name="special_fgm_string2">全部专题</string>
     <string name="special_fgm_string3">推荐专题入口</string>
+    <string name="special_detail_act_string1">返回</string>
 
 
 </resources>

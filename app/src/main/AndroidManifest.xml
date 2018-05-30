@@ -55,21 +55,21 @@
 
         </activity>
         <activity android:name=".ui.index.IndexActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+
         </activity>
         <activity android:name=".ui.course.CourseActivity" />
         <activity android:name=".ui.video.VideoActivity" />
         <activity android:name=".ui.album.AlbumActivity" />
         <activity android:name=".ui.StartActivity">
-
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
         <activity android:name=".ui.welcome.WelcomeActivity" />
         <activity android:name=".ui.phone_number_verify.PhoneNumberVerifyActivity" />
-        <activity android:name=".ui.favorite.FavoriteActivity"></activity>
-        <activity android:name=".ui.special.SpecialActivity"></activity>
+        <activity android:name=".ui.favorite.FavoriteActivity" />
+        <activity android:name=".ui.specialdetail.SpecialDetailActivity" />
     </application>
 
 </manifest>

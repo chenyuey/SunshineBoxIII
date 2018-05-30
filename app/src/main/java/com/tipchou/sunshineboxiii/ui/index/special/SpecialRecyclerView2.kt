@@ -11,6 +11,7 @@ import android.widget.Button
 import com.tipchou.sunshineboxiii.R
 import com.tipchou.sunshineboxiii.entity.local.SpecialSubjectLocal
 import com.tipchou.sunshineboxiii.ui.index.IndexActivity
+import com.tipchou.sunshineboxiii.ui.specialdetail.SpecialDetailActivity
 
 /**
  * Created by 邵励治 on 2018/5/29.
@@ -41,7 +42,7 @@ class SpecialRecyclerView2(private val activity: IndexActivity, fragment: Specia
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) = holder.bind(dataset[position])
 
-    class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView), View.OnClickListener {
+    inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView), View.OnClickListener {
         private val button: Button
         private var specialSubjectLocal: SpecialSubjectLocal? = null
 
@@ -57,9 +58,7 @@ class SpecialRecyclerView2(private val activity: IndexActivity, fragment: Specia
         }
 
         override fun onClick(v: View?) {
-
+            activity.startActivity(SpecialDetailActivity.newIntent(activity, specialSubjectLocal!!))
         }
-
-
     }
 }
