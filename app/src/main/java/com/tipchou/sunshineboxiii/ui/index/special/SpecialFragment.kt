@@ -16,7 +16,7 @@ class SpecialFragment : BaseFragment() {
 
     override fun created(bundle: Bundle?) {
         val adapter1 = SpecialRecyclerView1(activity as IndexActivity, this)
-        val adapter2 = SpecialRecyclerView2(activity as IndexActivity)
+        val adapter2 = SpecialRecyclerView2(activity as IndexActivity, this)
         val layoutManager1 = LinearLayoutManager(activity)
         val layoutManager2 = LinearLayoutManager(activity)
         layoutManager1.orientation = LinearLayoutManager.HORIZONTAL

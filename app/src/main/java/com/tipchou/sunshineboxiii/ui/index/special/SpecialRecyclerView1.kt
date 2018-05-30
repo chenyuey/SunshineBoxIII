@@ -1,6 +1,5 @@
 package com.tipchou.sunshineboxiii.ui.index.special
 
-import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
 import android.support.v7.widget.RecyclerView
@@ -11,24 +10,21 @@ import android.widget.ImageView
 import com.bumptech.glide.Glide
 import com.tipchou.sunshineboxiii.R
 import com.tipchou.sunshineboxiii.entity.local.SpecialSubjectLocal
-import com.tipchou.sunshineboxiii.support.Resource
 import com.tipchou.sunshineboxiii.ui.index.IndexActivity
 
 /**
  * Created by 邵励治 on 2018/5/29.
  * Perfect Code
  */
-class SpecialRecyclerView1(private val activity: IndexActivity, private val fragment: SpecialFragment) : RecyclerView.Adapter<SpecialRecyclerView1.ViewHolder>() {
+class SpecialRecyclerView1(private val activity: IndexActivity, fragment: SpecialFragment) : RecyclerView.Adapter<SpecialRecyclerView1.ViewHolder>() {
     private val layoutInflater: LayoutInflater = LayoutInflater.from(activity)
 
     private val viewModel: SpecialViewModel = ViewModelProviders.of(activity).get(SpecialViewModel::class.java)
 
-    private val specialSubject: LiveData<Resource<List<SpecialSubjectLocal>>>
-
     private val dataset = arrayListOf<SpecialSubjectLocal>()
 
     init {
-        specialSubject = viewModel.getSpecialSubject()
+        val specialSubject = viewModel.getSpecialSubject()
         specialSubject.observe(fragment, Observer {
             dataset.clear()
             val specialSubjectList = it?.data
