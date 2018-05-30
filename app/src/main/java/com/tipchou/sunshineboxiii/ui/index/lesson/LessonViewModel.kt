@@ -1,4 +1,4 @@
-package com.tipchou.sunshineboxiii.ui.index
+package com.tipchou.sunshineboxiii.ui.index.lesson
 
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
@@ -7,13 +7,14 @@ import com.tipchou.sunshineboxiii.entity.local.FavoriteLocal
 import com.tipchou.sunshineboxiii.entity.local.LessonLocal
 import com.tipchou.sunshineboxiii.entity.local.RoleLocal
 import com.tipchou.sunshineboxiii.support.*
+import com.tipchou.sunshineboxiii.ui.index.DownloadHolder
 import javax.inject.Inject
 
 /**
  * Created by 邵励治 on 2018/4/29.
  * Perfect Code
  */
-class IndexViewModel : ViewModel() {
+class LessonViewModel : ViewModel() {
     @Inject
     lateinit var repository: Repository
 

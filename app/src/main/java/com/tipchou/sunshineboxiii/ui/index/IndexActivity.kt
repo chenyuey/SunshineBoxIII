@@ -38,7 +38,9 @@ import com.tipchou.sunshineboxiii.ui.StartActivity
 import com.tipchou.sunshineboxiii.ui.base.BaseActivity
 import com.tipchou.sunshineboxiii.ui.favorite.FavoriteActivity
 import com.tipchou.sunshineboxiii.ui.index.lesson.LessonFragment
+import com.tipchou.sunshineboxiii.ui.index.lesson.LessonViewModel
 import com.tipchou.sunshineboxiii.ui.index.special.SpecialFragment
+import com.tipchou.sunshineboxiii.ui.index.special.SpecialViewModel
 import kotlinx.android.synthetic.main.activity_index.*
 import kotlinx.android.synthetic.main.activity_index_content.*
 import java.io.File
@@ -49,7 +51,9 @@ import java.io.File
  * Perfect Code
  */
 class IndexActivity : BaseActivity() {
-    private var viewModel: IndexViewModel? = null
+    private var lessonViewModel: LessonViewModel? = null
+
+    private var specialViewModel: SpecialViewModel? = null
 
     private var refreshAnimator: ObjectAnimator? = null
 
@@ -68,7 +72,8 @@ class IndexActivity : BaseActivity() {
         }
         //refresh button
         index_act_view1.setOnClickListener {
-            viewModel?.loadLesson()
+            lessonViewModel?.loadLesson()
+            specialViewModel?.loadSpecialSubject()
         }
         //侧边菜单
         val headView: View = index_act_navigationview.inflateHeaderView(R.layout.index_act_headerlayout)
@@ -82,7 +87,7 @@ class IndexActivity : BaseActivity() {
             alertDialogBuilder.setTitle("确定重置软件")
             alertDialogBuilder.setMessage("这会删除全部的本地文件")
             alertDialogBuilder.setPositiveButton("确定") { _, _ ->
-                viewModel?.clearDatabase()
+                lessonViewModel?.clearDatabase()
             }
             alertDialogBuilder.setNegativeButton("取消") { _, _ ->
 
@@ -94,7 +99,7 @@ class IndexActivity : BaseActivity() {
             alertDialogBuilder.setTitle("确定登出")
             alertDialogBuilder.setMessage("这会退出当前账号，并丢失全部的本地文件")
             alertDialogBuilder.setPositiveButton("确定") { _, _ ->
-                viewModel?.clearDatabase()
+                lessonViewModel?.clearDatabase()
                 AVUser.logOut()
                 startActivity(StartActivity.newIntent(this))
                 finish()
@@ -141,8 +146,8 @@ class IndexActivity : BaseActivity() {
     }
 
     private fun setUpViewModel() {
-        viewModel = ViewModelProviders.of(this).get(IndexViewModel::class.java)
-        viewModel?.getRole()?.observe(this, Observer {
+        lessonViewModel = ViewModelProviders.of(this).get(LessonViewModel::class.java)
+        lessonViewModel?.getRole()?.observe(this, Observer {
             Log.e("Role", "Status: ${it?.status.toString()}; Message: ${it?.message}; Size: ${it?.data?.size}")
             if (it == null) {
                 //should not be here
@@ -160,8 +165,17 @@ class IndexActivity : BaseActivity() {
                 }
             }
         })
-        viewModel?.getLesson()?.observe(this, Observer {
+        lessonViewModel?.getLesson()?.observe(this, Observer {
             Log.e("Lesson", "Status: ${it?.status.toString()}; Message: ${it?.message}; Size: ${it?.data?.size}")
+            when (it?.status) {
+                Resource.Status.SUCCESS -> stopRefresh()
+                Resource.Status.ERROR -> stopRefresh()
+                Resource.Status.LOADING -> startRefresh()
+            }
+        })
+
+        specialViewModel = ViewModelProviders.of(this).get(SpecialViewModel::class.java)
+        specialViewModel?.getSpecialSubject()?.observe(this, Observer {
             when (it?.status) {
                 Resource.Status.SUCCESS -> stopRefresh()
                 Resource.Status.ERROR -> stopRefresh()
@@ -232,9 +246,9 @@ class IndexActivity : BaseActivity() {
     }
 
     override fun resume() {
-        viewModel?.setNetStatus(getNetworkState(this))
-        viewModel?.loadRole()
-        viewModel?.loadLesson()
+        lessonViewModel?.setNetStatus(getNetworkState(this))
+        lessonViewModel?.loadRole()
+        lessonViewModel?.loadLesson()
     }
 
     override fun onDestroy() {
@@ -271,7 +285,7 @@ class IndexActivity : BaseActivity() {
     private inner class NetworkChangeBroadcast : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
             val success: Boolean = isConnected(this@IndexActivity)
-            viewModel?.setNetStatus(success)
+            lessonViewModel?.setNetStatus(success)
         }
     }
 

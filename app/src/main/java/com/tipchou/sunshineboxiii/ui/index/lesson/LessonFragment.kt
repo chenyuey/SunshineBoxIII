@@ -10,8 +10,6 @@ import com.tipchou.sunshineboxiii.R
 import com.tipchou.sunshineboxiii.support.LessonType
 import com.tipchou.sunshineboxiii.ui.base.BaseFragment
 import com.tipchou.sunshineboxiii.ui.index.IndexActivity
-import com.tipchou.sunshineboxiii.ui.index.IndexRecyclerViewAdapter
-import com.tipchou.sunshineboxiii.ui.index.IndexViewModel
 import kotlinx.android.synthetic.main.fragment_lesson.*
 
 /**
@@ -19,7 +17,7 @@ import kotlinx.android.synthetic.main.fragment_lesson.*
  * Perfect Code
  */
 class LessonFragment : BaseFragment() {
-    private var viewModel: IndexViewModel? = null
+    private var viewModel: LessonViewModel? = null
     private fun setUpClickEvent() {
         //subject button
         lesson_fgm_linearlayout1.setOnClickListener {
@@ -111,7 +109,7 @@ class LessonFragment : BaseFragment() {
     }
 
     private fun setUpViewModel() {
-        viewModel = ViewModelProviders.of(activity!!).get(IndexViewModel::class.java)
+        viewModel = ViewModelProviders.of(activity!!).get(LessonViewModel::class.java)
         viewModel?.getLessonType()?.observe(this, Observer {
             when (it) {
                 LessonType.NURSERY -> {
@@ -169,7 +167,7 @@ class LessonFragment : BaseFragment() {
     }
 
     private fun setUpRecyclerView() {
-        val adapter = IndexRecyclerViewAdapter(activity as IndexActivity, this)
+        val adapter = LessonRecyclerViewAdapter(activity as IndexActivity, this)
         lesson_fgm_recyclerview.layoutManager = GridLayoutManager(activity, 4)
 //        lesson_fgm_recyclerview.layoutManager = StaggeredGridLayoutManager(4, StaggeredGridLayoutManager.VERTICAL)
         lesson_fgm_recyclerview.adapter = adapter

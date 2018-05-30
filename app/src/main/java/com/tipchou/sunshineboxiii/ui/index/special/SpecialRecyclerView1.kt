@@ -21,7 +21,7 @@ import com.tipchou.sunshineboxiii.ui.index.IndexActivity
 class SpecialRecyclerView1(private val activity: IndexActivity, private val fragment: SpecialFragment) : RecyclerView.Adapter<SpecialRecyclerView1.ViewHolder>() {
     private val layoutInflater: LayoutInflater = LayoutInflater.from(activity)
 
-    private val viewModel: SpecialViewModel = ViewModelProviders.of(fragment).get(SpecialViewModel::class.java)
+    private val viewModel: SpecialViewModel = ViewModelProviders.of(activity).get(SpecialViewModel::class.java)
 
     private val specialSubject: LiveData<Resource<List<SpecialSubjectLocal>>>
 

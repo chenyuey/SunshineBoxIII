@@ -1,4 +1,4 @@
-package com.tipchou.sunshineboxiii.ui.index
+package com.tipchou.sunshineboxiii.ui.index.lesson
 
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.Observer
@@ -19,13 +19,14 @@ import com.tipchou.sunshineboxiii.entity.local.RoleLocal
 import com.tipchou.sunshineboxiii.support.DaggerMagicBox
 import com.tipchou.sunshineboxiii.support.Resource
 import com.tipchou.sunshineboxiii.ui.course.CourseActivity
-import com.tipchou.sunshineboxiii.ui.index.lesson.LessonFragment
+import com.tipchou.sunshineboxiii.ui.index.DownloadHolder
+import com.tipchou.sunshineboxiii.ui.index.IndexActivity
 
 /**
  * Created by 邵励治 on 2018/5/8.
  * Perfect Code
  */
-class IndexRecyclerViewAdapter(private val activity: IndexActivity, private val fragment: LessonFragment) : RecyclerView.Adapter<IndexRecyclerViewAdapter.ViewHolder>() {
+class LessonRecyclerViewAdapter(private val activity: IndexActivity, private val fragment: LessonFragment) : RecyclerView.Adapter<LessonRecyclerViewAdapter.ViewHolder>() {
     class ItemData(val LessonLocal: LessonLocal, val editor: Boolean, val download: Boolean)
 
     private val netStatusLiveData: LiveData<Boolean>
@@ -39,11 +40,11 @@ class IndexRecyclerViewAdapter(private val activity: IndexActivity, private val 
     private val layoutInflater: LayoutInflater = LayoutInflater.from(activity)
 
     private val itemDataList = ArrayList<ItemData>()
-    private val viewModel: IndexViewModel
+    private val viewModel: LessonViewModel
 
     init {
         DaggerMagicBox.create().poke(this)
-        viewModel = ViewModelProviders.of(activity).get(IndexViewModel::class.java)
+        viewModel = ViewModelProviders.of(activity).get(LessonViewModel::class.java)
         netStatusLiveData = viewModel.getNetStatus()
         netStatusLiveData.observe(activity, Observer { })
         downloadLesson = { viewModel.downloadLesson(it) }
@@ -287,11 +288,11 @@ class IndexRecyclerViewAdapter(private val activity: IndexActivity, private val 
 
         private fun getValueNotNull(): Triple<Boolean, LessonLocal, Boolean> {
             val editor = this.editor
-                    ?: throw Exception("IndexRecyclerViewAdapter's bind() editor is null")
+                    ?: throw Exception("LessonRecyclerViewAdapter's bind() editor is null")
             val lesson = this.lesson
-                    ?: throw Exception("IndexRecyclerViewAdapter's bind() lesson is null")
+                    ?: throw Exception("LessonRecyclerViewAdapter's bind() lesson is null")
             val download = this.download
-                    ?: throw Exception("IndexRecyclerViewAdapter's bind() download is null")
+                    ?: throw Exception("LessonRecyclerViewAdapter's bind() download is null")
             return Triple(editor, lesson, download)
         }
 

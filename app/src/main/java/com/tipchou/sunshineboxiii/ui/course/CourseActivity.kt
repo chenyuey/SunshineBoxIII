@@ -23,7 +23,7 @@ import com.tipchou.sunshineboxiii.entity.local.FavoriteActionLocal
 import com.tipchou.sunshineboxiii.support.IOUtils
 import com.tipchou.sunshineboxiii.ui.album.AlbumActivity
 import com.tipchou.sunshineboxiii.ui.base.BaseActivity
-import com.tipchou.sunshineboxiii.ui.index.IndexViewModel
+import com.tipchou.sunshineboxiii.ui.index.lesson.LessonViewModel
 import com.tipchou.sunshineboxiii.ui.video.VideoActivity
 import kotlinx.android.synthetic.main.activity_course.*
 import java.io.File
@@ -42,7 +42,7 @@ class CourseActivity : BaseActivity(), CourseMediaPlayer {
 
     private var lessonObjectId: String? = null
 
-    private var viewModel: IndexViewModel? = null
+    private var viewModel: LessonViewModel? = null
 
     var favorite: Boolean = false
 
@@ -162,7 +162,7 @@ class CourseActivity : BaseActivity(), CourseMediaPlayer {
 
 
     private fun setUpViewModel() {
-        viewModel = ViewModelProviders.of(this).get(IndexViewModel::class.java)
+        viewModel = ViewModelProviders.of(this).get(LessonViewModel::class.java)
         viewModel?.getFavorite()?.observe(this, android.arch.lifecycle.Observer {
             val data = it?.data
             if (data != null) {
