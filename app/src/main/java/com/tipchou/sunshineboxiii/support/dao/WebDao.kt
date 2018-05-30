@@ -4,10 +4,7 @@ package com.tipchou.sunshineboxiii.support.dao
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import com.avos.avoscloud.*
-import com.tipchou.sunshineboxiii.entity.web.FavoriteWeb
-import com.tipchou.sunshineboxiii.entity.web.LessonWeb
-import com.tipchou.sunshineboxiii.entity.web.RoleWeb
-import com.tipchou.sunshineboxiii.entity.web.TestWeb
+import com.tipchou.sunshineboxiii.entity.web.*
 import com.tipchou.sunshineboxiii.support.ApiResponse
 import com.tipchou.sunshineboxiii.support.LessonType
 import javax.inject.Inject
@@ -150,6 +147,29 @@ class WebDao @Inject constructor() {
                 if (response != null) {
                     for (item in response) {
                         result.add(LessonWeb(item))
+                    }
+                }
+                data.value = ApiResponse(result, exception)
+            }
+        })
+        return data
+    }
+
+
+    /**
+     * 获取SpecialSubject表中的数据
+     */
+    fun getSpecialSubject(): LiveData<ApiResponse<List<SpecialSubjectWeb>>> {
+        val data = MutableLiveData<ApiResponse<List<SpecialSubjectWeb>>>()
+        val query = AVQuery<AVObject>("SpecialSubject")
+        query.include("picture")
+        query.limit = 1000
+        query.findInBackground(object : FindCallback<AVObject>() {
+            override fun done(response: MutableList<AVObject>?, exception: AVException?) {
+                val result = arrayListOf<SpecialSubjectWeb>()
+                if (response != null) {
+                    for (item in response) {
+                        result.add(SpecialSubjectWeb(item))
                     }
                 }
                 data.value = ApiResponse(result, exception)

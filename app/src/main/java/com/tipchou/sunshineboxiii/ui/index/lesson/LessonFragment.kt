@@ -170,8 +170,10 @@ class LessonFragment : BaseFragment() {
 
     private fun setUpRecyclerView() {
         val adapter = IndexRecyclerViewAdapter(activity as IndexActivity, this)
-        lesson_fgm_recyclerview.layoutManager = GridLayoutManager(mActivity, 4)
+        lesson_fgm_recyclerview.layoutManager = GridLayoutManager(activity, 4)
+//        lesson_fgm_recyclerview.layoutManager = StaggeredGridLayoutManager(4, StaggeredGridLayoutManager.VERTICAL)
         lesson_fgm_recyclerview.adapter = adapter
+
     }
 
     override fun created(bundle: Bundle?) {

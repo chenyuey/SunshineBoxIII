@@ -2,13 +2,11 @@ package com.tipchou.sunshineboxiii.support
 
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
-import com.tipchou.sunshineboxiii.entity.local.DownloadLocal
-import com.tipchou.sunshineboxiii.entity.local.FavoriteLocal
-import com.tipchou.sunshineboxiii.entity.local.LessonLocal
-import com.tipchou.sunshineboxiii.entity.local.RoleLocal
+import com.tipchou.sunshineboxiii.entity.local.*
 import com.tipchou.sunshineboxiii.entity.web.FavoriteWeb
 import com.tipchou.sunshineboxiii.entity.web.LessonWeb
 import com.tipchou.sunshineboxiii.entity.web.RoleWeb
+import com.tipchou.sunshineboxiii.entity.web.SpecialSubjectWeb
 import com.tipchou.sunshineboxiii.support.dao.DbDao
 import com.tipchou.sunshineboxiii.support.dao.WebDao
 import javax.inject.Inject
@@ -92,6 +90,24 @@ class Repository @Inject constructor() {
                     databaseList
                 },
                 saveCallResult = { dbDao.saveFavorite(it) }
+        ).getAsLiveData()
+    }
+
+    fun getSpecialSubject(): LiveData<Resource<List<SpecialSubjectLocal>>> {
+        return GeneralDataRequest<SpecialSubjectLocal, SpecialSubjectWeb>(
+                loadFromDb = { dbDao.getSpecialSubject() },
+                shouldFetch = { true },
+                createCall = { webDao.getSpecialSubject() },
+                deleteDb = { dbDao.removeSpecialSubject(it) },
+                buildSavedList = {
+                    val databaseList = ArrayList<SpecialSubjectLocal>()
+                    for (item in it) {
+                        val dbData = SpecialSubjectLocal(objectId = item.objectId, recommendStatus = item.recommendStatus, title = item.title, pictureUrl = item.pictureUrl, describe = item.describe, onLine = item.onLine)
+                        databaseList.add(dbData)
+                    }
+                    databaseList
+                },
+                saveCallResult = { dbDao.saveSpecialSubject(it) }
         ).getAsLiveData()
     }
 

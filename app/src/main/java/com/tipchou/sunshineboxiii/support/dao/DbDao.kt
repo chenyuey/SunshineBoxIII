@@ -232,6 +232,36 @@ class DbDao @Inject constructor() {
         }
     }
 
+    fun getSpecialSubject(): ObjectBoxLiveData<SpecialSubjectLocal> {
+        if (boxStore == null) {
+            //should not be here!!!!!!
+            throw Exception("App.getBoxStore() get null!!!")
+        } else {
+            val specialSubjectBox = boxStore!!.boxFor(SpecialSubjectLocal::class.java)
+            return ObjectBoxLiveData(specialSubjectBox.query().build())
+        }
+    }
+
+    fun saveSpecialSubject(specialSubjectLocalList: List<SpecialSubjectLocal>) {
+        if (boxStore == null) {
+            //should not be here!!!!!!
+            throw Exception("App.getBoxStore() get null!!!")
+        } else {
+            val specialSubjectBox = boxStore!!.boxFor(SpecialSubjectLocal::class.java)
+            specialSubjectBox.put(specialSubjectLocalList)
+        }
+    }
+
+    fun removeSpecialSubject(specialSubjectLocalList: List<SpecialSubjectLocal>) {
+        if (boxStore == null) {
+            //should not be here!!!!!!
+            throw Exception("App.getBoxStore() get null!!!")
+        } else {
+            val specialSubjectBox = boxStore!!.boxFor(SpecialSubjectLocal::class.java)
+            specialSubjectBox.remove(specialSubjectLocalList)
+        }
+    }
+
     fun removeAll() {
         if (boxStore == null) {
             //should not be here!!!!!!

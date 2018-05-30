@@ -3,6 +3,7 @@ package com.tipchou.sunshineboxiii.support
 import com.tipchou.sunshineboxiii.ui.favorite.FavoriteViewModel
 import com.tipchou.sunshineboxiii.ui.index.IndexRecyclerViewAdapter
 import com.tipchou.sunshineboxiii.ui.index.IndexViewModel
+import com.tipchou.sunshineboxiii.ui.index.special.SpecialViewModel
 import com.tipchou.sunshineboxiii.ui.test.TestRepository
 import com.tipchou.sunshineboxiii.ui.test.TestViewModel
 import dagger.Component
@@ -21,4 +22,5 @@ interface MagicBox {
     fun poke(repository: Repository)
     fun poke(indexRecyclerViewAdapter: IndexRecyclerViewAdapter)
     fun poke(favoriteViewModel: FavoriteViewModel)
+    fun poke(specialViewModel: SpecialViewModel)
 }
