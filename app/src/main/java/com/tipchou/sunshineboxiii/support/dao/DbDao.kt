@@ -271,10 +271,13 @@ class DbDao @Inject constructor() {
             val favoriteBox = boxStore!!.boxFor(FavoriteLocal::class.java)
             val lessonBox = boxStore!!.boxFor(LessonLocal::class.java)
             val roleBox = boxStore!!.boxFor(RoleLocal::class.java)
+            val specialSubjectBox = boxStore!!.boxFor(SpecialSubjectLocal::class.java)
+
             downloadBox.removeAll()
             favoriteBox.removeAll()
             lessonBox.removeAll()
             roleBox.removeAll()
+            specialSubjectBox.removeAll()
         }
     }
 }
