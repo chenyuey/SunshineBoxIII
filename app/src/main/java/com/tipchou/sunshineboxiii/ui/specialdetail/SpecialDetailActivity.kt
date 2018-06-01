@@ -32,7 +32,7 @@ class SpecialDetailActivity : BaseActivity() {
         if (specialSubjectLocal == null) {
             showSnackBar("数据解析失败，请尝试刷新或清空数据库！")
         } else {
-            special_detail_act_textview1.text = "# " + specialSubjectLocal?.title
+            special_detail_act_textview1.text = specialSubjectLocal?.title
             if (specialSubjectLocal?.describe != null && specialSubjectLocal?.describe != "") {
                 special_detail_act_linearlayout1.visibility = View.VISIBLE
                 special_detail_act_textview2.text = specialSubjectLocal?.describe

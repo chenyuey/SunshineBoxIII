@@ -71,6 +71,7 @@
     <string name="course_act_string3">教学文件</string>
     <string name="course_act_string4">作者</string>
     <string name="course_act_string5">收藏按钮</string>
+    <string name="course_act_string6">收藏</string>
 
     <!--CourseItem-->
     <string name="course_act_item_string1">课程类别图片</string>

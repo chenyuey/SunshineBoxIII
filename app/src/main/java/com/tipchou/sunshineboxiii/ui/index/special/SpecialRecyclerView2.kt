@@ -30,7 +30,11 @@ class SpecialRecyclerView2(private val activity: IndexActivity, fragment: Specia
             dataset.clear()
             val specialSubjectList = it?.data
             if (specialSubjectList != null) {
-                dataset.addAll(specialSubjectList)
+                for (item in specialSubjectList) {
+                    if (item.onLine) {
+                        dataset.add(item)
+                    }
+                }
             }
             notifyDataSetChanged()
         })
@@ -54,7 +58,7 @@ class SpecialRecyclerView2(private val activity: IndexActivity, fragment: Specia
         @SuppressLint("SetTextI18n")
         fun bind(specialSubjectLocal: SpecialSubjectLocal) {
             this.specialSubjectLocal = specialSubjectLocal
-            button.text = "#" + specialSubjectLocal.title
+            button.text = specialSubjectLocal.title
         }
 
         override fun onClick(v: View?) {

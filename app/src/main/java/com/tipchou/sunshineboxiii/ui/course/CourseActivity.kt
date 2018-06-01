@@ -79,7 +79,7 @@ class CourseActivity : BaseActivity(), CourseMediaPlayer {
             course_act_cardview1.visibility = View.GONE
         }
         //click favorite
-        course_act_imageview4.setOnClickListener {
+        course_act_view1.setOnClickListener {
             if (favorite) {
                 val parameters = HashMap<String, ArrayList<FavoriteActionLocal>>()
                 val list = arrayListOf<FavoriteActionLocal>()
@@ -170,10 +170,12 @@ class CourseActivity : BaseActivity(), CourseMediaPlayer {
                     if (item.lessonId == lessonObjectId) {
                         favorite = when (item.action) {
                             true -> {
+                                course_act_textview8.text = "取消"
                                 course_act_imageview4.setBackgroundResource(R.drawable.favourite_red)
                                 true
                             }
                             false -> {
+                                course_act_textview8.text = "收藏"
                                 course_act_imageview4.setBackgroundResource(R.drawable.default_favorite)
                                 false
                             }

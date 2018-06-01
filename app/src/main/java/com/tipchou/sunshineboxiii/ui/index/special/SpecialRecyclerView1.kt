@@ -34,7 +34,9 @@ class SpecialRecyclerView1(private val activity: IndexActivity, fragment: Specia
             } else {
                 for (item in specialSubjectList) {
                     if (item.recommendStatus) {
-                        dataset.add(item)
+                        if (item.onLine) {
+                            dataset.add(item)
+                        }
                     }
                 }
             }
