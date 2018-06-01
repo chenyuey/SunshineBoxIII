@@ -6,10 +6,8 @@ import android.arch.lifecycle.ViewModel
 import com.tipchou.sunshineboxiii.entity.local.DownloadLocal
 import com.tipchou.sunshineboxiii.entity.local.LessonLocal
 import com.tipchou.sunshineboxiii.entity.local.LessonSubjectLocal
-import com.tipchou.sunshineboxiii.support.DaggerMagicBox
-import com.tipchou.sunshineboxiii.support.GeneralObserver
-import com.tipchou.sunshineboxiii.support.Repository
-import com.tipchou.sunshineboxiii.support.Resource
+import com.tipchou.sunshineboxiii.support.*
+import com.tipchou.sunshineboxiii.ui.index.DownloadHolder
 import javax.inject.Inject
 
 /**
@@ -28,6 +26,17 @@ class SpecialDetailViewModel : ViewModel() {
     private val downloadObserver: GeneralObserver<List<DownloadLocal>>
     private var specialObjectId: String = ""
 
+    private val lessonDownloadHelper = LessonDownloadHelper { lessonObjectId, storageUrl, editor ->
+        if (editor) {
+            repository.dbDao.saveDownload(lessonObjectId, null, storageUrl)
+        } else {
+            repository.dbDao.saveDownload(lessonObjectId, storageUrl, null)
+        }
+    }
+
+    fun getDownloadQueue() = lessonDownloadHelper.getDownloadQueue()
+
+    fun downloadLesson(downloadHolder: DownloadHolder) = lessonDownloadHelper.enqueueDownloaded(downloadHolder)
 
     init {
         DaggerMagicBox.create().poke(this)
