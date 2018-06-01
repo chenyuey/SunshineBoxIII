@@ -13,6 +13,7 @@ import com.tipchou.sunshineboxiii.R
 import com.tipchou.sunshineboxiii.entity.local.DownloadLocal
 import com.tipchou.sunshineboxiii.entity.local.LessonLocal
 import com.tipchou.sunshineboxiii.ui.course.CourseActivity
+import com.tipchou.sunshineboxiii.ui.index.DownloadHolder
 
 /**
  * Created by 邵励治 on 2018/5/26.
@@ -23,13 +24,19 @@ class FavoriteRecyclerViewAdapter(private val activity: FavoriteActivity) : Recy
     private val favoriteLessonList = arrayListOf<LessonLocal>()
     private val download: LiveData<List<DownloadLocal>>
 
+    private val downloadingQueue: LiveData<HashMap<DownloadHolder, String>>
+    private val toDownload: (downloadHolder: DownloadHolder) -> Unit
 
     init {
         viewModel.getFavoriteLesson().observe(activity, Observer {
             val data = it?.data
             if (data != null) {
                 favoriteLessonList.clear()
-                favoriteLessonList.addAll(data)
+                for (item in data) {
+                    if (item.isPublish == true) {
+                        favoriteLessonList.add(item)
+                    }
+                }
                 notifyDataSetChanged()
             }
         })
@@ -37,18 +44,21 @@ class FavoriteRecyclerViewAdapter(private val activity: FavoriteActivity) : Recy
             viewModel.loadFavoriteLesson()
         })
         download = viewModel.getDownload()
+        downloadingQueue = viewModel.getDownloadQueue()
+        toDownload = { viewModel.downloadLesson(it) }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder = ViewHolder(LayoutInflater.from(activity).inflate(R.layout.item_index_recyclerview, parent, false))
 
     override fun getItemCount(): Int = favoriteLessonList.size
 
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) = holder.bind(favoriteLessonList[position])
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) = holder.bind(favoriteLessonList[position], false)
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView), View.OnClickListener {
         private val favoriteImageView: ImageView
         private val backgroundImageView: ImageView
         private val lessonNameTextView: TextView
+        private val downloadStatusTextView: TextView
 
         private var lessonLocal: LessonLocal? = null
 
@@ -57,18 +67,100 @@ class FavoriteRecyclerViewAdapter(private val activity: FavoriteActivity) : Recy
             favoriteImageView = itemView.findViewById(R.id.index_rcv_imageview4)
             backgroundImageView = itemView.findViewById(R.id.index_rcv_imageview1)
             lessonNameTextView = itemView.findViewById(R.id.index_rcv_textview2)
+            downloadStatusTextView = itemView.findViewById(R.id.index_rcv_textview1)
         }
 
-        fun bind(lessonLocal: LessonLocal) {
+        fun bind(lessonLocal: LessonLocal, isDownload: Boolean) {
             this.lessonLocal = lessonLocal
+            observerDownload(false, lessonLocal)
+
             lessonNameTextView.text = lessonLocal.name
-            when (lessonLocal.subject) {
-                "NURSERY" -> backgroundImageView.setBackgroundResource(R.drawable.nursery)
-                "MUSIC" -> backgroundImageView.setBackgroundResource(R.drawable.music)
-                "READING" -> backgroundImageView.setBackgroundResource(R.drawable.reading)
-                "GAME" -> backgroundImageView.setBackgroundResource(R.drawable.game)
-            }
+
             favoriteImageView.visibility = View.VISIBLE
+
+            val downloadValue = download.value
+            if (downloadValue != null) {
+                var publishUrl: String? = null
+                for (downloadLocal in downloadValue) {
+                    if (downloadLocal.objectId == lessonLocal.objectId) {
+                        if (downloadLocal.publishedUrl != null) {
+                            publishUrl = downloadLocal.publishedUrl
+                        }
+                    }
+                }
+                if (isDownload) {
+                    downloadStatusTextView.text = ""
+                    when (lessonLocal.subject) {
+                        "NURSERY" -> backgroundImageView.setBackgroundResource(R.drawable.nursery)
+                        "MUSIC" -> backgroundImageView.setBackgroundResource(R.drawable.music)
+                        "READING" -> backgroundImageView.setBackgroundResource(R.drawable.reading)
+                        "GAME" -> backgroundImageView.setBackgroundResource(R.drawable.game)
+                    }
+                } else {
+                    if (publishUrl != null) {
+                        downloadStatusTextView.text = ""
+                        when (lessonLocal.subject) {
+                            "NURSERY" -> backgroundImageView.setBackgroundResource(R.drawable.nursery)
+                            "MUSIC" -> backgroundImageView.setBackgroundResource(R.drawable.music)
+                            "READING" -> backgroundImageView.setBackgroundResource(R.drawable.reading)
+                            "GAME" -> backgroundImageView.setBackgroundResource(R.drawable.game)
+                        }
+                    } else {
+                        downloadStatusTextView.text = "点击下载"
+                        when (lessonLocal.subject) {
+                            "NURSERY" -> backgroundImageView.setBackgroundResource(R.drawable.nursery_gray)
+                            "MUSIC" -> backgroundImageView.setBackgroundResource(R.drawable.music_gray)
+                            "READING" -> backgroundImageView.setBackgroundResource(R.drawable.reading_gray)
+                            "GAME" -> backgroundImageView.setBackgroundResource(R.drawable.game_gray)
+                        }
+                    }
+                }
+            }
+        }
+
+        private fun observerDownload(editor: Boolean, lesson: LessonLocal) {
+            val (isDownloading, myDownloadHolder: com.tipchou.sunshineboxiii.ui.index.DownloadHolder?) = isDownloading(editor, lesson)
+            if (isDownloading && myDownloadHolder != null) {
+                downloadingQueue.observe(activity, object : Observer<HashMap<DownloadHolder, String>> {
+                    override fun onChanged(t: HashMap<DownloadHolder, String>?) {
+                        if (t != null) {
+                            var isMyHolderInMap = false
+                            for (downloadHolder in t.keys) {
+                                if (downloadHolder == myDownloadHolder) {
+                                    isMyHolderInMap = true
+                                    break
+                                }
+                            }
+                            if (isMyHolderInMap) {
+                                downloadStatusTextView.text = t[myDownloadHolder]
+                            } else {
+                                downloadingQueue.removeObserver(this)
+                                bind(lesson, true)
+                            }
+                        } else {
+                            //should not be here!!!
+                        }
+                    }
+                })
+            }
+        }
+
+        private fun isDownloading(editor: Boolean, lesson: LessonLocal): Pair<Boolean, DownloadHolder?> {
+            val downloadHolderMap = downloadingQueue.value
+            var isDownloading = false
+            var myDownloadHolder: DownloadHolder? = null
+            if (downloadHolderMap != null) {
+                for (downloadHolder in downloadHolderMap.keys) {
+                    if (downloadHolder.editor == editor && downloadHolder.lessonObjectId == lesson.objectId) {
+                        isDownloading = true
+                        myDownloadHolder = downloadHolder
+                        break
+                    }
+                }
+            } else {
+                //should not be here
+            }
+            return Pair(isDownloading, myDownloadHolder)
         }
 
         override fun onClick(v: View?) {
@@ -86,7 +178,8 @@ class FavoriteRecyclerViewAdapter(private val activity: FavoriteActivity) : Recy
                 if (publishUrl != null && lessonLocal != null) {
                     activity.startActivity(CourseActivity.newIntent(activity, lessonLocal.objectId, publishUrl))
                 } else {
-                    activity.showSnackBar("该课程目前没有下载，请下载后再尝试打开")
+                    toDownload(DownloadHolder(lessonObjectId = lessonLocal?.objectId!!, editor = false, downloadUrl = lessonLocal.packageUrl!!))
+                    observerDownload(false, lessonLocal)
                 }
             }
         }

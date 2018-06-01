@@ -70,7 +70,7 @@ class SpecialDetailRecyclerViewAdapter(private val activity: SpecialDetailActivi
             downloadStatusTextView = itemView.findViewById(R.id.index_rcv_textview1)
         }
 
-        fun bind(lessonLocal: LessonLocal, isdownload: Boolean) {
+        fun bind(lessonLocal: LessonLocal, isDownload: Boolean) {
             this.lessonLocal = lessonLocal
             observerDownload(false, lessonLocal)
 
@@ -88,7 +88,7 @@ class SpecialDetailRecyclerViewAdapter(private val activity: SpecialDetailActivi
                         }
                     }
                 }
-                if (isdownload) {
+                if (isDownload) {
                     downloadStatusTextView.text = ""
                     when (lessonLocal.subject) {
                         "NURSERY" -> backgroundImageView.setBackgroundResource(R.drawable.nursery)
