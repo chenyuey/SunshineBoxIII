@@ -1,5 +1,6 @@
 package com.tipchou.sunshineboxiii.support.dao
 
+import android.content.Context
 import com.tipchou.sunshineboxiii.entity.local.*
 import com.tipchou.sunshineboxiii.support.App
 import com.tipchou.sunshineboxiii.support.LessonType
@@ -316,6 +317,10 @@ class DbDao @Inject constructor() {
             lessonBox.removeAll()
             roleBox.removeAll()
             specialSubjectBox.removeAll()
+            val cacheEditor = App.mAppContext?.getSharedPreferences("UserGuide", Context.MODE_PRIVATE)?.edit()
+            cacheEditor?.clear()
+            cacheEditor?.apply()
+
         }
     }
 }

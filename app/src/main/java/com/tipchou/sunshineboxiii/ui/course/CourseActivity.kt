@@ -23,6 +23,7 @@ import com.tipchou.sunshineboxiii.entity.local.FavoriteActionLocal
 import com.tipchou.sunshineboxiii.support.IOUtils
 import com.tipchou.sunshineboxiii.ui.album.AlbumActivity
 import com.tipchou.sunshineboxiii.ui.base.BaseActivity
+import com.tipchou.sunshineboxiii.ui.guide.GuideActivity
 import com.tipchou.sunshineboxiii.ui.index.lesson.LessonViewModel
 import com.tipchou.sunshineboxiii.ui.video.VideoActivity
 import kotlinx.android.synthetic.main.activity_course.*
@@ -119,7 +120,7 @@ class CourseActivity : BaseActivity(), CourseMediaPlayer {
     override fun layoutId(): Int = R.layout.activity_course
 
     override fun created(bundle: Bundle?) {
-
+        setUpUserGuide()
         setUpClickEvent()
         //获取resource存储地址
         resourceStorageAddress = intent.getStringExtra(RESOURCE_STORAGE_ADDRESS)
@@ -158,6 +159,17 @@ class CourseActivity : BaseActivity(), CourseMediaPlayer {
             setUpViewModel()
         }
 
+    }
+
+    private fun setUpUserGuide() {
+        val userGuideCache = getSharedPreferences("UserGuide", Context.MODE_PRIVATE)
+        val firstOpenLesson = userGuideCache.getBoolean("FirstOpenLesson", true)
+        if (firstOpenLesson) {
+            startActivity(GuideActivity.newIntent(this, GuideActivity.Companion.ActivityName.Lesson))
+            val editor = userGuideCache.edit()
+            editor.putBoolean("FirstOpenLesson", false)
+            editor.apply()
+        }
     }
 
 

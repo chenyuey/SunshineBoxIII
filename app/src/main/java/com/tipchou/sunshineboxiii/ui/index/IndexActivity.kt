@@ -214,7 +214,7 @@ class IndexActivity : BaseActivity() {
     override fun layoutId(): Int = R.layout.activity_index
 
     override fun created(bundle: Bundle?) {
-        startActivity(GuideActivity.newIntent(this, GuideActivity.Companion.ActivityName.Lesson))
+        setUpUserGuide()
         setUpClickEvent()
         setUpAnimator()
         setUpNetWorkChangeBroadcast()
@@ -223,6 +223,17 @@ class IndexActivity : BaseActivity() {
         createRootFolder()
         index_act_viewpager.adapter = MyAdapter(supportFragmentManager)
         index_act_tablayout.setupWithViewPager(index_act_viewpager)
+    }
+
+    private fun setUpUserGuide() {
+        val userGuideCache = getSharedPreferences("UserGuide", Context.MODE_PRIVATE)
+        val firstOpenIndex = userGuideCache.getBoolean("FirstOpenIndex", true)
+        if (firstOpenIndex) {
+            startActivity(GuideActivity.newIntent(this, GuideActivity.Companion.ActivityName.Index))
+            val editor = userGuideCache.edit()
+            editor.putBoolean("FirstOpenIndex", false)
+            editor.apply()
+        }
     }
 
     private class MyAdapter(fm: FragmentManager) : FragmentPagerAdapter(fm) {
