@@ -37,6 +37,7 @@ import com.tipchou.sunshineboxiii.support.Resource
 import com.tipchou.sunshineboxiii.ui.StartActivity
 import com.tipchou.sunshineboxiii.ui.base.BaseActivity
 import com.tipchou.sunshineboxiii.ui.favorite.FavoriteActivity
+import com.tipchou.sunshineboxiii.ui.guide.GuideActivity
 import com.tipchou.sunshineboxiii.ui.index.lesson.LessonFragment
 import com.tipchou.sunshineboxiii.ui.index.lesson.LessonViewModel
 import com.tipchou.sunshineboxiii.ui.index.special.SpecialFragment
@@ -213,6 +214,7 @@ class IndexActivity : BaseActivity() {
     override fun layoutId(): Int = R.layout.activity_index
 
     override fun created(bundle: Bundle?) {
+        startActivity(GuideActivity.newIntent(this, GuideActivity.Companion.ActivityName.Lesson))
         setUpClickEvent()
         setUpAnimator()
         setUpNetWorkChangeBroadcast()
