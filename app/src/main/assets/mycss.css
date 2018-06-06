@@ -1,0 +1,48 @@
+.markdown h1{
+  /*font-weight: bold;*/
+  color: #f09038;
+}
+.markdown h2{
+  position: relative;
+  /*font-weight: bold;*/
+  color:white ;
+  text-align: center;
+  line-height: 32px;
+  margin-left: 45%;
+  width: 130px;
+  background:  #f09038;
+  border-radius: 15px;
+}
+.markdown h2:before{
+  position: absolute;
+  content: "";
+  top: -5px;
+  left: -25px;
+  height: 100px;
+  width: 20px;
+  background-image: url('../../static/image/markdownTop.png');
+  background-repeat:no-repeat;
+}
+.markdown h2:after{
+  position: absolute;
+  content: "";
+  top: -5px;
+  right: -30px;
+  height: 100px;
+  width: 20px;
+  background-image: url('../../static/image/markdownBottom.png');
+  background-repeat:no-repeat;
+}
+.markdown h3{
+  position: relative;
+  margin-left: 10px;
+  color: #f09038;
+}
+.markdown h3:before{
+  position: absolute;
+  content: "";
+  height: 25px;
+  width: 5px;
+  left: -10px;
+  background : #f09038;
+}

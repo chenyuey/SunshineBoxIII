@@ -144,7 +144,7 @@ class CourseActivity : BaseActivity(), CourseMediaPlayer {
             //解析markdown并加载
             if (jsonBean.content != null) {
                 val markdown: String = rebuildMarkdown(materialFolder, jsonBean)
-                course_act_markdownview1.loadMarkdown(markdown)
+                course_act_markdownview1.loadMarkdown(markdown, "file:///android_asset/classic.css")
             }
 
             //加载Material中数据到RecyclerView中
@@ -158,7 +158,6 @@ class CourseActivity : BaseActivity(), CourseMediaPlayer {
             }
             setUpViewModel()
         }
-
     }
 
     private fun setUpUserGuide() {
@@ -171,7 +170,6 @@ class CourseActivity : BaseActivity(), CourseMediaPlayer {
             editor.apply()
         }
     }
-
 
     private fun setUpViewModel() {
         viewModel = ViewModelProviders.of(this).get(LessonViewModel::class.java)
