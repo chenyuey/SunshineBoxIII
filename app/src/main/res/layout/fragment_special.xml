@@ -18,8 +18,10 @@
         android:id="@+id/special_fgm_recyclerview1"
         android:layout_width="match_parent"
         android:layout_height="216dp"
-        android:layout_marginStart="120dp"
-        android:layout_marginTop="16dp" />
+        android:layout_marginTop="16dp"
+        android:clipToPadding="false"
+        android:paddingEnd="120dp"
+        android:paddingStart="120dp" />
 
     <TextView
         android:layout_width="wrap_content"

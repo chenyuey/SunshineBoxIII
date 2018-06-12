@@ -29,5 +29,4 @@ class SpecialFragment : BaseFragment() {
 
     override fun resumed() {
     }
-
 }
