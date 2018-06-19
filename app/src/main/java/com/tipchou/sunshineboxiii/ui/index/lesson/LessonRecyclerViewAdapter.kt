@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import com.avos.avoscloud.AVAnalytics
+import com.avos.avoscloud.AVObject
 import com.avos.avoscloud.AVUser
 import com.tipchou.sunshineboxiii.R
 import com.tipchou.sunshineboxiii.entity.local.DownloadLocal
@@ -331,6 +332,11 @@ class LessonRecyclerViewAdapter(private val activity: IndexActivity, private val
                                         AVAnalytics.onEvent(activity, "打开课程总数")
                                         AVAnalytics.onEvent(activity, "用户打开课程数", AVUser.getCurrentUser().username + ":" + AVUser.getCurrentUser().mobilePhoneNumber)
                                         AVAnalytics.onEvent(activity, "类目下课程打开数", lesson?.subject)
+                                        val accessRecord = AVObject("UserAction")
+                                        accessRecord.put("userId", AVUser.getCurrentUser().objectId)
+                                        accessRecord.put("lessonId", lesson?.objectId)
+                                        accessRecord.put("behaviorType","openLesson")
+                                        accessRecord.saveInBackground()
                                         activity.startActivity(CourseActivity.newIntent(activity, lesson?.objectId!!, downloadedLesson.stagingUrl!!))
                                     } else {
                                         throw Exception("FUCK")

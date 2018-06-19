@@ -12,6 +12,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.avos.avoscloud.AVAnalytics;
+import com.avos.avoscloud.AVObject;
+import com.avos.avoscloud.AVUser;
 import com.bumptech.glide.Glide;
 import com.tipchou.sunshineboxiii.R;
 
@@ -95,15 +97,30 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.ViewHolder
         public void onClick(View v) {
             switch (materials.getMaterialType()) {
                 case ALBUM:
-                    AVAnalytics.onEvent(activity, "资源被打开数","绘本");
+                    AVAnalytics.onEvent(activity, "资源被打开数", "绘本");
+                    AVObject accessRecord = new AVObject("UserAction");
+                    accessRecord.put("userId", AVUser.getCurrentUser().getObjectId());
+                    accessRecord.put("resId", materials.getName() + "绘本");
+                    accessRecord.put("behaviorType", "openRes");
+                    accessRecord.saveInBackground();
                     courseMediaPlayer.openAlbum(materials);
                     break;
                 case AUDIO:
-                    AVAnalytics.onEvent(activity, "资源被打开数","音频");
+                    AVAnalytics.onEvent(activity, "资源被打开数", "音频");
+                    AVObject accessRecord1 = new AVObject("UserAction");
+                    accessRecord1.put("userId", AVUser.getCurrentUser().getObjectId());
+                    accessRecord1.put("resId", materials.getName() + "音频");
+                    accessRecord1.put("behaviorType", "openRes");
+                    accessRecord1.saveInBackground();
                     courseMediaPlayer.playAudio(materials);
                     break;
                 case VIDEO:
-                    AVAnalytics.onEvent(activity, "资源被打开数","视频");
+                    AVAnalytics.onEvent(activity, "资源被打开数", "视频");
+                    AVObject accessRecord2 = new AVObject("UserAction");
+                    accessRecord2.put("userId", AVUser.getCurrentUser().getObjectId());
+                    accessRecord2.put("resId", materials.getName() + "音频");
+                    accessRecord2.put("behaviorType", "openRes");
+                    accessRecord2.saveInBackground();
                     courseMediaPlayer.playVideo(materials);
                     break;
                 default:

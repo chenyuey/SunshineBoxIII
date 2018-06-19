@@ -3,6 +3,8 @@ package com.tipchou.sunshineboxiii.support
 import android.arch.lifecycle.MediatorLiveData
 import android.os.Environment
 import android.util.Log
+import com.avos.avoscloud.AVObject
+import com.avos.avoscloud.AVUser
 import com.tipchou.sunshineboxiii.ui.index.DownloadHolder
 import okhttp3.ResponseBody
 import retrofit2.Call
@@ -61,6 +63,11 @@ constructor(saveDownloadResult: (lessonObjectId: String, storageUrl: String, edi
                                                 val outPutFolder = decompressZip(file, File(folder, downloadHolder.lessonObjectId))
                                                 Log.e("outputFolder", outPutFolder.absolutePath)
                                                 saveDownloadResult(downloadHolder.lessonObjectId, outPutFolder.absolutePath, downloadHolder.editor)
+                                                val accessRecord = AVObject("UserAction")
+                                                accessRecord.put("userId", AVUser.getCurrentUser().objectId)
+                                                accessRecord.put("lessonId", downloadHolder.lessonObjectId)
+                                                accessRecord.put("behaviorType", "downloadLesson")
+                                                accessRecord.saveInBackground()
                                                 isDownloading = false
                                                 val newValue = hashMapOf<DownloadHolder, String>()
                                                 newValue.putAll(downloadQueue.value!!)
