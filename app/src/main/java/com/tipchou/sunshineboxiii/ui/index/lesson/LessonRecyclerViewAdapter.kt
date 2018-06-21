@@ -335,7 +335,8 @@ class LessonRecyclerViewAdapter(private val activity: IndexActivity, private val
                                         val accessRecord = AVObject("UserAction")
                                         accessRecord.put("userId", AVUser.getCurrentUser().objectId)
                                         accessRecord.put("lessonId", lesson?.objectId)
-                                        accessRecord.put("behaviorType","openLesson")
+                                        accessRecord.put("behaviorType", "openLesson")
+                                        accessRecord.put("equipment", "androidApp")
                                         accessRecord.saveInBackground()
                                         activity.startActivity(CourseActivity.newIntent(activity, lesson?.objectId!!, downloadedLesson.stagingUrl!!))
                                     } else {

@@ -51,6 +51,7 @@ abstract class BaseActivity : AppCompatActivity() {
                 accessRecord.put("userId", AVUser.getCurrentUser().objectId)
                 accessRecord.put("usageTime", (pauseTime!! - resumeTime!!).toString())
                 accessRecord.put("behaviorType", "useApp")
+                accessRecord.put("equipment", "androidApp")
                 accessRecord.saveInBackground()
             }
         }

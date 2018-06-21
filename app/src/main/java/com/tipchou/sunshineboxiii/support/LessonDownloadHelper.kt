@@ -67,6 +67,7 @@ constructor(saveDownloadResult: (lessonObjectId: String, storageUrl: String, edi
                                                 accessRecord.put("userId", AVUser.getCurrentUser().objectId)
                                                 accessRecord.put("lessonId", downloadHolder.lessonObjectId)
                                                 accessRecord.put("behaviorType", "downloadLesson")
+                                                accessRecord.put("equipment", "androidApp")
                                                 accessRecord.saveInBackground()
                                                 isDownloading = false
                                                 val newValue = hashMapOf<DownloadHolder, String>()

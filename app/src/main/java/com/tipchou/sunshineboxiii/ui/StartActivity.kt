@@ -20,6 +20,7 @@ class StartActivity : ActivationActivityManager() {
             val accessRecord = AVObject("UserAction")
             accessRecord.put("userId", AVUser.getCurrentUser().objectId)
             accessRecord.put("behaviorType", "openApp")
+            accessRecord.put("equipment", "androidApp")
             accessRecord.saveInBackground()
             startActivity(IndexActivity.newIntent(this))
             finish()

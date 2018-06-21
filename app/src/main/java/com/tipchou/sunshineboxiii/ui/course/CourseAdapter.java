@@ -102,6 +102,7 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.ViewHolder
                     accessRecord.put("userId", AVUser.getCurrentUser().getObjectId());
                     accessRecord.put("resId", materials.getName() + "绘本");
                     accessRecord.put("behaviorType", "openRes");
+                    accessRecord.put("equipment", "androidApp");
                     accessRecord.saveInBackground();
                     courseMediaPlayer.openAlbum(materials);
                     break;
@@ -111,6 +112,7 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.ViewHolder
                     accessRecord1.put("userId", AVUser.getCurrentUser().getObjectId());
                     accessRecord1.put("resId", materials.getName() + "音频");
                     accessRecord1.put("behaviorType", "openRes");
+                    accessRecord1.put("equipment", "androidApp");
                     accessRecord1.saveInBackground();
                     courseMediaPlayer.playAudio(materials);
                     break;
@@ -120,6 +122,7 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.ViewHolder
                     accessRecord2.put("userId", AVUser.getCurrentUser().getObjectId());
                     accessRecord2.put("resId", materials.getName() + "音频");
                     accessRecord2.put("behaviorType", "openRes");
+                    accessRecord2.put("equipment", "androidApp");
                     accessRecord2.saveInBackground();
                     courseMediaPlayer.playVideo(materials);
                     break;
