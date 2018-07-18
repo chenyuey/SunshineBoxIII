@@ -1,0 +1,218 @@
+{
+  "_note1": "KEEP THIS FILE! Check it into a version control system (VCS) like git.",
+  "_note2": "ObjectBox manages crucial IDs for your object model. See docs for details.",
+  "_note3": "If you have VCS merge conflicts, you must resolve them according to ObjectBox docs.",
+  "entities": [
+    {
+      "id": "1:1733589089233160950",
+      "lastPropertyId": "3:4991430117101102990",
+      "name": "FavoriteLocal",
+      "properties": [
+        {
+          "id": "1:8832986884678804093",
+          "name": "id"
+        },
+        {
+          "id": "2:2901129590757390525",
+          "name": "action"
+        },
+        {
+          "id": "3:4991430117101102990",
+          "name": "lessonId"
+        }
+      ],
+      "relations": []
+    },
+    {
+      "id": "2:5825345660349853457",
+      "lastPropertyId": "2:7847811624140602179",
+      "name": "RoleLocal",
+      "properties": [
+        {
+          "id": "1:8800341607849034768",
+          "name": "id"
+        },
+        {
+          "id": "2:7847811624140602179",
+          "name": "name"
+        }
+      ],
+      "relations": []
+    },
+    {
+      "id": "3:3679922389379796652",
+      "lastPropertyId": "4:2081891802578390495",
+      "name": "LessonSubjectLocal",
+      "properties": [
+        {
+          "id": "1:1105189466461634582",
+          "name": "id"
+        },
+        {
+          "id": "2:6312402604025036168",
+          "name": "objectId"
+        },
+        {
+          "id": "3:6868564699147635012",
+          "name": "specialObjectId"
+        },
+        {
+          "id": "4:2081891802578390495",
+          "name": "lessonObjectId"
+        }
+      ],
+      "relations": []
+    },
+    {
+      "id": "4:119956645457846429",
+      "lastPropertyId": "4:5937428806183623126",
+      "name": "TestLocal",
+      "properties": [
+        {
+          "id": "1:5792554051073516192",
+          "name": "id"
+        },
+        {
+          "id": "2:6623319170048802608",
+          "name": "userId"
+        },
+        {
+          "id": "3:4856212200797440587",
+          "name": "userName"
+        },
+        {
+          "id": "4:5937428806183623126",
+          "name": "tags"
+        }
+      ],
+      "relations": []
+    },
+    {
+      "id": "5:2740889612521194112",
+      "lastPropertyId": "12:2585328219392014125",
+      "name": "LessonLocal",
+      "properties": [
+        {
+          "id": "1:7805767256832928735",
+          "name": "id"
+        },
+        {
+          "id": "2:4364157750105752048",
+          "name": "objectId"
+        },
+        {
+          "id": "3:7185227381440478050",
+          "name": "isPublish"
+        },
+        {
+          "id": "4:1853306624628230974",
+          "name": "tags"
+        },
+        {
+          "id": "5:7967095429444965162",
+          "name": "packageUrl"
+        },
+        {
+          "id": "6:3341373742106172703",
+          "name": "name"
+        },
+        {
+          "id": "7:6491104857783064030",
+          "name": "versionCode"
+        },
+        {
+          "id": "8:8063701441744914911",
+          "name": "draftVersionCode"
+        },
+        {
+          "id": "9:1851530662531876518",
+          "name": "subject"
+        },
+        {
+          "id": "10:5120080678697993918",
+          "name": "compiler"
+        },
+        {
+          "id": "11:1194558333816691833",
+          "name": "stagingPackageUrl"
+        },
+        {
+          "id": "12:2585328219392014125",
+          "name": "areChecked"
+        }
+      ],
+      "relations": []
+    },
+    {
+      "id": "6:5146594722815022906",
+      "lastPropertyId": "7:8650039829390207977",
+      "name": "SpecialSubjectLocal",
+      "properties": [
+        {
+          "id": "1:7550019231857144",
+          "name": "id"
+        },
+        {
+          "id": "2:7432540797938330596",
+          "name": "objectId"
+        },
+        {
+          "id": "3:4424871976530500082",
+          "name": "recommendStatus"
+        },
+        {
+          "id": "4:1032034159986499847",
+          "name": "title"
+        },
+        {
+          "id": "5:1263400167870375013",
+          "name": "pictureUrl"
+        },
+        {
+          "id": "6:4809082157371587740",
+          "name": "describe"
+        },
+        {
+          "id": "7:8650039829390207977",
+          "name": "onLine"
+        }
+      ],
+      "relations": []
+    },
+    {
+      "id": "7:8109668675942702278",
+      "lastPropertyId": "4:1682112370475590258",
+      "name": "DownloadLocal",
+      "properties": [
+        {
+          "id": "1:7361194301341074271",
+          "name": "id"
+        },
+        {
+          "id": "2:8990248387659429611",
+          "name": "objectId"
+        },
+        {
+          "id": "3:5206424975683921419",
+          "name": "publishedUrl"
+        },
+        {
+          "id": "4:1682112370475590258",
+          "name": "stagingUrl"
+        }
+      ],
+      "relations": []
+    }
+  ],
+  "lastEntityId": "7:8109668675942702278",
+  "lastIndexId": "0:0",
+  "lastRelationId": "0:0",
+  "lastSequenceId": "0:0",
+  "modelVersion": 4,
+  "modelVersionParserMinimum": 4,
+  "retiredEntityUids": [],
+  "retiredIndexUids": [],
+  "retiredPropertyUids": [],
+  "retiredRelationUids": [],
+  "version": 1
+}
