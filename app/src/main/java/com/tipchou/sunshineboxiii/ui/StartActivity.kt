@@ -16,12 +16,12 @@ class StartActivity : ActivationActivityManager() {
 
     override fun created(bundle: Bundle?) {
         if (AVUser.getCurrentUser() != null) {
-            AVAnalytics.onEvent(this, "用户打开应用总数", AVUser.getCurrentUser().username)
-            val accessRecord = AVObject("UserAction")
-            accessRecord.put("userId", AVUser.getCurrentUser().objectId)
-            accessRecord.put("behaviorType", "openApp")
-            accessRecord.put("equipment", "androidApp")
-            accessRecord.saveInBackground()
+//            AVAnalytics.onEvent(this, "用户打开应用总数", AVUser.getCurrentUser().username)
+//            val accessRecord = AVObject("UserAction")
+//            accessRecord.put("userId", AVUser.getCurrentUser().objectId)
+//            accessRecord.put("behaviorType", "openApp")
+//            accessRecord.put("equipment", "androidApp")
+//            accessRecord.saveInBackground()
             startActivity(IndexActivity.newIntent(this))
             finish()
         } else {

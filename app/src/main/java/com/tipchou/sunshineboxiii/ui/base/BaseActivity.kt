@@ -15,6 +15,11 @@ import android.content.Context
 import android.content.Intent
 import android.util.Log
 import com.tipchou.sunshineboxiii.support.App
+import android.app.Activity
+import android.app.Application
+import android.app.Application.ActivityLifecycleCallbacks
+
+
 
 
 /**
@@ -53,6 +58,15 @@ abstract class BaseActivity : AppCompatActivity() {
         {
             resumeTime = System.currentTimeMillis()
             App.resumeTime = resumeTime
+            //openApp 用户统计
+            if (AVUser.getCurrentUser() != null) {
+                AVAnalytics.onEvent(this, "用户打开应用总数", AVUser.getCurrentUser().username)
+                val accessRecord = AVObject("UserAction")
+                accessRecord.put("userId", AVUser.getCurrentUser().objectId)
+                accessRecord.put("behaviorType", "openApp")
+                accessRecord.put("equipment", "androidApp")
+                accessRecord.saveInBackground()
+            }
         }
         AVAnalytics.onResume(this)
         Log.e("isAppOnForeground","YES================"+resumeTime);
@@ -82,6 +96,7 @@ abstract class BaseActivity : AppCompatActivity() {
                     accessRecord.put("equipment", "androidApp")
                     accessRecord.saveInBackground()
                     App.resumeTime = null;
+                    resumeTime = null;
                 }
             }
             AVAnalytics.onPause(this)
