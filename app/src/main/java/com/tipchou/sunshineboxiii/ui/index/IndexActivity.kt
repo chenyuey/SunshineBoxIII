@@ -267,6 +267,7 @@ class IndexActivity : BaseActivity() {
     override fun onDestroy() {
         super.onDestroy()
         unregisterReceiver(netWorkChangeBroadcast)
+        Log.e("onDestroy","onDestroy================");
     }
 
     //--------------------------------Snack Bar-----------------------------------------------------

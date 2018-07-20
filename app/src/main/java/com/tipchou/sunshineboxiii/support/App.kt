@@ -1,7 +1,9 @@
 package com.tipchou.sunshineboxiii.support
 
+import android.app.Activity
 import android.app.Application
 import android.content.Context
+import android.os.Bundle
 import com.avos.avoscloud.AVOSCloud
 import com.tencent.bugly.Bugly
 import com.tipchou.sunshineboxiii.entity.local.MyObjectBox
@@ -17,17 +19,22 @@ class App : Application() {
         fun getBoxStore() = boxStore
 
         var mAppContext: Context? = null
+
+        var resumeTime: Long? = null
+//        fun getResumeTime() = resumeTime
     }
 
     override fun onCreate() {
         super.onCreate()
         mAppContext = this
         boxStore = MyObjectBox.builder().androidContext(this@App).build()
+//        resumeTime = System.currentTimeMillis()
         //Test Environment
 //        AVOSCloud.initialize(this, "TDJUy79LG3JzSqVw7Hj1emIr-gzGzoHsz", "P1wJ6vfje0bVezeeio4eqCJ7")
         //Product Environment
         AVOSCloud.initialize(this, "CQBviH8f3TNrbRwzHfjTw7yk-gzGzoHsz", "5KnQsMhpWAAXYXvzbGV1YU62")
         Bugly.init(applicationContext, "37eaf578cd", false)
+
     }
 
 }
