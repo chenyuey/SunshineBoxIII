@@ -1,6 +1,7 @@
 package com.tipchou.sunshineboxiii.ui.album
 
 import android.os.Bundle
+import android.util.Log
 import android.widget.ImageView
 import android.widget.Toast
 import com.bumptech.glide.Glide
@@ -94,7 +95,12 @@ class AlbumActivity : BaseActivity() {
             for (resource in resourceList) {
                 val file = File(resource.resourceStorageAddress)
                 files.add(file)
-                names.add(resource.name)
+                var file_name = resource.name
+                if (file_name == null)
+                {
+                    file_name = file.name
+                }
+                names.add(file_name)
             }
             return this
         }

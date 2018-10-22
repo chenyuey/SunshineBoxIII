@@ -3,6 +3,7 @@ package com.tipchou.sunshineboxiii.support.dao
 
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
+import android.util.Log
 import com.avos.avoscloud.*
 import com.tipchou.sunshineboxiii.entity.web.*
 import com.tipchou.sunshineboxiii.support.ApiResponse
@@ -169,6 +170,7 @@ class WebDao @Inject constructor() {
                 val result = arrayListOf<SpecialSubjectWeb>()
                 if (response != null) {
                     for (item in response) {
+                        Log.e("TAG",item.toString() +"===========");
                         result.add(SpecialSubjectWeb(item))
                     }
                 }
