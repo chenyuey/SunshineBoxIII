@@ -11,4 +11,6 @@ public interface CourseMediaPlayer {
     void playVideo(Materials materials);
 
     void openAlbum(Materials materials);
+
+    void openPDF(Materials materials);
 }

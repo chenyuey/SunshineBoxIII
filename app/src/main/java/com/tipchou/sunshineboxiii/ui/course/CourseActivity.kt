@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.arch.lifecycle.ViewModelProviders
 import android.content.Context
 import android.content.Intent
+import android.graphics.pdf.PdfDocument
 import android.media.MediaPlayer
 import android.net.Uri
 import android.os.Bundle
@@ -25,6 +26,7 @@ import com.tipchou.sunshineboxiii.ui.album.AlbumActivity
 import com.tipchou.sunshineboxiii.ui.base.BaseActivity
 import com.tipchou.sunshineboxiii.ui.guide.GuideActivity
 import com.tipchou.sunshineboxiii.ui.index.lesson.LessonViewModel
+import com.tipchou.sunshineboxiii.ui.pdf.PdfActivity
 import com.tipchou.sunshineboxiii.ui.video.VideoActivity
 import kotlinx.android.synthetic.main.activity_course.*
 import java.io.File
@@ -274,6 +276,17 @@ class CourseActivity : BaseActivity(), CourseMediaPlayer {
         startActivity(intent)
     }
 
+    override fun openPDF(materials: Materials) {
+//        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        if (mediaPlayer.isPlaying) {
+            mediaPlayer.reset()
+            course_act_cardview1.visibility = View.GONE
+        }
+        val intent = Intent(this, PdfActivity::class.java)
+        intent.putExtra("materials", materials)
+        startActivity(intent)
+    }
+
     private fun getMaterialsList(materialFolder: File, bean: CourseBean): List<Materials> {
         val materialsList = ArrayList<Materials>()
         for (materialsBean in bean.materials) {
@@ -282,26 +295,38 @@ class CourseActivity : BaseActivity(), CourseMediaPlayer {
                 val materials = Materials()
                 when (materialsBean.type) {
                     0 -> {
-                        //图集
-                        materials.name = materialsBean.name
-                        materials.materialType = Materials.MaterialType.ALBUM
-                        materials.resourceStorageAddress = materialFolder.absolutePath
-                        //获取图集的儿子们
-                        val albumResourceList = ArrayList<Materials.AlbumResource>()
-                        for (materialsBean1 in bean.materials) {
-                            if (materialsBean1.parent != null) {
-                                if (materialsBean1.parent == materialsBean.id) {
-                                    val albumResource = Materials.AlbumResource()
-                                    albumResource.name = materialsBean1.name
-                                    albumResource.order = materialsBean1.album_index
-                                    albumResource.resourceStorageAddress = materialFolder.absolutePath + File.separator + materialsBean1.filename
-                                    albumResourceList.add(albumResource)
+                        if (materialsBean.mime_type.equals("application/pdf"))
+                        {
+                            //pdf展示
+                            materials.name = materialsBean.name
+                            materials.materialType = Materials.MaterialType.PDF
+                            materials.resourceStorageAddress = materialsBean.url
+                            materials.order = materialsBean.file_index
+                            materialsList.add(materials)
+                        }
+                        else
+                        {
+                            //图集
+                            materials.name = materialsBean.name
+                            materials.materialType = Materials.MaterialType.ALBUM
+                            materials.resourceStorageAddress = materialFolder.absolutePath
+                            //获取图集的儿子们
+                            val albumResourceList = ArrayList<Materials.AlbumResource>()
+                            for (materialsBean1 in bean.materials) {
+                                if (materialsBean1.parent != null) {
+                                    if (materialsBean1.parent == materialsBean.id) {
+                                        val albumResource = Materials.AlbumResource()
+                                        albumResource.name = materialsBean1.name
+                                        albumResource.order = materialsBean1.album_index
+                                        albumResource.resourceStorageAddress = materialFolder.absolutePath + File.separator + materialsBean1.filename
+                                        albumResourceList.add(albumResource)
+                                    }
                                 }
                             }
+                            materials.albumResourceList = albumResourceList
+                            materials.order = materialsBean.file_index
+                            materialsList.add(materials)
                         }
-                        materials.albumResourceList = albumResourceList
-                        materials.order = materialsBean.file_index
-                        materialsList.add(materials)
                     }
                     1 -> {
                         //音频

@@ -22,7 +22,7 @@ public class Materials implements Serializable {
     }
 
     public enum MaterialType {
-        VIDEO, AUDIO, ALBUM
+        VIDEO, AUDIO, ALBUM, PDF
     }
 
     private String name;

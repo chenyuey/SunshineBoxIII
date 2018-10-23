@@ -62,6 +62,9 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.ViewHolder
                     case VIDEO:
                         textView.setText("视频： " + materials.getName());
                         break;
+                    case PDF:
+                        textView.setText("PDF： " + materials.getName());
+                        break;
                     default:
                         break;
                 }
@@ -80,6 +83,9 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.ViewHolder
                     case VIDEO:
                         Glide.with(activity).load(R.drawable.material_video).into(imageView);
                         break;
+                    case PDF:
+                        Glide.with(activity).load(R.drawable.material_aublum).into(imageView);
+                        break;
                     default:
                         break;
                 }
@@ -95,6 +101,7 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.ViewHolder
 
         @Override
         public void onClick(View v) {
+            Log.e("CourseAdapter.test", materials.getMaterialType().toString());
             switch (materials.getMaterialType()) {
                 case ALBUM:
                     AVAnalytics.onEvent(activity, "资源被打开数", "绘本");
@@ -105,6 +112,16 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.ViewHolder
                     accessRecord.put("equipment", "androidApp");
                     accessRecord.saveInBackground();
                     courseMediaPlayer.openAlbum(materials);
+                    break;
+                case PDF:
+                    AVAnalytics.onEvent(activity, "资源被打开数", "PDF");
+                    AVObject accessRecordPDF = new AVObject("UserAction");
+                    accessRecordPDF.put("userId", AVUser.getCurrentUser().getObjectId());
+                    accessRecordPDF.put("resId", materials.getName() + "PDF");
+                    accessRecordPDF.put("behaviorType", "openRes");
+                    accessRecordPDF.put("equipment", "androidApp");
+                    accessRecordPDF.saveInBackground();
+                    courseMediaPlayer.openPDF(materials);
                     break;
                 case AUDIO:
                     AVAnalytics.onEvent(activity, "资源被打开数", "音频");
