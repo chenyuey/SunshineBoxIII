@@ -33,7 +33,6 @@ class PdfActivity : BaseActivity() {
     }
 
 
-
     private fun setUpClickEvent() {
         pdf_close_act_button.setOnClickListener { finish() }
     }
