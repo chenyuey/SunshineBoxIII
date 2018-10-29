@@ -84,7 +84,7 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.ViewHolder
                         Glide.with(activity).load(R.drawable.material_video).into(imageView);
                         break;
                     case PDF:
-                        Glide.with(activity).load(R.drawable.material_aublum).into(imageView);
+                        Glide.with(activity).load(R.drawable.material_pdf).into(imageView);
                         break;
                     default:
                         break;
